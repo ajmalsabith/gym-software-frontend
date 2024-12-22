@@ -31,14 +31,13 @@ export const routes: Routes = [
         path: 'media',
         loadChildren: () => import('./admin-components/media/media.routes').then(m => m.routes),
       },
+      {
+        path:"gym",
+        loadChildren:()=> import('../app/gym/gym.module').then(m=>m.GymModule)
+      }
     ],
   },
-  {
 
-   path:'user',
-   loadChildren:()=> import('./user-components/user-components.module').then(m=>m.UserComponentsModule)
-
-  },
 
 
 //Login And Register Route

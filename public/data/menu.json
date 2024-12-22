@@ -183,6 +183,19 @@
           "type": "link"
         }
       ]
+    },
+    {
+      "route": "gym",
+      "name": "Gym",
+      "type": "sub",
+      "icon": "image",
+      "children": [
+        {
+          "route": "gym-list",
+          "name": "GymList",
+          "type": "link"
+        }
+      ]
     }
   ]
 }
