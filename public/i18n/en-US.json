@@ -47,6 +47,8 @@
     "material.data-table.sort": "Sort",
     "material.data-table.table": "Table",
     "media": "Media",
+    "Users":"Users",
+    "Users.UsersList":"UsersList",
     "Gym":"Gym",
     "Gym.GymList":"Gym List",
     "media.gallery": "Gallery",

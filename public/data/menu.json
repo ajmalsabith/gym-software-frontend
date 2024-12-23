@@ -196,6 +196,20 @@
           "type": "link"
         }
       ]
+    },
+
+    {
+      "route": "user",
+      "name": "Users",
+      "type": "sub",
+      "icon": "image",
+      "children": [
+        {
+          "route": "user-list",
+          "name": "UsersList",
+          "type": "link"
+        }
+      ]
     }
   ]
 }

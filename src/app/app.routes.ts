@@ -34,6 +34,10 @@ export const routes: Routes = [
       {
         path:"gym",
         loadChildren:()=> import('../app/gym/gym.module').then(m=>m.GymModule)
+      },
+      {
+        path:'user',
+        loadChildren:()=>import('../app/users-management/users-management.module').then(m=>m.UsersManagementModule)
       }
     ],
   },

@@ -5,16 +5,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { AddUserPopupComponent } from './add-user-popup/add-user-popup.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 
 @NgModule({
   declarations: [
-    AddGymPopupComponent
+    AddGymPopupComponent,
+    AddUserPopupComponent
   ],
   imports: [
     CommonModule,
     // MatButtonModule,
+    ReactiveFormsModule,
+    FormsModule,
      MatCardModule,
      MatDialogModule,
      MatFormFieldModule
