@@ -1,25 +1,34 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ApisConfig } from 'app/Apis/apis.config';
+
+const headers = new HttpHeaders({
+  'Content-Type': 'application/json',
+  'x-api-key': 'GYM_SOFT_43'
+});
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class DbService {
 
-  API_URL = 'http://localhost:3000/'
 
   constructor(
-    private http:HttpClient
+    private http:HttpClient,
+    private globalapis:ApisConfig
   ) { }
 
 
 
-  MethodGet(url:string){
-    return this.http.get(this.API_URL+url);
+
+
+  InsertGYm(data:any){
+    return this.http.post(this.globalapis.BACKEND_NODE_LOCAL_API+this.globalapis.GYM_INSERT_API,data,{ headers });
   }
 
-  methodPost(url:string,body:any){
-    return this.http.post(this.API_URL+url,body);
+  InsertGymUser(data:any){
+    return this.http.post(this.globalapis.BACKEND_NODE_LOCAL_API+this.globalapis.GYM_INSERT_API,data,{ headers });
   }
 
 

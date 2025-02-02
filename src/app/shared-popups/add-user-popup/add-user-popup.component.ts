@@ -56,7 +56,7 @@ submit(){
     return
   }
 
-  this.dbservice.methodPost("users/add-user",this.itemForm.value)
+  this.dbservice.InsertGymUser(this.itemForm.value)
   .subscribe((res:any)=>{
     if(res.success==true){
       this.snack.open("User Created Successfull !","OK",{duration:3000});

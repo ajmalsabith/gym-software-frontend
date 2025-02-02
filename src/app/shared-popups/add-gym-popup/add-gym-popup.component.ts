@@ -44,26 +44,46 @@ export class AddGymPopupComponent implements OnInit {
   }
 
 
+   fromvalue={
+    "name": "Elite Fitness Gym",
+    "ownerEmail": "owner@elitefitness.com",
+    "subscriptionStatus": "trial",
+    "subscriptionStartDate": "2024-02-01T00:00:00.000Z",
+    "subscriptionEndDate": "2024-03-02T00:00:00.000Z",
+    "daysLeft": 30,
+    "isTrial": true,
+    "address": {
+      "line1": "123 Main Street",
+      "city": "Los Angeles",
+      "district": "Los Angeles County",
+      "state": "California",
+      "country": "USA",
+      "zip": "90001"
+    },
+    "logo": "https://elitefitness.com/logo.png",
+    "phone": "+1 123-456-7890",
+    "website": "https://elitefitness.com"
+  }
+  
+
 
 
   submit(){
-    if(this.itemForm.invalid){
-      this.snack.open("Invalid Form Data !","OK",{duration:3000});
-      return
-    }
-
-//  service 
+    // if(this.itemForm.invalid){
+    //   this.snack.open("Invalid Form Data !","OK",{duration:3000});
+    //   return
+    // }
 
 
-    this.dbservice.methodPost("gym/add-gym",this.itemForm.value).subscribe((res:any)=>{
-      if(res.success==1){
-        this.snack.open("Gym Created Successfull!","OK",{duration:3000});
-      }else{
-        this.snack.open("Something Went Wrong ! Try Again","OK",{duration:3000});
-      }
+    console.log(this.itemForm.value,'form values ...');
+    
+    this.dbservice.InsertGYm(this.fromvalue).subscribe((res:any)=>{
+        this.snack.open(res.message+" "+res.gym.gymId,"OK",{duration:3000});
     },
   (err)=>{
-    this.snack.open("Server Error!")
+    this.snack.open("Something Went Wrong ! Try Again","OK",{duration:3000});
+
+    // this.snack.open("Server Error!")
   })
 
   }
