@@ -28,6 +28,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { GymComponent } from './Modules/gym/gym.component';
 import { UsersComponent } from './Modules/users/users.component';
 import { LoginComponent } from './Modules/login/login.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -46,6 +47,7 @@ import { LoginComponent } from './Modules/login/login.component';
         MatFormFieldModule,
         MtxGridModule,
         MatInputModule,
+        MatAutocompleteModule,
         MatOptionModule,
         MatSelectModule,
         PageHeaderComponent,
@@ -61,7 +63,7 @@ import { LoginComponent } from './Modules/login/login.component';
              MatTooltipModule,
             MatProgressSpinnerModule,
             MatPaginator,
-            MatTableModule
+            MatTableModule,
 
 
 

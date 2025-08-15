@@ -6,8 +6,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AdminService {
-
+export class CommonService {
  constructor(private http: HttpClient,private apiConfig:ApisConfig) {}
 
   private apiKey = 'GYM_SOFT_43'; // or load from environment
@@ -20,25 +19,16 @@ export class AdminService {
   }
 
 
-  createGym(data: any): Observable<any> {
-    return this.http.post(
-      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.CREATE_GYM}`,
-      data,
-      { headers: this.getHeaders() }
-    );
-  }
-
-  updateGym(data: any): Observable<any> {
-    return this.http.post(
-      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.UPDATE_GYM}`,
-      data,
-      { headers: this.getHeaders() }
-    );
-  }
-
-  getGymList(): Observable<any> {
+getIndianCitiesList(): Observable<any> {
     return this.http.get(
-      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.GET_GYM_LIST}`,
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.GET_INDIAN_CITIES_LIST}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  getIndianStatesDistList(): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.GET_INDIAN_STATES_DIST_LIST}`,
       { headers: this.getHeaders() }
     );
   }

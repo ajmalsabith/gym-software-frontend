@@ -15,7 +15,7 @@
       &:hover,
       &:focus {
         // background-color: var(--sidemenu-heading-hover-background-color);
-        background-color: rgb(199, 217, 239);
+        background-color: white;
         color:black !important;
             border-radius: 0.5rem;
 
@@ -26,13 +26,17 @@
           border-radius: 0.5rem;
       >.menu-heading {
         color: var(--sidemenu-active-heading-text-color);
-        background-color: var(--sidemenu-active-heading-background-color);
+        // background-color: var(--sidemenu-active-heading-background-color);
+              background-color: white;
+
             border-radius: 0.5rem;
 
 
         &:hover,
         &:focus {
-          background-color: var(--sidemenu-active-heading-hover-background-color);
+          // background-color: var(--sidemenu-active-heading-hover-background-color);
+                background-color: white;
+
               border-radius: 0.5rem;
 
         }
@@ -40,7 +44,8 @@
     }
 
     &.expanded {
-      background-color: var(--sidemenu-expanded-background-color);
+      // background-color: var(--sidemenu-expanded-background-color);
+      background-color: white;
       color: black !important;
 
       >.menu-toggle>.menu-caret {

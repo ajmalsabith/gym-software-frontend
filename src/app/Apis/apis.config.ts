@@ -9,38 +9,28 @@ import { Injectable } from "@angular/core";
 export class ApisConfig{
 
 
-  API_LOCAL_URL:string=""
+  API_LOCAL_URL:string="http://localhost:3400/"
   API_SERVER_URL:string=""
 
   // Method POST
-  USER_LOGIN_: string = "api/login/";
-  CLIENT_CREATE: string = "/api/clients/create/";
-  ASIGN_PERMISSIONS: string = "api/assign-permission/";
+  ADMIN_LOGIN_: string = "";
+  CLIENT_LOGIN: string = "";
   
-  CREATE_MODULE: string = "/api/create-module/";
-  CREATE_ROLE: string = "api/create-role/";
-  CREATE_STAFF: string = "/api/staff/create/";
-  CREATE_CANTYPE: string = "api/can-types/create/";
-  CREATE_BATCH: string ="/api/batch/create/";
+  CREATE_GYM: string = "admin/insertgym";
+  UPDATE_GYM: string = "admin/updategym";
+  CREATE_USER: string = "";
+  UPDATE_USER: string = "";
 
-
-  REFRESH_TOKENS:string="api/refresh/"
 
   // Method GET
 
-  GET_MODULES:string="api/modules/"
-  GET_ROLES:string="/api/roles/"
+  GET_GYM_LIST:string="admin/get-gymlist"
+  GET_USER_LIST:string=""
 
-  GET_CLIENTS:string="api/clients/"
-  CANTYPE_LIST:string="api/can-details-list/"
-  GET_BATCHES :string = 'api/batch/list/';
-  GET_PERMISSION :string = 'api/roles/';
-  //Method PUT
+  GET_INDIAN_CITIES_LIST:string="common/india-cities"
+  GET_INDIAN_STATES_DIST_LIST:string="common/states-districts"
 
-  CLIENT_UPDATE: string = "api/clients/";
-  STAFF_UPDATE: string = "api/staff/";
-  CANTYPE_UPDATE: string = 'api/can-types/';
-  BATCH_UPDATE: string="api/batch/";
+
 
 
 

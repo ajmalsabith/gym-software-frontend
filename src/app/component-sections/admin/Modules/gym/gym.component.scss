@@ -92,3 +92,34 @@ margin-top: 15px;
   justify-content: center;
   z-index: 10;
 }
+.upload-btn {
+  background-color: orange;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.upload-btn:hover {
+  background-color: darkorange;
+}
+
+.logo-upload-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-preview img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}

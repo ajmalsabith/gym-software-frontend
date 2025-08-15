@@ -12,12 +12,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { filter } from 'rxjs/operators';
 
 import { AuthService } from '@core/authentication';
-import { ApiServiceService } from 'app/service/api-service.service';
 import { SaveDailogComponent } from 'app/layout-store/dialog/save-dailog/save-dailog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { StoreModule } from 'app/layout-store/store.module';
 import { ErrorDailogComponent } from 'app/layout-store/dialog/error-dailog/error-dailog.component';
 import { TokenService } from 'app/service/token.service';
+import { AdminService } from 'app/component-sections/admin/services/admin.service';
 
 @Component({
   selector: 'app-login',
@@ -42,7 +42,7 @@ import { TokenService } from 'app/service/token.service';
 export class LoginComponent {
 
   constructor( private fb:FormBuilder,private router:Router,private tokenservice:TokenService,
-    private auth:AuthService,private apiservcie:ApiServiceService,private dailog:MatDialog){
+    private auth:AuthService,private apiservcie:AdminService,private dailog:MatDialog){
 
     
     const rememberName= localStorage.getItem('email')
@@ -74,55 +74,55 @@ export class LoginComponent {
   }
 
 
-  submitLogin(){
+  // submitLogin(){
 
-    this.isSubmitting = true;
+  //   this.isSubmitting = true;
 
-    if(this.loginForm.valid){
+  //   if(this.loginForm.valid){
 
 
-    this.apiservcie.login(this.loginForm.value).subscribe((res:any)=>{
-      console.log(res,'==login response');
+  //   this.apiservcie.login(this.loginForm.value).subscribe((res:any)=>{
+  //     console.log(res,'==login response');
 
-      this.tokenservice.setTokens(res.access,res.refresh)
-      localStorage.setItem('user_email', res.user.email);
+  //     this.tokenservice.setTokens(res.access,res.refresh)
+  //     localStorage.setItem('user_email', res.user.email);
 
-          if(this.loginForm.get('rememberMe')?.value)
-              {
-                localStorage.setItem('rememberMe',this.loginForm.get('rememberMe')?.value)
-                localStorage.setItem('email',this.loginForm.get('email')?.value)
-              }
-              else
-              {
-                localStorage.setItem('rememberMe',this.loginForm.get('rememberMe')?.value)
-                localStorage.setItem('email','') 
-              }
-             this.isSubmitting = false;
+  //         if(this.loginForm.get('rememberMe')?.value)
+  //             {
+  //               localStorage.setItem('rememberMe',this.loginForm.get('rememberMe')?.value)
+  //               localStorage.setItem('email',this.loginForm.get('email')?.value)
+  //             }
+  //             else
+  //             {
+  //               localStorage.setItem('rememberMe',this.loginForm.get('rememberMe')?.value)
+  //               localStorage.setItem('email','') 
+  //             }
+  //            this.isSubmitting = false;
 
-               this.router.navigateByUrl('/');
+  //              this.router.navigateByUrl('/');
       
-    },(err)=>{
-      console.log(err.error.message,'=error');
+  //   },(err)=>{
+  //     console.log(err.error.message,'=error');
 
-      this.dailog.open(ErrorDailogComponent, {
-    width: '350px',
-    data: {
-      message:err.error?.message|| "Invalid email or password"
-    }
+  //     this.dailog.open(ErrorDailogComponent, {
+  //   width: '350px',
+  //   data: {
+  //     message:err.error?.message|| "Invalid email or password"
+  //   }
 
-    });
-      this.isSubmitting = false;
-  })
+  //   });
+  //     this.isSubmitting = false;
+  // })
 
-  }else{
-    this.isSubmitting = false;
+  // }else{
+  //   this.isSubmitting = false;
 
-    this.loginForm.markAllAsTouched();
-    return;
+  //   this.loginForm.markAllAsTouched();
+  //   return;
 
-  }
+  // }
 
-  }
+  // }
 
   
 }

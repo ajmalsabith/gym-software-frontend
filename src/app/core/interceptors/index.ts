@@ -18,7 +18,7 @@ import { AuthInterceptor } from 'app/interceptor/auth.interceptor';
 
 /** Http interceptor providers in outside-in order */
 export const httpInterceptorProviders = [
-  { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  // { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
 
   // { provide: HTTP_INTERCEPTORS, useClass: BaseUrlInterceptor, multi: true },
   // { provide: HTTP_INTERCEPTORS, useClass: SettingsInterceptor, multi: true },

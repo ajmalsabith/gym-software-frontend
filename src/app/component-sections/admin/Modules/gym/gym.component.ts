@@ -4,7 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { ErrorDailogComponent } from 'app/layout-store/dialog/error-dailog/error-dailog.component';
 import { SaveDailogComponent } from 'app/layout-store/dialog/save-dailog/save-dailog.component';
-import { ApiServiceService } from 'app/service/api-service.service';
+import { AdminService } from '../../services/admin.service';
+import { Observable } from 'rxjs';
+import { CommonService } from 'app/service/common.service';
 
 @Component({
   selector: 'app-gym',
@@ -16,7 +18,7 @@ export class GymComponent {
    @ViewChild('addressInput') addressInput!: ElementRef;
   
     selectedTabIndex = 0;
-    clientDetailsTabDisabled = true; // controls tab enable/disable
+    GymDetailsTabDisabled = true; // controls tab enable/disable
   
     list: any[] = [];
     filteredList: any[] = [];
@@ -29,138 +31,191 @@ export class GymComponent {
     hidePassword = true;
     hideConfirmPassword = true;
   
-    selectedClientId: number | null = null;
+    selectedGymId: number | null = null;
     isEditing = false;
   
-    columns: MtxGridColumn[] = [
+ columns: MtxGridColumn[] = [
+  { header: 'Gym ID', field: 'gymId', sortable: true },
+  { header: 'Gym Name', field: 'name', sortable: true },
+  { header: 'Owner Email', field: 'ownerEmail', sortable: true },
+  { header: 'Phone', field: 'phone', sortable: true },
+  { header: 'Subscription Status', field: 'subscriptionStatus', sortable: true },
+  {
+    header: 'Subscription Period',
+    field: 'subscriptionStartDate',
+    sortable: true,
+    formatter: (rowData: any) =>
+      `${rowData.subscriptionStartDate ? new Date(rowData.subscriptionStartDate).toLocaleDateString() : ''} 
+       - 
+       ${rowData.subscriptionEndDate ? new Date(rowData.subscriptionEndDate).toLocaleDateString() : ''}`
+  },
+  {
+    header: 'Trial',
+    field: 'isTrial',
+    sortable: true,
+    formatter: (rowData: any) => rowData.isTrial ? 'Yes' : 'No'
+  },
+ {
+  header: 'Address',
+  field: 'line1',
+  sortable: false,
+  formatter: (rowData: any) => rowData.line1 || ''
+},
+  {
+    header: 'Actions',
+    field: 'actions',
+    width: '120px',
+    pinned: 'right',
+    type: 'button',
+    buttons: [
       {
-        header: 'Client Name',
-        sortable: true,
-        field: 'first_name',
-        formatter: (rowData: any) => `${rowData.first_name || ''} ${rowData.last_name || ''}`.trim(),
-      },
-      { header: 'Email', field: 'email', sortable: true },
-      { header: 'Contact', field: 'contact_number', sortable: true },
-      { header: 'Status', field: 'status', sortable: true },
-      {
-        header: 'Actions',
-        field: 'actions',
-        width: '120px',
-        pinned: 'right',
-        type: 'button',
-        buttons: [
-          {
-            icon: 'edit',
-            tooltip: 'Edit',
-            type: 'icon',
-            click: (record: any) => this.onEdit(record),
-          },
-        ],
-      },
-    ];
-  
+        icon: 'edit',
+        tooltip: 'Edit',
+        type: 'icon',
+        click: (record: any) => this.onEdit(record),
+      }
+    ]
+  }
+];
+
     constructor(
       private fb: FormBuilder,
-      private apiService: ApiServiceService,
+      private adminservice: AdminService,
+      private commonservice: CommonService,
       private dialog: MatDialog,
     ) {
-      this.reactiveForm1 = this.fb.group(
-        {
-          user_name: ['', Validators.required],
-          password: ['', Validators.required],
-          confirm_password: ['', Validators.required],
-          first_name: ['', Validators.required],
-          last_name: ['', Validators.required],
-          email: ['', [Validators.required, Validators.email]],
-          contact_number: ['', Validators.required],
-          address: [''],
-          status: ['Active', Validators.required],
-        },
-        { validators: this.passwordMatchValidator, updateOn: 'change' }
-      );
+         this.reactiveForm1 = this.fb.group({
+      gymId: [''],
+      name: ['', Validators.required],
+      ownerEmail: ['', [Validators.required, Validators.email]],
+      subscriptionStatus: ['active', Validators.required],
+      subscriptionStartDate: ['', Validators.required],
+      subscriptionEndDate: ['', Validators.required],
+      isTrial: [false],
+      phone: ['', [Validators.pattern(/^\+?[0-9\s-]+$/)]],
+      website: ['', [Validators.pattern(/^https?:\/\/.+/)]],
+      logo: [''],
+      // Address fields
+      line1: [''],
+      city: [''],
+      district: [''],
+      state: [''],
+      country: ['India'],
+      zip: ['']
+    });
     }
+
+  onSubmitGymform() {
+    if (this.reactiveForm1.valid) {
+      // TODO: API call
+    }
+  }
   
     ngOnInit(): void {
-      
+
+    this.reactiveForm1.get('subscriptionStatus')?.valueChanges.subscribe(value => {
+        this.reactiveForm1.patchValue({ isTrial: value === 'trial' });
+    });
+
+      this.GetGymList()
+      this.GetIndianCitiesList()
+      this.GetIndianStateDistList()
     }
   
-   
+  onLogoSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) {
+    return;
+  }
+
+  const file = input.files[0];
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    const base64String = (reader.result as string).split(',')[1] || '';
+
+    this.reactiveForm1.patchValue({
+      logo: `data:${file.type};base64,${base64String}`
+    });
+
+    // Optionally mark the form control as touched
+    this.reactiveForm1.get('logo')?.markAsDirty();
+  };
+
+  reader.readAsDataURL(file);
+}
+
     // Handle tab change
     onTabChange(index: number): void {
       this.selectedTabIndex = index;
   
       // If switched to Client List tab (index 0) -> disable details tab
       if (index === 0) {
-        this.clientDetailsTabDisabled = true;
+        this.GymDetailsTabDisabled = true;
       }
     }
   
 
 
     loading = false; 
-    onSubmit(): void {
-      if (!this.reactiveForm1.valid) return;
-    
-      this.loading = true; // show spinner
-    
-      const formData = { ...this.reactiveForm1.value };
-      delete formData.confirm_password;
-    
-      if (this.isEditing && this.selectedClientId) {
-        this.apiService.updateClient(this.selectedClientId, formData).subscribe({
-          next: () => {
-            this.loading = false; // hide spinner
-            this.resetForm();
-            // Show dialog first, then go to first tab
-            const dialogRef = this.dialog.open(SaveDailogComponent, {
-              width: '400px',
-              data: { message: 'Client updated successfully' },
-            });
-            dialogRef.afterClosed().subscribe(() => {
-              this.selectedTabIndex = 0;
-              this.clientDetailsTabDisabled = true;
-            });
-          },
-          error: () => {
-            this.loading = false;
-            this.openErrorDialog('Failed to update client');
-          },
-        });
-      } else {
-        this.apiService.createClient(formData).subscribe({
-          next: () => {
-            this.loading = false;
-            this.resetForm();
-            const dialogRef = this.dialog.open(SaveDailogComponent, {
-              width: '400px',
-              data: { message: 'Client created successfully' },
-            });
-            dialogRef.afterClosed().subscribe(() => {
-              this.selectedTabIndex = 0;
-              this.clientDetailsTabDisabled = true;
-            });
-          },
-          error: () => {
-            this.loading = false;
-            this.openErrorDialog('Failed to create client');
-          },
-        });
-      }
+  onSubmit(): void {
+  if (this.reactiveForm1.invalid) return;
+
+  this.loading = true; // show spinner
+
+  const formData = { ...this.reactiveForm1.value };
+
+  let request$: Observable<any>;
+  let successMessage = '';
+
+  if (this.isEditing && this.selectedGymId) {
+    // Ensure ID is sent to backend for update
+    request$ = this.adminservice.updateGym({
+      id: this.selectedGymId,
+      obj:formData
+    });
+    successMessage = 'Gym updated successfully';
+  } else {
+    request$ = this.adminservice.createGym(formData);
+    successMessage = 'Gym created successfully';
+  }
+
+  request$.subscribe({
+    next: () => {
+      this.loading = false;
+      this.resetForm();
+      const dialogRef = this.dialog.open(SaveDailogComponent, {
+        width: '400px',
+        data: { message: successMessage }
+      });
+      dialogRef.afterClosed().subscribe(() => {
+        this.selectedTabIndex = 0;
+        this.GymDetailsTabDisabled = true;
+        this.GetGymList()
+      });
+    },
+    error: (err) => {
+      this.loading = false;
+      const errorMsg = this.isEditing
+        ? 'Failed to update Gym'
+        : 'Failed to create Gym';
+      this.openErrorDialog(errorMsg);
+      console.error(err);
     }
+  });
+}
+
     
       resetForm(): void {
         this.reactiveForm1.reset({ status: 'Active' });
-        this.selectedClientId = null;
+        this.selectedGymId = null;
         this.isEditing = false;
       }
     
-      onEdit(client: any): void {
-        this.clientDetailsTabDisabled = false; // enable
-        this.reactiveForm1.patchValue({
-          ...client,
-          confirm_password: client.password,
-        });
-        this.selectedClientId = client.id;
+      onEdit(gym: any): void {
+        this.GymDetailsTabDisabled = false; // enable
+        this.reactiveForm1.patchValue(gym);
+        this.selectedGymId = gym.gymId;
         this.isEditing = true;
         this.selectedTabIndex = 1;
       }
@@ -200,27 +255,53 @@ export class GymComponent {
       }
     
       GetGymList(): void {
-        this.apiService.getClients().subscribe({
+        this.adminservice.getGymList().subscribe({
           next: (res: any) => {
+            console.log(res,'==Gymlist');
+            
             this.list = res;
             this.filteredList = [...res];
           },
-          error: () => this.openErrorDialog('Failed to fetch Gym Details'),
+          error: () => this.openErrorDialog('Failed to fetch Gym List'),
         });
       }
-    
-      passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
-        const pass = group.get('password')?.value;
-        const confirm = group.get('confirm_password')?.value;
-        return pass === confirm ? null : { passwordMismatch: true };
+
+      IndianCitiesList:any
+      IndianStateDistList:any
+       GetIndianCitiesList(): void {
+        this.commonservice.getIndianCitiesList().subscribe({
+          next: (res: any) => {            
+            this.IndianCitiesList = res;
+          },
+          error: (err) => console.log(err.error),
+        });
       }
-    
-      addClient(): void {
-        this.clientDetailsTabDisabled = false; // enable
+
+       GetIndianStateDistList(): void {
+        this.commonservice.getIndianStatesDistList().subscribe({
+          next: (res: any) => {
+            
+            this.IndianStateDistList = res;
+          },
+          error: (err) => console.log(err.error),
+          
+        });
+      }
+  
+      addGym(): void {
+        this.GymDetailsTabDisabled = false; // enable
         this.selectedTabIndex = 1;
       }
     
     
+
+    filteredDistricts: string[] = [];
+    filtredCities:any[]=[]
+onStateChange(selectedState: string) {
+  const state = this.IndianStateDistList.find((s:any) => s.state === selectedState);
+  this.filteredDistricts = state ? state.districts : [];
+
+}
   
 
 }

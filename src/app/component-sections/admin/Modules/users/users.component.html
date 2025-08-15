@@ -23,13 +23,13 @@
       </div>
 
       <div class="filters-right">
-        <button mat-flat-button style="background-color: black;" (click)="addClient()">Create New User</button>
+        <button mat-flat-button class="add-button" (click)="addClient()">Create New User</button>
       </div>
     </div>
 
     <!-- Edit Action Template -->
     <ng-template #actionTpl let-row="row">
-      <button mat-icon-button style="color: black;" (click)="editStaff(row)">
+      <button mat-icon-button class="edit-icon" (click)="editStaff(row)">
         <mat-icon>edit</mat-icon>
       </button>
     </ng-template>
@@ -162,8 +162,8 @@
           </div>
 
           <div class="form-buttons">
-            <button mat-raised-button style="color: #c00100;" type="button">Cancel</button>
-            <button mat-raised-button style="color: #026e00;" type="submit" [disabled]="reactiveForm1.invalid">Save</button>
+            <button mat-raised-button  class="cancel-button" type="button">Cancel</button>
+            <button mat-raised-button  class="save-button" type="submit" [disabled]="reactiveForm1.invalid">Save</button>
 
           </div>
         </form>

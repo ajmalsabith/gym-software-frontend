@@ -3,7 +3,7 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse
 import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { TokenService } from 'app/service/token.service';
-import { ApiServiceService } from 'app/service/api-service.service';
+import { AdminService } from 'app/component-sections/admin/services/admin.service';
 
 
 @Injectable()
@@ -11,7 +11,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(
     private tokenService: TokenService,
-    private apiService: ApiServiceService
+    private adminservice: AdminService
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -31,7 +31,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error.status === 401 && this.tokenService.getRefreshToken()) {
           const refreshData = { refresh: this.tokenService.getRefreshToken() };
 
-          return this.apiService.RefreshTokens(refreshData).pipe(
+          return this.adminservice.getGymList().pipe(
             switchMap(response => {
               const newAccessToken = response.access;
 
