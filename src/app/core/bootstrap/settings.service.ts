@@ -48,7 +48,7 @@ export class SettingsService {
     ) {
       const isSystemDark = this.mediaMatcher.matchMedia('(prefers-color-scheme: dark)').matches;
       // Set theme to dark if `prefers-color-scheme` is dark. Otherwise, set it to light.
-      return isSystemDark ? 'dark' : 'light';
+      return 'light';
     } else {
       return this.options.theme as Exclude<AppTheme, 'auto'>;
     }

@@ -8,30 +8,40 @@
 
   .menu-item {
     overflow: hidden;
-    border-radius: 1.5rem;
+    border-radius: 0.5rem !important;
     will-change: transform; // fix expansion in Safari
 
     >.menu-heading {
       &:hover,
       &:focus {
-        background-color: var(--sidemenu-heading-hover-background-color);
+        // background-color: var(--sidemenu-heading-hover-background-color);
+        background-color: rgb(199, 217, 239);
+        color:black !important;
+            border-radius: 0.5rem;
+
       }
     }
 
     &.active {
+          border-radius: 0.5rem;
       >.menu-heading {
         color: var(--sidemenu-active-heading-text-color);
         background-color: var(--sidemenu-active-heading-background-color);
+            border-radius: 0.5rem;
+
 
         &:hover,
         &:focus {
           background-color: var(--sidemenu-active-heading-hover-background-color);
+              border-radius: 0.5rem;
+
         }
       }
     }
 
     &.expanded {
       background-color: var(--sidemenu-expanded-background-color);
+      color: black !important;
 
       >.menu-toggle>.menu-caret {
         transform: rotate(-180deg);
@@ -41,6 +51,10 @@
     &:has(.active)>.menu-heading {
       color: var(--sidemenu-active-heading-text-color);
     }
+  }
+
+  .menu-item :hover{
+    border-radius: 0.5rem;
   }
 
   .menu-heading {

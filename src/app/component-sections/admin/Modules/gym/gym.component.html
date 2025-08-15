@@ -1,0 +1,185 @@
+
+<page-header class="bg-cyan-50" title="Gym" />
+
+<mat-tab-group [(selectedIndex)]="selectedTabIndex" (selectedIndexChange)="onTabChange($event)">
+  <!-- TAB 1: Client List -->
+  <mat-tab label="Gym List">
+    <div class="filters-container">
+      <div class="filters-left">
+        <!-- Search Filter -->
+        <mat-form-field appearance="outline" style="width: 300px; margin-right: 10px;">
+          <mat-label>Search</mat-label>
+          <input matInput placeholder="Search by name or email" [(ngModel)]="searchText" (input)="applyFilters()" />
+        </mat-form-field>
+
+        <!-- Status Filter -->
+        <mat-form-field appearance="outline" style="width: 200px;">
+          <mat-label>Status</mat-label>
+          <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
+            <mat-option value="">All</mat-option>
+            <mat-option value="Active">Active</mat-option>
+            <mat-option value="Inactive">Inactive</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Add Client Button -->
+      <div class="filters-right">
+        <button mat-flat-button style="background-color: black;" (click)="addClient()">Create New Gym</button>
+      </div>
+    </div>
+
+    <!-- Data Grid -->
+    <mtx-grid
+  [data]="filteredList"
+  [columns]="columns"
+  [loading]="false"
+  [columnResizable]="false"
+  [multiSelectable]="false"
+  [rowSelectable]="false"
+  [hideRowSelectionCheckbox]="true"
+  [rowHover]="true"
+  [rowStriped]="false"
+  [showToolbar]="true"
+  [toolbarTitle]="'Client List'"
+  [columnHideable]="true"
+  [columnSortable]="true"
+  [columnPinnable]="true"
+  [expandable]="false"
+  [pageOnFront]="true"
+  [showPaginator]="true"
+  [pageSizeOptions]="[5, 10, 50, 100]"
+  [pageIndex]="0"
+  [pageSize]="5"
+  (rowClick)="onRowClick($event)"
+></mtx-grid>
+
+  </mat-tab>
+
+  <!-- TAB 2: Client Form -->
+  <mat-tab label="Gym Details" [disabled]="clientDetailsTabDisabled">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Client Details</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="reactiveForm1" (ngSubmit)="onSubmit()" class="form-field-grid">
+
+        <div class="form-row">
+          <mat-form-field appearance="fill">
+            <mat-label>First Name</mat-label>
+            <input matInput formControlName="first_name" required />
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Last Name</mat-label>
+            <input matInput formControlName="last_name" required />
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="fill">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" required />
+            <mat-error *ngIf="reactiveForm1.get('email')?.invalid">
+              {{ getErrorMessage() }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="fill">
+            <mat-label>Contact Number</mat-label>
+            <input matInput formControlName="contact_number" required />
+          </mat-form-field>
+        </div>
+
+       <div class="form-row password-row">
+  
+  <!-- Left: Username (full column) -->
+  <div class="col-username">
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>UserName</mat-label>
+      <input matInput formControlName="user_name" required />
+    </mat-form-field>
+  </div>
+
+  <!-- Right: Password + Confirm Password -->
+  <div class="col-passwords">
+    <div class="col-half">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required />
+        <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+
+    <div class="col-half">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirm_password" required />
+        <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
+          <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        <mat-error *ngIf="reactiveForm1.get('confirm_password')?.hasError('passwordMismatch')">
+          Password and Confirm Password do not match
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </div>
+
+</div>
+
+
+        <div class="form-row">
+          <!-- <mat-form-field appearance="fill">
+            <mat-label>Address</mat-label>
+            <textarea matInput formControlName="address"></textarea>
+          </mat-form-field> -->
+          <mat-form-field appearance="fill">
+  <mat-label>Address</mat-label>
+  <textarea matInput formControlName="address" #addressInput></textarea>
+</mat-form-field>
+
+
+          <mat-form-field appearance="fill">
+            <mat-label>Status</mat-label>
+            <mat-select formControlName="status">
+              <mat-option value="Active">Active</mat-option>
+              <mat-option value="Inactive">Inactive</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="form-buttons" style="margin-top: 20px;">
+          
+         <button
+  mat-raised-button
+  type="reset"
+  (click)="reactiveForm1.reset({ status: 'Active' }); selectedTabIndex = 0"
+  style="margin-left: 10px; color: #c00100;"
+>
+  Cancel
+</button>
+<button
+            mat-raised-button
+            style="color: #026e00;"
+            type="submit"
+            [disabled]="reactiveForm1.invalid"
+          >
+            Save
+          </button>
+
+
+        </div>
+
+        <div *ngIf="loading" class="loading-overlay">
+    <mat-spinner color="accent" aria-label="Loading"></mat-spinner>
+  </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</mat-tab>
+
+</mat-tab-group>

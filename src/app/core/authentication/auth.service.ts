@@ -46,7 +46,6 @@ export class AuthService {
       .pipe(
         catchError(() => of(undefined)),
         tap(token => this.tokenService.set(token)),
-        map(() => this.check())
       );
   }
 
@@ -61,9 +60,12 @@ export class AuthService {
     return this.user$.pipe(share());
   }
 
-  menu() {
-    return iif(() => this.check(), this.loginService.menu(), of([]));
-  }
+ menu() {
+  const menulist= this.loginService.menu();
+  console.log(menulist,'===menulist');
+  
+  return menulist
+}
 
   private assignUser() {
     if (!this.check()) {

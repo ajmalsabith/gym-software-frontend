@@ -5,7 +5,7 @@
 <ng-template #menuListTpl
   let-menuList="menuList" let-parentRoute="parentRoute" let-level="level" let-expanded="expanded">
   <ul navAccordion class="matero-sidemenu level-{{level}}" [class.submenu]="level>0"
-    [@expansion]="expanded ? 'expanded' : 'collapsed'">
+    [@expansion]="expanded ? 'expanded' : 'collapsed'" style="margin-top: 10px;" >
     @for (menuItem of menuList; track menuItem) {
       <ng-template
         [ngxPermissionsOnly]="menuItem.permissions?.only"

@@ -10,10 +10,10 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'app-user-panel',
   template: `
     <div class="matero-user-panel" routerLink="/profile/overview">
-      <img class="matero-user-panel-avatar" [src]="user.avatar" alt="avatar" width="64" />
+      <img class="matero-user-panel-avatar" src="public/images/avatar.jpg" alt="avatar" width="64" />
       <div class="matero-user-panel-info">
-        <h4>{{ user.name }}</h4>
-        <h5>{{ user.email }}</h5>
+        <h4>Test</h4>
+        <h5>testgmail.com</h5>
       </div>
     </div>
   `,
@@ -28,6 +28,13 @@ export class UserPanelComponent implements OnInit {
   user!: User;
 
   ngOnInit(): void {
-    this.auth.user().subscribe(user => (this.user = user));
+    this.auth.user().subscribe((user) =>{
+      console.log(user,'=user data========');
+      
+      this.user = user
+    });
+
+    console.log(this.user,'=========================user====data');
+    
   }
 }

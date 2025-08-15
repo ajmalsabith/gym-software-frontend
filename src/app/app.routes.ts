@@ -1,58 +1,40 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core';
 import { AdminLayoutComponent } from '@theme/admin-layout/admin-layout.component';
-import { AuthLayoutComponent } from '@theme/auth-layout/auth-layout.component';
 import { DashboardComponent } from './admin-components/dashboard/dashboard.component';
-import { LoginComponent } from './admin-components/sessions/login/login.component';
-import { RegisterComponent } from './admin-components/sessions/register/register.component';
 
 export const routes: Routes = [
 
-//Admin Layout After Login
+ {
+  path: 'client',
+  component: AdminLayoutComponent,
+  // canActivate: [UserAuthGuard],
+  // data: { auth: true }, // needs login
+  children: [
+    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+    { path: 'dashboard', component: DashboardComponent },
+    {
+      path: 'modules',
+      loadChildren: () => import('../app/component-sections/client/client.module').then(m => m.ClientModule)
+    }
+  ]
+ },
 
   {
-    path: '',
-    component: AdminLayoutComponent,
-    canActivate: [authGuard],
-    canActivateChild: [authGuard],
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: DashboardComponent },
-    
-      {
-        path: 'design',
-        loadChildren: () => import('./admin-components/design/design.routes').then(m => m.routes),
-      },
-      {
-        path: 'material',
-        loadChildren: () => import('./admin-components/material/material.routes').then(m => m.routes),
-      },
-      {
-        path: 'media',
-        loadChildren: () => import('./admin-components/media/media.routes').then(m => m.routes),
-      },
-      {
-        path:"gym",
-        loadChildren:()=> import('../app/gym/gym.module').then(m=>m.GymModule)
-      },
-      {
-        path:'user',
-        loadChildren:()=>import('../app/users-management/users-management.module').then(m=>m.UsersManagementModule)
-      }
-    ],
-  },
+  path: 'admin',
+  component: AdminLayoutComponent,
+  // canActivate: [UserAuthGuard],
+  // data: { auth: true }, // needs login
+  children: [
+    { path: 'dashboard', component: DashboardComponent },
+    {
+      path: 'modules',
+      loadChildren: () => import('../app/component-sections/admin/admin.module').then(m => m.AdminModule)
+    },
+    { path: '**', redirectTo: 'dashboard' },
+  ]
+ },
 
+  { path: '**', redirectTo: 'admin' },
 
-
-//Login And Register Route
-
-  {
-    path: 'auth',
-    component: AuthLayoutComponent,
-    children: [
-      { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent },
-    ],
-  },
-  { path: '**', redirectTo: 'dashboard' },
 ];

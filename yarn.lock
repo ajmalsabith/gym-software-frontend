@@ -231,10 +231,10 @@
     vite "5.4.6"
     watchpack "2.4.1"
 
-"@angular/cdk@^18.2.9", "@angular/cdk@>=18.2.0", "@angular/cdk@18.2.9":
-  version "18.2.9"
-  resolved "https://registry.npmjs.org/@angular/cdk/-/cdk-18.2.9.tgz"
-  integrity sha512-hV2dXpvy2TLwCsRtI/ZXkb2EoaJiellRr+kbcnKwO15LFoz3mTAOhKtsvu7yOyURkaPiI605qiIZrPP4zLL1qw==
+"@angular/cdk@^18.2.9", "@angular/cdk@>=18.2.0", "@angular/cdk@18.2.14":
+  version "18.2.14"
+  resolved "https://registry.npmjs.org/@angular/cdk/-/cdk-18.2.14.tgz"
+  integrity sha512-vDyOh1lwjfVk9OqoroZAP8pf3xxKUvyl+TVR8nJxL4c5fOfUFkD7l94HaanqKSRwJcI2xiztuu92IVoHn8T33Q==
   dependencies:
     tslib "^2.3.0"
   optionalDependencies:
@@ -305,17 +305,17 @@
   dependencies:
     tslib "^2.3.0"
 
-"@angular/material-moment-adapter@^18.2.9", "@angular/material-moment-adapter@>=18.0.0":
-  version "18.2.9"
-  resolved "https://registry.npmjs.org/@angular/material-moment-adapter/-/material-moment-adapter-18.2.9.tgz"
-  integrity sha512-GjvqMoVcPPP1xpqMPSKEL1eSSfG2omULTdYnN3xFUroKmo8ZPS9+rgcbIi3At3ErnWctayEB0BUycoZwYtwg2A==
+"@angular/material-moment-adapter@^18.2.14", "@angular/material-moment-adapter@>=18.0.0":
+  version "18.2.14"
+  resolved "https://registry.npmjs.org/@angular/material-moment-adapter/-/material-moment-adapter-18.2.14.tgz"
+  integrity sha512-igICm+qQl/KeglU4LcCHgSaaoJR6RUlDzpCs2+kfLSnsvAy5Z0ZauW3pbIsCEIDb0zknBqos9d8x+pXg/bncCQ==
   dependencies:
     tslib "^2.3.0"
 
-"@angular/material@^18.2.9", "@angular/material@>=13.0.0", "@angular/material@>=18.0.0", "@angular/material@>=18.2.0", "@angular/material@18.2.9":
-  version "18.2.9"
-  resolved "https://registry.npmjs.org/@angular/material/-/material-18.2.9.tgz"
-  integrity sha512-M2oCgPPIMMd6BLgEJCD+FvdC7gRDeCjj9yktNn3ctHmkKUWRvpJ3xRBH/WjVXb+9fPCCW1iNwZI7+bN1fHE7cA==
+"@angular/material@^18.2.9", "@angular/material@>=13.0.0", "@angular/material@>=18.0.0", "@angular/material@>=18.2.0", "@angular/material@18.2.14":
+  version "18.2.14"
+  resolved "https://registry.npmjs.org/@angular/material/-/material-18.2.14.tgz"
+  integrity sha512-28pxzJP49Mymt664WnCtPkKeg7kXUsQKTKGf/Kl95rNTEdTJLbnlcc8wV0rT0yQNR7kXgpfBnG7h0ETLv/iu5Q==
   dependencies:
     tslib "^2.3.0"
 
@@ -6688,7 +6688,7 @@ mkdirp@^1.0.3:
   resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
 
-moment@^2.18.1, moment@^2.30.0:
+moment@^2.18.1, moment@^2.30.0, moment@^2.30.1:
   version "2.30.1"
   resolved "https://registry.npmjs.org/moment/-/moment-2.30.1.tgz"
   integrity sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==
