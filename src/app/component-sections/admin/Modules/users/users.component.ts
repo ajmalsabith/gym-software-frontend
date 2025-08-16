@@ -1,6 +1,12 @@
 import { Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
+import { ErrorDailogComponent } from 'app/layout-store/dialog/error-dailog/error-dailog.component';
+import { SaveDailogComponent } from 'app/layout-store/dialog/save-dailog/save-dailog.component';
+import { AdminService } from '../../services/admin.service';
+import { Observable } from 'rxjs';
+import { CommonService } from 'app/service/common.service';
 
 @Component({
   selector: 'app-users',
@@ -18,77 +24,220 @@ export class UsersComponent {
     list: any[] = [];
     filteredList: any[] = [];
     columns: MtxGridColumn[] = [];
-    reactiveForm1!: FormGroup;
   
     hidePassword = true;
     hideConfirmPassword = true;
   
     // track whether we're editing an existing row (optional)
     editingIndex: number | null = null;
+    isEditing = false;
+
+    UserForm!: FormGroup;
+    selectedUserId: number | null = null;
+
+
+  constructor(private fb: FormBuilder,private dialog:MatDialog,
+    private adminservice:AdminService,private commonservice:CommonService,
+  ) {
+
+    this.UserForm = this.fb.group({
+      userId: [{ value: '', disabled: true }], // readonly
+      name: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
+      gymId:['',[Validators.required]],
+      phone: [''],
+      gender: [''],
+      dob: [''],
+      role: ['', Validators.required],
+      line1: [''],
+      city: [''],
+      district: [''],
+      state: [''],
+      country: [''],
+      zip: [''],
+      photo:[''],
+      IsStatus:['Active']
+    });
+  }
+
+
   
-    constructor(private fb: FormBuilder) {}
+
+loading=false
+  onUserSubmit(): void {
+  if (this.UserForm.invalid) return;
+
+  this.loading = true; // show spinner
+
+  const formData = { ...this.UserForm.value };
+
+  let request$: Observable<any>;
+  let successMessage = '';
+
+  if (this.isEditing && this.selectedUserId) {
+    
+    // Update existing user
+    request$ = this.adminservice.updateUser({
+      id: this.selectedUserId,
+      obj: formData
+    });
+    successMessage = 'User updated successfully';
+  } else {
+    // Create new user
+    request$ = this.adminservice.createUser(formData);
+    successMessage = 'User created successfully';
+  }
+
+  request$.subscribe({
+    next: () => {
+      this.loading = false;
+      this.resetForm();
+      const dialogRef = this.dialog.open(SaveDailogComponent, {
+        width: '400px',
+        data: { message: successMessage }
+      });
+      dialogRef.afterClosed().subscribe(() => {
+        this.selectedTabIndex = 0;
+        this.UserDetailsTabDisabled = true;
+        this.GetUserList(); // refresh user list
+      });
+    },
+    error: (err) => {
+      this.loading = false;
+      const errorMsg = this.isEditing
+        ? 'Failed to update User'
+        : 'Failed to create User';
+      this.openErrorDialog(errorMsg);
+      console.error(err);
+    }
+  });
+}
+
+
+Gymlist:any
+GetGymList(): void {
+        this.adminservice.getGymList().subscribe({
+          next: (res: any) => {
+            console.log(res,'==Gymlist');
+            
+            this.Gymlist = res;
+          },
+          error: () => this.openErrorDialog('Failed to fetch Gym List'),
+        });
+      }
+
+
+ GetUserList(): void {
+        this.adminservice.getUserList().subscribe({
+          next: (res: any) => {
+            console.log(res,'==userlist');
+            
+            this.list = res;
+            this.filteredList = [...res];
+          },
+          error: () => this.openErrorDialog('Failed to fetch User List'),
+        });
+      }
+
+ resetForm(): void {
+        this.UserForm.reset({ status: 'Active' });
+        this.selectedUserId = null;
+        this.isEditing = false;
+      }
+    
+      onEdit(user: any): void {
+        this.UserDetailsTabDisabled = false; // enable
+        this.UserForm.patchValue(user);
+        this.UserForm.patchValue({gymId:user.gymId?._id});
+        this.selectedUserId = user.userId;
+        this.isEditing = true;
+        this.selectedTabIndex = 1;
+      }
+
+   openSuccessDialog(message: string): void {
+        this.dialog.open(SaveDailogComponent, { width: '400px', data: { message } });
+      }
+    
+      openErrorDialog(message: string): void {
+        this.dialog.open(ErrorDailogComponent, { width: '400px', data: { message } });
+      }
+
+
+      onLogoSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) {
+    return;
+  }
+
+  const file = input.files[0];
+  const reader = new FileReader();
+
+  reader.onload = () => {
+    const base64String = (reader.result as string).split(',')[1] || '';
+
+    this.UserForm.patchValue({
+      photo: `data:${file.type};base64,${base64String}`
+    });
+
+    // Optionally mark the form control as touched
+    this.UserForm.get('photo')?.markAsDirty();
+  };
+
+  reader.readAsDataURL(file);
+}
+    
+
+  getErrorMessage(): string {
+    if (this.UserForm.get('email')?.hasError('required')) {
+      return 'Email is required';
+    }
+    return this.UserForm.get('email')?.hasError('email') ? 'Not a valid email' : '';
+  }
   
     ngOnInit(): void {
-      // sample staff data
-      this.list = [
-        { user_name: 'john_doe', email: 'john@example.com', contact_number: '1234567890', status: 'Active', first_name: 'John', last_name: 'Doe', address: '123 Street', role: '1' },
-        { user_name: 'jane_smith', email: 'jane@example.com', contact_number: '9876543210', status: 'Inactive', first_name: 'Jane', last_name: 'Smith', address: '456 Avenue', role: '1' }
-      ];
-      this.filteredList = [...this.list];
+
+      this.GetGymList()
+      this.GetUserList()
+      this.GetIndianStateDistList()
+      
+
   
-      this.columns = [
-        { header: 'Staff Name', field: 'first_name', sortable: true, formatter: (rowData) => `${rowData.first_name} ${rowData.last_name}` },
-        { header: 'Email', field: 'email', sortable: true },
-        { header: 'Contact', field: 'contact_number', sortable: true },
-        { header: 'Status', field: 'status', sortable: true },
-        {
-          header: 'Actions',
-          field: 'actions',
-          width: '120px',
-          pinned: 'right',
-          cellTemplate: this.actionTpl,
-          type: 'button',
-          buttons: [{ icon: 'edit', tooltip: 'Edit', type: 'icon' }]
-        }
-      ];
+   this.columns = [
+  { header: 'User ID', field: 'userId', sortable: true },
+  { header: 'Name', field: 'name', sortable: true },
+  { 
+    header: 'Gym Name', 
+    field: 'gymName', 
+    sortable: true,
+    formatter: (rowData) => rowData.gymId?.name || '-' 
+  },
+  { header: 'Email', field: 'email', sortable: true },
+  { header: 'Phone', field: 'phone', sortable: true },
+  { header: 'Role', field: 'role', sortable: true },
+  { header: 'Status', field: 'IsStatus', sortable: true },
+    {
+    header: 'Actions',
+    field: 'actions',
+    width: '120px',
+    pinned: 'right',
+    type: 'button',
+    buttons: [
+      {
+        icon: 'edit',
+        tooltip: 'Edit',
+        type: 'icon',
+        click: (record: any) => this.onEdit(record),
+      }
+    ]
+  }
+];
+
   
-      this.reactiveForm1 = this.fb.group({
-        first_name: [''],
-        last_name: [''],
-        email: ['', [Validators.required, Validators.email]],
-        contact_number: [''],
-        user_name: ['', Validators.required],
-        password: ['', Validators.required],
-        confirm_password: ['', Validators.required],
-        address: [''],
-        role: ['', Validators.required],
-        status: ['Active'],
-        latitude: [''],
-        longitude: ['']
-      }, { validators: this.passwordMatchValidator });
     }
   
    
-  
-    // Dynamically loads Google Maps JS if not already loaded
-    loadGoogleMapsScript(): Promise<void> {
-      const win = window as any;
-      return new Promise((resolve, reject) => {
-        if (win.google && win.google.maps && win.google.maps.places) {
-          resolve();
-          return;
-        }
-  
-        const existing = document.querySelector('script[data-google-maps]');
-        if (existing) {
-          existing.addEventListener('load', () => resolve());
-          existing.addEventListener('error', (e) => reject(e));
-          return;
-        }
-  
-       
-      });
-    }
+
   
     
   
@@ -104,40 +253,21 @@ export class UsersComponent {
       });
     }
   
-    addClient() {
+    UserDetailsTabDisabled=true
+    addUser() {
       this.selectedTabIndex = 1;
-      this.editingIndex = null;
-      this.reactiveForm1.reset({ status: 'Active' });
+       this.UserDetailsTabDisabled = false; // enable
     }
-  
-    saveStaff() {
-      if (!this.reactiveForm1.valid) return console.warn('Form invalid');
-  
-      const value = this.reactiveForm1.value;
-      if (this.editingIndex !== null) {
-        // update existing
-        this.list[this.editingIndex] = { ...this.list[this.editingIndex], ...value };
-        this.filteredList = [...this.list];
-      } else {
-        // add new
-        this.list.push({ ...value });
-        this.filteredList = [...this.list];
-      }
-  
-      console.log('Staff saved:', value);
-      this.selectedTabIndex = 0;
-    }
+
+      
   
   
   
-    editStaff(row: any) {
-      this.editingIndex = this.list.findIndex(r => r.user_name === row.user_name);
-      this.selectedTabIndex = 1;
-      this.reactiveForm1.patchValue(row);
-    }
+  
+    
   
     onRowDoubleClick(rowData: any) {
-      this.editStaff(rowData);
+      this.onEdit(rowData);
     }
   
   
@@ -147,16 +277,42 @@ export class UsersComponent {
       return password === confirmPassword ? null : { passwordMismatch: true };
     }
   
-    getErrorMessage() {
-      return this.reactiveForm1.get('email')?.hasError('required') ? 'Email is required'
-        : this.reactiveForm1.get('email')?.hasError('email') ? 'Invalid email'
-        : '';
-    }
-  
+
     onRowClick(event: any) {
       if (event?.event?.detail === 2) {
-        this.editStaff(event.rowData);
+        this.onEdit(event.rowData);
       }
     }
 
+
+
+     IndianCitiesList:any
+      IndianStateDistList:any
+       GetIndianCitiesList(): void {
+        this.commonservice.getIndianCitiesList().subscribe({
+          next: (res: any) => {            
+            this.IndianCitiesList = res;
+          },
+          error: (err) => console.log(err.error),
+        });
+      }
+
+       GetIndianStateDistList(): void {
+        this.commonservice.getIndianStatesDistList().subscribe({
+          next: (res: any) => {
+            
+            this.IndianStateDistList = res;
+          },
+          error: (err) => console.log(err.error),
+          
+        });
+      }
+  
+        filteredDistricts: string[] = [];
+    filtredCities:any[]=[]
+onStateChange(selectedState: string) {
+  const state = this.IndianStateDistList.find((s:any) => s.state === selectedState);
+  this.filteredDistricts = state ? state.districts : [];
+
+}
 }

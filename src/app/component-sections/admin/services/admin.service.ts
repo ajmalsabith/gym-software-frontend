@@ -42,4 +42,38 @@ export class AdminService {
       { headers: this.getHeaders() }
     );
   }
+
+
+
+    createUser(data: any): Observable<any> {
+    return this.http.post(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.CREATE_USER}`,
+      data,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  updateUser(data: any): Observable<any> {
+    return this.http.post(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.UPDATE_USER}`,
+      data,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  getUserList(): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.GET_USER_LIST}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+
+    AdminLogin(data: any): Observable<any> {
+    return this.http.post(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.ADMIN_LOGIN}`,
+      data,
+      { headers: this.getHeaders() }
+    );
+  }
 }

@@ -29,6 +29,10 @@ import { GymComponent } from './Modules/gym/gym.component';
 import { UsersComponent } from './Modules/users/users.component';
 import { LoginComponent } from './Modules/login/login.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { RouterLink } from '@angular/router';
+import { MtxButtonModule } from '@ng-matero/extensions/button';
+import { TranslateModule } from '@ngx-translate/core';
+import { StoreModule } from 'app/layout-store/store.module';
 
 
 @NgModule({
@@ -64,6 +68,12 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
             MatProgressSpinnerModule,
             MatPaginator,
             MatTableModule,
+
+                RouterLink,
+                MtxButtonModule,
+                TranslateModule,
+                StoreModule,
+            
 
 
 

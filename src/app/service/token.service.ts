@@ -26,8 +26,34 @@ export class TokenService {
     localStorage.removeItem('refresh_token');
   }
 
-  logout(): void {
-    this.clearTokens();
-    this.router.navigate(['/auth/login']);
+   SetAdminToken(token:string,role:string): void {
+    localStorage.setItem('admin_token', token);
+    localStorage.setItem('Role',role);
   }
+
+    clearAdminToken(): void {
+    localStorage.removeItem('admin_token');
+    localStorage.removeItem('Role');
+  }
+
+  
+  getAdminToken(): string | null {
+    return localStorage.getItem('admin_token');
+  }
+
+  GetRole(){
+      return localStorage.getItem('Role');
+  }
+
+  Clientlogout(): void {
+    this.clearTokens();
+    this.router.navigate(['/client-login']);
+  }
+
+  AdminLogout(){
+    this.clearAdminToken();
+    this.router.navigate(['/admin-login']);
+  }
+
+
 }

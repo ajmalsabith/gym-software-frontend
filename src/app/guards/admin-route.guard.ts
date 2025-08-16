@@ -10,7 +10,7 @@ export class UserAuthGuard implements CanActivate {
   constructor(private tokenService: TokenService, private router: Router) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const token = this.tokenService.getAccessToken();
+    const token = this.tokenService.getAdminToken();
     const isAuthRoute = route.data['auth'] === true; // true means this route needs login
 
     if (isAuthRoute) {
@@ -18,13 +18,13 @@ export class UserAuthGuard implements CanActivate {
       if (token) {
         return true;
       } else {
-        this.router.navigate(['/auth/login']);
+        this.router.navigate(['/admin-login']);
         return false;
       }
     } else {
       // Guest route → must NOT have token
       if (token) {
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['admin/dashboard']);
         return false;
       }
       return true;

@@ -46,7 +46,14 @@ export class UserComponent implements OnInit {
   }
 
   logout(): void {
-    this.tokenservice.logout();
+    const Role = this.tokenservice.GetRole()
+    if(Role=="Admin"){
+    this.tokenservice.AdminLogout();
+    }else if (Role=="Client"){
+    this.tokenservice.Clientlogout();
+    }else{
+      this.tokenservice.AdminLogout();
+    }
   }
 
   restore() {
