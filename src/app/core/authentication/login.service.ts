@@ -4,12 +4,15 @@ import { map } from 'rxjs';
 
 import { Menu } from '@core';
 import { Token, User } from './interface';
+import { TokenService } from 'app/service/token.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
-  protected readonly http = inject(HttpClient);
+  constructor(private http:HttpClient,private tokenservice:TokenService){
+
+  }
 
   login(username: string, password: string, rememberMe = false) {
     return this.http.post<Token>('/auth/login', { username, password, rememberMe });
@@ -28,6 +31,11 @@ export class LoginService {
   }
 
   menu() {
-    return this.http.get<{ menu: Menu[] }>('/me/menu').pipe(map(res => res.menu));
+    const role= this.tokenservice.GetRole()
+    if(role=="Admin"){
+      return this.http.get<{ menu: Menu[] }>('/me/menu').pipe(map(res => res.menu));
+    }else{
+      return this.http.get<{ menu: Menu[] }>('/me/clientmenu').pipe(map(res => res.menu));
+    }
   }
 }

@@ -49,7 +49,10 @@
     "media": "Media",
     "GymManagment":"Gym Management", 
     "UsersManagement":"User Management", 
-    "qrmanagement":"QR & Label",
+    "clientdashboard":"Dashboard",
+    "Players":"Players & Registration",
+    "Trainers":"Trainer Management",
+
     "admin":"Admin",
     "admin.rolesandPermissions":"Roles & Permissions",
     "Users":"Users",

@@ -57,7 +57,7 @@ export class LoginComponent {
       this.adminservice.AdminLogin(this.loginForm.value).subscribe((res:any)=>{
         console.log(res,'==login response');
   
-        this.tokenservice.SetAdminToken(res.token,res.role)
+        this.tokenservice.SetAdminToken(res.token,res.Role)
   
             if(this.loginForm.get('rememberMe')?.value)
                 {

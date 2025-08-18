@@ -1,0 +1,30 @@
+{
+  "clientmenu": [
+
+     {
+      "route": "client/dashboard",
+      "name": "clientdashboard",
+      "type": "link",
+      "icon": "dashboard"
+    },
+
+         
+     {
+      "route": "client/modules/player-manage",
+      "name": "Players",
+      "type": "link",
+      "icon": "badge"
+    },
+    {
+      "route": "client/modules/trainer-manage",
+      "name": "Trainers",
+      "type": "link",
+      "icon": "manage_accounts"
+    }
+
+   
+    
+
+    
+  ]
+}
