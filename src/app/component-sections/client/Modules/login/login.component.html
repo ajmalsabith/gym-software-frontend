@@ -1,8 +1,9 @@
 <div class="d-flex w-full h-full">
   <mat-card class="m-auto" style="max-width: 380px;">
-  <mat-card-header class="m-b-10" style="display: flex; justify-content: center;margin-top: 10px;">
-  <mat-card-title style="display: flex; justify-content: center;">
-    <img src="images/logo.avif" width="220px" height="100px" alt="Logo">
+  <mat-card-header class="m-b-10" style="display: flex; justify-content: start;margin-top: 10px;">
+  <mat-card-title style="display: flex; justify-content:start;gap: 80px;">
+    <img src="images/gym-logo2.jpg" style="border-radius: 15%;"  width="60px" height="60px" alt="Logo">
+    <h4 style="color:black">Login</h4>
   </mat-card-title>
 </mat-card-header>
 
@@ -46,7 +47,7 @@
 
         <mat-checkbox formControlName="rememberMe">{{'remember_me' | translate}}</mat-checkbox>
 
-        <button class="w-full m-y-16" mat-flat-button  style="background-color: #343dff;"
+        <button class="w-full m-y-16" mat-flat-button (click)="submitLogin()"  style="background-color: #343dff;"
           [loading]="isSubmitting">{{'login' | translate}}</button>
 
         <!-- <div>

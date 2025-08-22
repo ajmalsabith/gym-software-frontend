@@ -45,16 +45,19 @@ export class UserComponent implements OnInit {
     
   }
 
-  logout(): void {
-    const Role = this.tokenservice.GetRole()
-    if(Role=="Admin"){
+logout(): void {
+  const currentUrl = this.router.url; // e.g. "/admin/dashboard" or "/client/home"
+
+  if (currentUrl.startsWith('/admin')) {
     this.tokenservice.AdminLogout();
-    }else if (Role=="Client"){
+  } else if (currentUrl.startsWith('/client')) {
     this.tokenservice.Clientlogout();
-    }else{
-      this.tokenservice.AdminLogout();
-    }
+  } else {
+    // default
+    this.tokenservice.AdminLogout();
+    this.tokenservice.Clientlogout();
   }
+}
 
   restore() {
     this.settings.reset();

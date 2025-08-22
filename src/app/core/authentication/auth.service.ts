@@ -67,6 +67,12 @@ export class AuthService {
   return menulist
 }
 
+ Clientmenu() {
+  const menulist= this.loginService.clientmenu();
+  console.log(menulist,'===client');
+  return menulist
+}
+
   private assignUser() {
     if (!this.check()) {
       return of({}).pipe(tap(user => this.user$.next(user)));

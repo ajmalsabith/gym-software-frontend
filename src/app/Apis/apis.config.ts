@@ -14,7 +14,7 @@ export class ApisConfig{
 
   // Method POST
   ADMIN_LOGIN: string = "admin/login";
-  CLIENT_LOGIN: string = "";
+  CLIENT_LOGIN: string = "client/login";
   
   CREATE_GYM: string = "admin/insertgym";
   UPDATE_GYM: string = "admin/updategym";
@@ -30,6 +30,8 @@ export class ApisConfig{
 
   GET_INDIAN_CITIES_LIST:string="common/india-cities"
   GET_INDIAN_STATES_DIST_LIST:string="common/states-districts"
+
+  GET_REFRESH_TOKENS:string="client/refresh-token"
 
 
 

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ErrorDailogComponent } from 'app/layout-store/dialog/error-dailog/error-dailog.component';
-import { AdminService } from '../../services/admin.service';
+import { ClientService } from '../../services/client.service';
 import { MatDialog } from '@angular/material/dialog';
 import { TokenService } from 'app/service/token.service';
 import { Router } from '@angular/router';
@@ -11,17 +11,17 @@ import { Router } from '@angular/router';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class ClientLoginComponent {
 
 
   constructor( private fb:FormBuilder,private router:Router,private tokenservice:TokenService,
-   private adminservice:AdminService,private dailog:MatDialog){
+   private adminservice:ClientService,private dailog:MatDialog){
   
       
-      const rememberName= localStorage.getItem('adminUsername')
-      this.toggleSide=localStorage.getItem('AdminRememberMe')
+      const rememberName= localStorage.getItem('clientUsername')
+      this.toggleSide=localStorage.getItem('UserRememberMe')
     this.loginForm = this.fb.group({
-      username: [rememberName, [Validators.required]],
+      email: [rememberName, [Validators.required]],
       password: ['', [Validators.required]],
       rememberMe:[this.toggleSide=='true'?true:false]
   
@@ -35,7 +35,7 @@ export class LoginComponent {
   
   
     get email() {
-      return this.loginForm.get('username')!;
+      return this.loginForm.get('email')!;
     }
   
     get password() {
@@ -54,26 +54,26 @@ export class LoginComponent {
       if(this.loginForm.valid){
   
   
-      this.adminservice.AdminLogin(this.loginForm.value).subscribe((res:any)=>{
+      this.adminservice.ClientLogin(this.loginForm.value).subscribe((res:any)=>{
         console.log(res,'==login response');
   
-        this.tokenservice.SetAdminToken(res.token)
         this.tokenservice.SetRole(res.Role)
+        this.tokenservice.setTokens(res.tokens.accessToken,res.tokens.refreshToken)
 
   
             if(this.loginForm.get('rememberMe')?.value)
                 {
-                  localStorage.setItem('AdminRememberMe',this.loginForm.get('rememberMe')?.value)
-                  localStorage.setItem('adminUsername',this.loginForm.get('username')?.value)
+                  localStorage.setItem('UserRememberMe',this.loginForm.get('rememberMe')?.value)
+                  localStorage.setItem('clientUsername',this.loginForm.get('email')?.value)
                 }
                 else
                 {
-                  localStorage.setItem('AdminRememberMe',this.loginForm.get('rememberMe')?.value)
-                  localStorage.setItem('adminUsername','') 
+                  localStorage.setItem('UserRememberMe',this.loginForm.get('rememberMe')?.value)
+                  localStorage.setItem('clientUsername','') 
                 }
                this.isSubmitting = false;
   
-                 this.router.navigateByUrl('admin/dashboard');
+                 this.router.navigateByUrl('client/dashboard');
         
       },(err:any)=>{
         console.log(err.error.message,'=error');
@@ -81,7 +81,7 @@ export class LoginComponent {
         this.dailog.open(ErrorDailogComponent, {
       width: '350px',
       data: {
-        message:err.error?.message|| "Invalid username or password"
+        message:err.error?.message|| "Invalid email or password"
       }
   
       });

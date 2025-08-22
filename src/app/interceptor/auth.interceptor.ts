@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { TokenService } from 'app/service/token.service';
 import { AdminService } from 'app/component-sections/admin/services/admin.service';
+import { ClientService } from 'app/component-sections/client/services/client.service';
 
 
 @Injectable()
@@ -11,7 +12,8 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(
     private tokenService: TokenService,
-    private adminservice: AdminService
+    private adminservice: AdminService,
+    private clienservice: ClientService
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -31,7 +33,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error.status === 401 && this.tokenService.getRefreshToken()) {
           const refreshData = { refresh: this.tokenService.getRefreshToken() };
 
-          return this.adminservice.getGymList().pipe(
+          return this.clienservice.getRefreshTokens(refreshData).pipe(
             switchMap(response => {
               const newAccessToken = response.access;
 

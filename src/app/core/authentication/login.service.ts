@@ -30,12 +30,12 @@ export class LoginService {
     return this.http.get<User>('/me');
   }
 
-  menu() {
-    const role= this.tokenservice.GetRole()
-    if(role=="Admin"){
-      return this.http.get<{ menu: Menu[] }>('/me/menu').pipe(map(res => res.menu));
-    }else{
-      return this.http.get<{ menu: Menu[] }>('/me/clientmenu').pipe(map(res => res.menu));
-    }
-  }
+menu() {
+    return this.http.get<{ menu: Menu[] }>('data/menu.json').pipe(map(res => res.menu));
+}
+
+clientmenu() {
+  return this.http.get<{ menu: Menu[] }>('data/clientmenu.json').pipe(map(res => res.menu));
+}
+
 }

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { LoginComponent } from 'app/login/login.component';
 import { GymComponent } from './Modules/gym/gym.component';
 import { UsersComponent } from './Modules/users/users.component';
 import { DashboardComponent } from 'app/admin-components/dashboard/dashboard.component';

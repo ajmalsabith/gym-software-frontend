@@ -51,7 +51,13 @@
     "UsersManagement":"User Management", 
     "clientdashboard":"Dashboard",
     "Players":"Players & Registration",
-    "Trainers":"Trainer Management",
+    "Trainers":"Staff & Trainers",
+    "membershipplans":"Plans & Pricing",
+    "AttendanceCheckinSystem":"Attendance",
+
+    "ReportsAnalytics":"Reports & Analytics",
+    "paymentbilling":"Payment & Billing",
+    "UpdatesReminders":"Updates & Reminders",
 
     "admin":"Admin",
     "admin.rolesandPermissions":"Roles & Permissions",

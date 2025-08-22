@@ -26,14 +26,16 @@ export class TokenService {
     localStorage.removeItem('refresh_token');
   }
 
-   SetAdminToken(token:string,role:string): void {
+   SetAdminToken(token:string): void {
     localStorage.setItem('admin_token', token);
-    localStorage.setItem('Role',role);
   }
 
-    clearAdminToken(): void {
+  SetRole(role:string){
+     localStorage.setItem('Role',role);
+  }
+
+  clearAdminToken(): void {
     localStorage.removeItem('admin_token');
-    localStorage.removeItem('Role');
   }
 
   
