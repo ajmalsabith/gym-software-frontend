@@ -60,10 +60,9 @@ export class AuthService {
     return this.user$.pipe(share());
   }
 
- menu() {
+  menu() {
   const menulist= this.loginService.menu();
   console.log(menulist,'===menulist');
-  
   return menulist
 }
 

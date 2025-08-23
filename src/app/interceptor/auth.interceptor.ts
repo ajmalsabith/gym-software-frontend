@@ -3,7 +3,6 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpErrorResponse
 import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { TokenService } from 'app/service/token.service';
-import { AdminService } from 'app/component-sections/admin/services/admin.service';
 import { ClientService } from 'app/component-sections/client/services/client.service';
 
 
@@ -12,7 +11,6 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(
     private tokenService: TokenService,
-    private adminservice: AdminService,
     private clienservice: ClientService
   ) {}
 

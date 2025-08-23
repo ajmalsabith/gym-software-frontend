@@ -47,16 +47,7 @@ export class UserComponent implements OnInit {
 
 logout(): void {
   const currentUrl = this.router.url; // e.g. "/admin/dashboard" or "/client/home"
-
-  if (currentUrl.startsWith('/admin')) {
-    this.tokenservice.AdminLogout();
-  } else if (currentUrl.startsWith('/client')) {
-    this.tokenservice.Clientlogout();
-  } else {
-    // default
-    this.tokenservice.AdminLogout();
-    this.tokenservice.Clientlogout();
-  }
+  this.tokenservice.Clientlogout();
 }
 
   restore() {

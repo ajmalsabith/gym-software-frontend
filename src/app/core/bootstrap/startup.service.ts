@@ -31,17 +31,7 @@ constructor(
         .pipe(
           tap(user => this.setPermissions(user)),
           switchMap(() =>{    
-             const currentUrl = this.router.url; 
-             console.log(this.route.url,'currenturl');
-             
-            const role = this.tokenservice.GetRole();
-            if(currentUrl.startsWith('/admin')){
-              return this.authService.menu()
-            }else if(currentUrl.startsWith('/client')){
-              return this.authService.Clientmenu()
-            }else{
-             return this.authService.menu()
-            }
+             return this.authService.Clientmenu()
           } ),
           tap(menu => this.setMenu(menu))
         )

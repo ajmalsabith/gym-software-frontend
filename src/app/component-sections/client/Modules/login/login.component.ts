@@ -81,7 +81,7 @@ export class ClientLoginComponent {
         this.dailog.open(ErrorDailogComponent, {
       width: '350px',
       data: {
-        message:err.error?.message|| "Invalid email or password"
+        message:err.error?.message|| "Server connection failed"
       }
   
       });
