@@ -1,0 +1,50 @@
+<page-header class="bg-cyan-50" title="Membership Plans" />
+
+  <!-- Tab 1: Staff List -->
+  <div class="filters-container">
+    <div class="filters-left">
+      <!-- Search Filter -->
+
+       <mat-form-field appearance="outline" class="formsearchfeild">
+        <mat-label>Search</mat-label>
+        <input matInput placeholder="Search" [(ngModel)]="searchText" (input)="applyFilters()" />
+      </mat-form-field>
+
+    
+      <!-- Status Filter -->
+      <mat-form-field appearance="outline" class="formsearchfeild">
+        <mat-label>Status</mat-label>
+        <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
+          <mat-option value="">All</mat-option>
+          <mat-option value="Active">Active</mat-option>
+          <mat-option value="Inactive">Inactive</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="filters-right">
+      <button mat-flat-button class="add-button" (click)="CreatePlan('')">Create New Plan</button>
+    </div>
+  </div>
+
+
+  <mtx-grid
+    [data]="filteredList"
+    [columns]="columns"
+    [loading]="false"
+    [columnResizable]="false"
+    [rowSelectable]="false"
+    [rowHover]="true"
+    [rowStriped]="false"
+    [showToolbar]="true"
+    [columnHideable]="true"
+    [columnSortable]="true"
+    [columnPinnable]="true"
+    [expandable]="false"
+    [pageOnFront]="true"
+    [showPaginator]="true"
+    [pageSizeOptions]="[5, 10, 50, 100]"
+    [pageIndex]="0"
+    [pageSize]="5"
+    [toolbarTitle]="'Membership Plans List'"
+  ></mtx-grid>

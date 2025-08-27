@@ -26,36 +26,29 @@ export class TokenService {
     localStorage.removeItem('refresh_token');
   }
 
-   SetAdminToken(token:string): void {
-    localStorage.setItem('admin_token', token);
-  }
 
-  SetRole(role:string){
-     localStorage.setItem('Role',role);
-  }
-
-  clearAdminToken(): void {
-    localStorage.removeItem('admin_token');
-  }
-
-  
-  getAdminToken(): string | null {
-    return localStorage.getItem('admin_token');
-  }
-
-  GetRole(){
-      return localStorage.getItem('Role');
-  }
 
   Clientlogout(): void {
     this.clearTokens();
+    this.clearSession()
     this.router.navigate(['/client-login']);
   }
 
-  AdminLogout(){
-    this.clearAdminToken();
-    this.router.navigate(['/admin-login']);
+
+
+   private storageKey = 'UserSession';
+  // Save full object to sessionStorage
+  setUserSession(userData: { role: string; userId: string; gymId: string }) {
+    sessionStorage.setItem(this.storageKey, JSON.stringify(userData));
   }
 
+  // Get full object from sessionStorage
+  getUserSession(): { role: string; userId: string; gymId: string } | null {
+    const data = sessionStorage.getItem(this.storageKey);
+    return data ? JSON.parse(data) : null;
+  }
 
+  clearSession() {
+    sessionStorage.removeItem(this.storageKey);
+  }
 }

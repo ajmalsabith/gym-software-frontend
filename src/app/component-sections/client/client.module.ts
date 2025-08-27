@@ -35,10 +35,16 @@ import { MtxButtonModule } from '@ng-matero/extensions/button';
 import { TranslateModule } from '@ngx-translate/core';
 import { StoreModule } from 'app/layout-store/store.module';
 import { ClientLoginComponent } from './Modules/login/login.component';
+import { PlayerManageComponent } from './Modules/player-manage/player-manage.component';
+import { MembershipPlansComponent } from './Modules/membership-plans/membership-plans.component';
+import { PlanDialogeComponent } from './Modules/membership-plans/plan-dialoge/plan-dialoge.component';
 
 @NgModule({
   declarations: [
-  ClientLoginComponent 
+  ClientLoginComponent ,
+  PlayerManageComponent,
+  MembershipPlansComponent,
+  PlanDialogeComponent
   ],
   imports: [
     CommonModule,
@@ -65,8 +71,6 @@ import { ClientLoginComponent } from './Modules/login/login.component';
              MatTooltipModule,
             MatProgressSpinnerModule,
             MatPaginator,
-            MatTableModule,
-
                 RouterLink,
                 MtxButtonModule,
                 TranslateModule,

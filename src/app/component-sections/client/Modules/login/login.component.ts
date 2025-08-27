@@ -57,7 +57,11 @@ export class ClientLoginComponent {
       this.adminservice.ClientLogin(this.loginForm.value).subscribe((res:any)=>{
         console.log(res,'==login response');
   
-        this.tokenservice.SetRole(res.Role)
+        this.tokenservice.setUserSession({
+            role: res.Role,
+            userId: res.UserId,
+            gymId: res.Gymid
+        });        
         this.tokenservice.setTokens(res.tokens.accessToken,res.tokens.refreshToken)
 
   

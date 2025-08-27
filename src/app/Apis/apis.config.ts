@@ -9,28 +9,41 @@ import { Injectable } from "@angular/core";
 export class ApisConfig{
 
 
+  // API URLS
   API_LOCAL_URL:string="http://localhost:3400/"
   API_SERVER_URL:string=""
 
-  // Method POST
+  // login
   ADMIN_LOGIN: string = "admin/login";
   CLIENT_LOGIN: string = "client/login";
   
+
+  // gym
+  GET_GYM_LIST:string="client/get-gymlist"
   CREATE_GYM: string = "admin/insertgym";
   UPDATE_GYM: string = "admin/updategym";
-  CREATE_USER: string = "admin/insertuser";
-  UPDATE_USER: string = "admin/updateuser";
 
 
+  // users or players
+  GET_USER_LIST:string="client/get-userlist"
+  CREATE_USER: string = "client/insertuser";
+  UPDATE_USER: string = "client/updateuser";
+  GET_PLYERS_LISTBY_GYMID: string = "client/get-players-listbygymid";
 
-  // Method GET
 
-  GET_GYM_LIST:string="admin/get-gymlist"
-  GET_USER_LIST:string="admin/get-userlist"
+  // membership plans
+  INSERT_MEMBERSHIP_PLAN_BY_GYMID:string="client/insert-membership-plans"
+  UPDATE_MEMBERSHIP_PLAN_BY_GYMID:string="client/update-membership-plans"
+  GET_MEMBERSHIP_PLAN_BY_GYMID:string="client/get-membership-plans"
 
+
+  //  common apis 
   GET_INDIAN_CITIES_LIST:string="common/india-cities"
   GET_INDIAN_STATES_DIST_LIST:string="common/states-districts"
 
+
+
+  // token
   GET_REFRESH_TOKENS:string="client/refresh-token"
 
 

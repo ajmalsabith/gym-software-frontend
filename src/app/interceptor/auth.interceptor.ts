@@ -28,7 +28,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         // If unauthorized and refresh token exists
-        if (error.status === 401 && this.tokenService.getRefreshToken()) {
+        if (error.status === 403 && this.tokenService.getRefreshToken()) {
           const refreshData = { refresh: this.tokenService.getRefreshToken() };
 
           return this.clienservice.getRefreshTokens(refreshData).pipe(
@@ -47,7 +47,7 @@ export class AuthInterceptor implements HttpInterceptor {
             }),
             catchError(refreshError => {
               // Refresh token invalid → clear tokens and redirect to login
-              this.tokenService.clearTokens();
+              this.tokenService.Clientlogout();
               // Optionally redirect to login here
               return throwError(() => refreshError);
             })

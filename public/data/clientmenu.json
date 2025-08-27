@@ -11,7 +11,7 @@
 
          
      {
-      "route": "client/modules/player-manage",
+      "route": "client/modules/players-manage",
       "name": "Players",
       "type": "link",
       "icon": "badge"

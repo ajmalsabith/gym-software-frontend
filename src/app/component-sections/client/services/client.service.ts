@@ -38,5 +38,68 @@ export class ClientService {
       data,
     )
   }
-  
+
+ 
+// admin apis
+  createUser(data: any): Observable<any> {
+    return this.http.post(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.CREATE_USER}`,
+      data,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  updateUser(data: any): Observable<any> {
+    return this.http.post(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.UPDATE_USER}`,
+      data,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  getUserList(): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.GET_USER_LIST}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  getPlayersListByGymId(gymId:any): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.GET_PLYERS_LISTBY_GYMID}?gymId=${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+
+  getGymList(): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.GET_GYM_LIST}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  getMembershipPlansByGymID(gymId:any): Observable<any> {
+  return this.http.get(
+    `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.GET_MEMBERSHIP_PLAN_BY_GYMID}?gymId=${gymId}`,
+    { headers: this.getHeaders() }
+  );
+}
+
+
+  UpdateMembershipPlansByGymID(data:any): Observable<any> {
+    return this.http.post(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.UPDATE_MEMBERSHIP_PLAN_BY_GYMID}`,data,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  InsertMembershipPlansByGymID(data:any): Observable<any> {
+    return this.http.post(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.INSERT_MEMBERSHIP_PLAN_BY_GYMID}`,data,
+      { headers: this.getHeaders() }
+    );
+  }
+
+
 }
