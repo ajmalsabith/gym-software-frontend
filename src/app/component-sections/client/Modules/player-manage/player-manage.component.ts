@@ -44,12 +44,14 @@ export class PlayerManageComponent {
     private clientservice:ClientService,private commonservice:CommonService,
   ) {
 
+    const UserSession= this.tokenservice.getUserSession()
+
     this.UserForm = this.fb.group({
       userId: [{ value: '', disabled: true }], // readonly
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
-      gymId:['',[Validators.required]],
+      gymId: [{ value: UserSession?.gymId, disabled: true }, [Validators.required]],
       phone: [''],
       gender: [''],
       dob: [''],
@@ -201,6 +203,9 @@ GetGymList(): void {
     }
     return this.UserForm.get('email')?.hasError('email') ? 'Not a valid email' : '';
   }
+
+  @ViewChild('photoTpl', { static: true }) photoTpl!: TemplateRef<any>;
+
   
     ngOnInit(): void {
 
@@ -211,6 +216,12 @@ GetGymList(): void {
 
   
    this.columns = [
+  {
+      header: 'Photo',
+      field: 'photo',
+      cellTemplate: this.photoTpl,   // ✅ works with ViewChild
+      width: '80px'
+  },
   { header: 'User ID', field: 'userId', sortable: true },
   { header: 'Name', field: 'name', sortable: true },
   { 
@@ -278,8 +289,11 @@ GetGymList(): void {
   
     UserDetailsTabDisabled=true
     addUser() {
+      const UserSession= this.tokenservice.getUserSession()
+      this.UserForm.reset()
+      this.UserForm.patchValue({gymId:UserSession?.gymId})
       this.selectedTabIndex = 1;
-       this.UserDetailsTabDisabled = false; // enable
+      this.UserDetailsTabDisabled = false; // enable
     }
 
       

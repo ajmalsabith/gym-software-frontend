@@ -25,37 +25,34 @@ export class AuthInterceptor implements HttpInterceptor {
       });
     }
 
-    return next.handle(authReq).pipe(
-      catchError((error: HttpErrorResponse) => {
-        // If unauthorized and refresh token exists
-        if (error.status === 403 && this.tokenService.getRefreshToken()) {
-          const refreshData = { refresh: this.tokenService.getRefreshToken() };
+   return next.handle(authReq).pipe(
+   catchError((error: HttpErrorResponse) => {
+    if ((error.status === 401 || error.status === 403) && this.tokenService.getRefreshToken()) {
+      const refreshData = { refresh: this.tokenService.getRefreshToken() };
 
-          return this.clienservice.getRefreshTokens(refreshData).pipe(
-            switchMap(response => {
-              const newAccessToken = response.access;
+      return this.clienservice.getRefreshTokens(refreshData).pipe(
+        switchMap(response => {
+          console.log("Refresh response:", response);
+          const newAccessToken = response.access; // adjust to match backend
 
-              // Save new token
-              this.tokenService.setTokens(newAccessToken, this.tokenService.getRefreshToken()!);
+          this.tokenService.setTokens(newAccessToken, this.tokenService.getRefreshToken()!);
 
-              // Retry original request with new token
-              const retryReq = req.clone({
-                setHeaders: { Authorization: `Bearer ${newAccessToken}` }
-              });
+          const retryReq = authReq.clone({
+            setHeaders: { Authorization: `Bearer ${newAccessToken}` }
+          });
 
-              return next.handle(retryReq);
-            }),
-            catchError(refreshError => {
-              // Refresh token invalid → clear tokens and redirect to login
-              this.tokenService.Clientlogout();
-              // Optionally redirect to login here
-              return throwError(() => refreshError);
-            })
-          );
-        }
+          return next.handle(retryReq);
+        }),
+        catchError(refreshError => {
+          this.tokenService.Clientlogout();
+          return throwError(() => refreshError);
+        })
+      );
+    }
 
-        return throwError(() => error);
-      })
-    );
+    return throwError(() => error);
+  })
+);
+
   }
 }
