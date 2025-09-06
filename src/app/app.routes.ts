@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core';
 import { AdminLayoutComponent } from '@theme/admin-layout/admin-layout.component';
-import { DashboardComponent } from './admin-components/dashboard/dashboard.component';
 import { ClientAuthGuard } from './guards/client-route-guard';
 import { DashboardComponentClient } from './component-sections/client/Modules/dashboard/dashboard.component';
 import { ClientLoginComponent } from './component-sections/client/Modules/login/login.component';

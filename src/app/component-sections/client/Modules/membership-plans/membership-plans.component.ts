@@ -29,22 +29,74 @@ export class MembershipPlansComponent {
    this.GetmemBershipPlanList()
   
    this.columns = [
+  { header: 'Subscription ID', field: 'subscriptionId', sortable: true, width: '130px' },
   { header: 'Plan Name', field: 'planName', sortable: true },
-  { header: 'Plan Type', field: 'planType', sortable: true },
-  { header: 'Duration (Months)', field: 'durationInMonths', sortable: true },
-  { header: 'Price', field: 'price', sortable: true },
-  { header: 'Features', field: 'features', sortable: true },
+  { header: 'Plan Type', field: 'planType', sortable: true, width: '100px' },
+  { header: 'Active', field: 'isActive', sortable: true, width: '90px', formatter: (r:any)=> r.isActive ? 'Yes' : 'No' },
   { 
-    header: 'Gym Name', 
-    field: 'gymId', 
-    sortable: true,
-    formatter: (rowData) => rowData.gymId?.name || '-' 
+    header: 'Price', 
+    field: 'price', 
+    sortable: true, 
+    width: '100px',
+    formatter: (rowData: any) => rowData.price ? `₹${rowData.price}` : '-'
   },
-  { header: 'Status', field: 'status', sortable: true },
+  { header: 'Duration (Months)', field: 'duration', sortable: true, width: '120px' },
+  { 
+    header: 'Start Date', 
+    field: 'startDate', 
+    sortable: true, 
+    width: '110px',
+    formatter: (rowData: any) => rowData.startDate ? new Date(rowData.startDate).toLocaleDateString() : '-'
+  },
+  { 
+    header: 'End Date', 
+    field: 'endDate', 
+    sortable: true, 
+    width: '110px',
+    formatter: (rowData: any) => rowData.endDate ? new Date(rowData.endDate).toLocaleDateString() : '-'
+  },
+  { 
+    header: 'Status', 
+    field: 'status', 
+    sortable: true, 
+    width: '100px',
+    formatter: (rowData: any) => {
+      const status = rowData.status || 'pending';
+      const statusMap: { [key: string]: string } = {
+        'active': '🟢 Active',
+        'expired': '🔴 Expired', 
+        'cancelled': '⚪ Cancelled',
+        'pending': '🟡 Pending'
+      };
+      return statusMap[status] || status;
+    }
+  },
+  { 
+    header: 'Payment', 
+    field: 'paymentStatus', 
+    sortable: true, 
+    width: '100px',
+    formatter: (rowData: any) => {
+      const status = rowData.paymentStatus || 'pending';
+      const statusMap: { [key: string]: string } = {
+        'completed': '✅ Paid',
+        'pending': '⏳ Pending',
+        'failed': '❌ Failed'
+      };
+      return statusMap[status] || status;
+    }
+  },
+  { 
+    header: 'Auto Renew', 
+    field: 'autoRenew', 
+    sortable: true, 
+    width: '90px',
+    formatter: (rowData: any) => rowData.autoRenew ? '✅ Yes' : '❌ No'
+  },
   {
     header: 'Actions',
     field: 'actions',
-    width: '120px',
+    width: '80px',
     pinned: 'right',
     type: 'button',
     buttons: [
@@ -63,14 +115,13 @@ export class MembershipPlansComponent {
 }
 
  GetmemBershipPlanList(): void {
-   const UserSession= this.tokenservice.getUserSession()
-        this.clientservice.getMembershipPlansByGymID(UserSession?.gymId).subscribe({
+   const UserSession= this.tokenservice.getAuthData()
+        this.clientservice.getSubscriptionPlans(UserSession?.gymId).subscribe({
           next: (res: any) => {
-            
-            this.list = res;
-            this.filteredList = [...res];
+           this.list = res.subscriptions
+            this.filteredList = [...this.list];
           },
-          error: () => this.openErrorDialog('Failed to fetch Players List'),
+          error: () => this.openErrorDialog('Failed to fetch Subscription Plans'),
         });
   }
 
@@ -97,9 +148,9 @@ export class MembershipPlansComponent {
 onEdit(record:any){
 
   const dialogRef = this.dialog.open(PlanDialogeComponent, {
-    width: '600px',
+    width: '700px',
     height:'auto',
-    minHeight:'350px',    data: {
+    minHeight:'500px',    data: {
       row:record,
       heading:"Update"    }
   });
@@ -113,9 +164,9 @@ onEdit(record:any){
 CreatePlan(record:any){
 
   const dialogRef = this.dialog.open(PlanDialogeComponent, {
-    width: '600px',
+    width: '700px',
     height:'auto',
-    minHeight:'350px',
+    minHeight:'500px',
     data: {
       heading:"Create"
     }

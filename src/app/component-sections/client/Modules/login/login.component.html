@@ -1,24 +1,26 @@
 <div class="d-flex w-full h-full">
-  <mat-card class="m-auto" style="max-width: 380px;">
-  <mat-card-header class="m-b-10" style="display: flex; justify-content: start;margin-top: 10px;">
-  <mat-card-title style="display: flex; justify-content:start;gap: 80px;">
-    <img src="images/gym-logo2.jpg" style="border-radius: 15%;"  width="60px" height="60px" alt="Logo">
-    <h4 style="color:black">Login</h4>
-  </mat-card-title>
-</mat-card-header>
-
+  <mat-card class="m-auto" style="max-width: 420px;">
+    <mat-card-header class="m-b-10" style="display: flex; justify-content: start;margin-top: 10px;">
+      <mat-card-title style="display: flex; justify-content:start;gap: 80px;">
+        <img src="images/gym-logo2.jpg" style="border-radius: 15%;" width="60px" height="60px" alt="Logo">
+        <h4 style="color:black">Gym Login</h4>
+      </mat-card-title>
+    </mat-card-header>
 
     <mat-card-content>
       <form class="form-field-full" [formGroup]="loginForm">
+
+        <!-- Email Field -->
         <mat-form-field appearance="outline">
           <mat-label>{{'email' | translate}}</mat-label>
           <input matInput placeholder="email" formControlName="email" required>
           @if (email.invalid) {
             <mat-error>
               @if (email.errors?.required) {
-                <span>{{'please_enter' | translate}}
-                  email
-                </span>
+                <span>{{'please_enter' | translate}} email</span>
+              }
+              @if (email.errors?.email) {
+                <span>Please enter a valid email address</span>
               }
               @if (email.errors?.remote) {
                 <span>{{ email.errors?.remote }}</span>
@@ -27,16 +29,14 @@
           }
         </mat-form-field>
 
+        <!-- Password Field -->
         <mat-form-field appearance="outline">
           <mat-label>{{'password' | translate}}</mat-label>
-          <input matInput placeholder="password" type="password"
-            formControlName="password" required>
+          <input matInput placeholder="password" type="password" formControlName="password" required>
           @if (password.invalid) {
             <mat-error>
               @if (password.errors?.required) {
-                <span>{{'please_enter' | translate}}
-                  password
-                </span>
+                <span>{{'please_enter' | translate}} password</span>
               }
               @if (password.errors?.remote) {
                 <span>{{ password.errors?.remote }}</span>
@@ -45,10 +45,36 @@
           }
         </mat-form-field>
 
+        <!-- Remember Me Checkbox -->
         <mat-checkbox formControlName="rememberMe">{{'remember_me' | translate}}</mat-checkbox>
 
-        <button class="w-full m-y-16" mat-flat-button (click)="submitLogin()"  style="background-color: #343dff;"
-          [loading]="isSubmitting">{{'login' | translate}}</button>
+        <!-- Login Button -->
+        <button 
+          class="w-full m-y-16" 
+          mat-flat-button 
+          (click)="submitLogin()" 
+          style="background-color: #343dff;"
+          [disabled]="isSubmitting">
+          @if (isSubmitting) {
+            <mat-spinner diameter="20" style="margin-right: 8px;"></mat-spinner>
+            Logging in...
+          } @else {
+            {{'login' | translate}}
+          }
+        </button>
+
+        <!-- Success Info (shown after successful login) -->
+        @if (getCurrentUserInfo()) {
+          <div class="success-info" style="margin-top: 16px; padding: 12px; background-color: #e8f5e8; border-radius: 4px; border-left: 4px solid #4caf50;">
+            <h6 style="margin: 0 0 8px 0; color: #2e7d32;">Login Successful!</h6>
+            <div style="font-size: 12px; color: #2e7d32;">
+              <p style="margin: 2px 0;"><strong>Email:</strong> {{ getCurrentUserInfo()?.email }}</p>
+              <p style="margin: 2px 0;"><strong>Role:</strong> {{ getCurrentUserInfo()?.role }}</p>
+              <p style="margin: 2px 0;"><strong>Gym:</strong> {{ getCurrentUserInfo()?.gymName }}</p>
+              <p style="margin: 2px 0;"><strong>Location:</strong> {{ getCurrentUserInfo()?.location }}</p>
+            </div>
+          </div>
+        }
 
         <!-- <div>
           <span>{{'have_no_account' | translate}}? </span>

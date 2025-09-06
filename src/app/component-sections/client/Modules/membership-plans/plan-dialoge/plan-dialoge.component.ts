@@ -15,6 +15,7 @@ export class PlanDialogeComponent {
   planForm: FormGroup;
   buttonLabel: string = 'Save'; // default
   loading = false;
+  trainers: any[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -25,32 +26,73 @@ export class PlanDialogeComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
 
-  const sessiondata=  this.tokenService.getUserSession()
+  const sessiondata=  this.tokenService.getAuthData()
   this.planForm = this.fb.group({
   _id: [''],
+  subscriptionId: [{ value: '', disabled: true }], // Auto-generated on backend
   planName: ['', Validators.required],
-  planType: ['', Validators.required],
-  durationInMonths: ['', Validators.required],
-  price: ['', Validators.required],
+  planType: ['basic', Validators.required],
+  price: ['', [Validators.required, Validators.min(0)]],
+  duration: ['', [Validators.required, Validators.min(1)]], // in months
+  startDate: ['', Validators.required],
+  endDate: ['', Validators.required],
+  status: ['pending', Validators.required],
   features: this.fb.array([]),   // << FormArray for multiple features
-  status: ['Active', Validators.required],
-  gymId: [sessiondata?.gymId,Validators.required]
+  description: [''],
+  isActive: [true],
+  paymentStatus: ['pending', Validators.required],
+  autoRenew: [false],
+  gymId: [sessiondata?.gymId, Validators.required],
+  trainerId: ['', Validators.required]
 });
+
+  // Initialize with at least one feature field if creating new
+  if (!data?.row) {
+    this.addFeature();
+  }
 
   if (data?.row) {
     this.buttonLabel = 'Update';
     this.planForm.patchValue({
       _id: data.row._id,
+      subscriptionId: data.row.subscriptionId,
       planName: data.row.planName,
       planType: data.row.planType,
-      durationInMonths: data.row.durationInMonths,
       price: data.row.price,
+      duration: data.row.duration,
+      startDate: data.row.startDate ? new Date(data.row.startDate).toISOString().split('T')[0] : '',
+      endDate: data.row.endDate ? new Date(data.row.endDate).toISOString().split('T')[0] : '',
       status: data.row.status,
-      gymId: data.row.gymId
+      description: data.row.description,
+  isActive: data.row.isActive !== undefined ? data.row.isActive : true,
+      paymentStatus: data.row.paymentStatus,
+      autoRenew: data.row.autoRenew,
+      gymId: data.row.gymId,
+  trainerId: data.row.trainerId
     });
 
     // Patch features separately
-    this.setFeatures(data.row.features);
+    this.setFeatures(data.row.features || []);
+  } else {
+    // Set default start date to today for new plans
+    const today = new Date().toISOString().split('T')[0];
+    this.planForm.patchValue({
+      startDate: today
+    });
+    this.onStartDateChange(today);
+  }
+
+  // Load trainers for this gym for selection
+  if (sessiondata?.gymId) {
+    this.clientservice.getTrainersList(sessiondata.gymId).subscribe({
+      next: (res: any) => {
+        const data = res.trainers
+        this.trainers = data
+      },
+      error: () => {
+        this.trainers = [];
+      }
+    });
   }
 }
 
@@ -61,7 +103,7 @@ get features(): FormArray {
 }
 
 addFeature(value: string = '') {
-  this.features.push(this.fb.control(value, Validators.required));
+  this.features.push(this.fb.control(value));
 }
 
 removeFeature(index: number) {
@@ -77,18 +119,37 @@ onPlanTypeChange(planType: string) {
   let months = 0;
 
   switch (planType) {
-    case 'Monthly':
+    case 'basic':
       months = 1;
       break;
-    case 'Quarterly':
+    case 'premium':
       months = 3;
       break;
-    case 'Yearly':
+    case 'custom':
       months = 12;
       break;
   }
 
-  this.planForm.get('durationInMonths')?.setValue(months);
+  this.planForm.get('duration')?.setValue(months);
+  
+  // Auto-calculate end date if start date is set
+  const startDate = this.planForm.get('startDate')?.value;
+  if (startDate) {
+    const start = new Date(startDate);
+    const end = new Date(start);
+    end.setMonth(end.getMonth() + months);
+    this.planForm.get('endDate')?.setValue(end.toISOString().split('T')[0]);
+  }
+}
+
+onStartDateChange(startDate: string) {
+  if (startDate) {
+    const duration = this.planForm.get('duration')?.value || 1;
+    const start = new Date(startDate);
+    const end = new Date(start);
+    end.setMonth(end.getMonth() + duration);
+    this.planForm.get('endDate')?.setValue(end.toISOString().split('T')[0]);
+  }
 }
 
  savePlan() {
@@ -101,17 +162,17 @@ onPlanTypeChange(planType: string) {
 
     // If _id exists → update, else → insert
     if (formValue._id) {
-      this.clientservice.UpdateMembershipPlansByGymID(formValue).subscribe({
+      this.clientservice.updateSubscriptionPlan(formValue).subscribe({
         next: (res: any) => {
           console.log("Updated:", res);
           this.loading = false;
                 const dialogRef = this.dialoge.open(SaveDailogComponent, {
                   width: '400px',
-                  data: { message: "Plan updated successfully" }
+                  data: { message: "Subscription plan updated successfully" }
                 });
                 dialogRef.afterClosed().subscribe(() => {        
                 });
-          this.dialogRef.close(res.plan); // close dialog with result
+          this.dialogRef.close(res); // close dialog with result
         },
         error: (err) => {
           console.error(err);
@@ -119,17 +180,22 @@ onPlanTypeChange(planType: string) {
         }
       });
     } else {
-      this.clientservice.InsertMembershipPlansByGymID(formValue).subscribe({
+      // Remove _id for creation and let backend auto-generate subscriptionId
+      const createData = { ...formValue };
+      delete createData._id;
+      delete createData.subscriptionId;
+      
+      this.clientservice.createSubscriptionPlan(createData).subscribe({
         next: (res: any) => {
           console.log("Inserted:", res);
           this.loading = false;
            const dialogRef = this.dialoge.open(SaveDailogComponent, {
                   width: '400px',
-                  data: { message: "Plan created successfully" }
+                  data: { message: "Subscription plan created successfully" }
                 });
                 dialogRef.afterClosed().subscribe(() => {        
           });
-          this.dialogRef.close(res.plan);
+          this.dialogRef.close(res);
         },
         error: (err) => {
           console.error(err);
@@ -139,5 +205,8 @@ onPlanTypeChange(planType: string) {
     }
   }
 }
+
+
+
 
 }

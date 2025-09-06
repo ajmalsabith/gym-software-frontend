@@ -1,4 +1,4 @@
-import { Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
@@ -14,7 +14,7 @@ import { TokenService } from 'app/service/token.service';
   templateUrl: './player-manage.component.html',
   styleUrl: './player-manage.component.scss'
 })
-export class PlayerManageComponent {
+export class PlayerManageComponent  implements OnInit{
 
 
    @ViewChild('actionTpl', { static: true }) actionTpl!: TemplateRef<any>;
@@ -38,19 +38,21 @@ export class PlayerManageComponent {
 
     UserForm!: FormGroup;
     selectedUserId: number | null = null;
-
+     authData:any
 
   constructor(private fb: FormBuilder,private dialog:MatDialog,private tokenservice:TokenService,
     private clientservice:ClientService,private commonservice:CommonService,
   ) {
-
+   
     this.UserForm = this.fb.group({
       userId: [{ value: '', disabled: true }], // readonly
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
       gymId:['',[Validators.required]],
+      subscriptionId: ['', [Validators.required]], // Add subscription field
       phone: [''],
+      age: [''],
       gender: [''],
       dob: [''],
       role: ['', Validators.required],
@@ -66,7 +68,7 @@ export class PlayerManageComponent {
   }
 
 
-  
+
 
 loading=false
   onUserSubmit(): void {
@@ -81,20 +83,23 @@ loading=false
 
   if (this.isEditing && this.selectedUserId) {
     
-    // Update existing user
-    request$ = this.clientservice.updateUser({
-      id: this.selectedUserId,
-      obj: formData
-    });
-    successMessage = 'Player updated successfully';
+    // Update existing user - implement later
+    // request$ = this.clientservice.updateUser({
+    //   id: this.selectedUserId,
+    //   obj: formData
+    // });
+    // successMessage = 'Player updated successfully';
+    this.loading = false;
+    this.openErrorDialog('Update functionality not implemented yet');
+    return;
   } else {
-    // Create new user
-    request$ = this.clientservice.createUser(formData);
+    // Create new player using new API
+    request$ = this.clientservice.createPlayer(formData);
     successMessage = 'New Player created successfully';
   }
 
   request$.subscribe({
-    next: () => {
+    next: (response) => {
       this.loading = false;
       this.resetForm();
       const dialogRef = this.dialog.open(SaveDailogComponent, {
@@ -112,7 +117,7 @@ loading=false
       const errorMsg = this.isEditing
         ? 'Failed to update Player'
         : 'Failed to create Player';
-      this.openErrorDialog(errorMsg);
+      this.openErrorDialog(errorMsg + ': ' + (err.error?.message || err.message));
       console.error(err);
     }
   });
@@ -120,26 +125,29 @@ loading=false
 
 
 Gymlist:any
-GetGymList(): void {
-        this.clientservice.getGymList().subscribe({
+MembershipPlansList: any[] = []; // Add this property
+
+
+      // Add this method to load membership plans
+      GetMembershipPlansList(): void {
+        const gymId = localStorage.getItem('gymId') 
+        this.clientservice.getMembershipPlansByGymID(gymId).subscribe({
           next: (res: any) => {
-            console.log(res,'==Gymlist');
-            
-            this.Gymlist = res;
+                 this.MembershipPlansList = res.subscriptions
           },
-          error: () => this.openErrorDialog('Failed to fetch Gym List'),
+          error: () => this.openErrorDialog('Failed to fetch Membership Plans'),
         });
       }
 
 
  GetPlayersList(): void {
-  const UserSession= this.tokenservice.getUserSession()
-        this.clientservice.getPlayersListByGymId(UserSession?.gymId).subscribe({
+ const gymId = localStorage.getItem('gymId') 
+        this.clientservice.getPlayersListByGymId(gymId).subscribe({
           next: (res: any) => {
             console.log(res,'==userlist');
             
-            this.list = res;
-            this.filteredList = [...res];
+            this.list = res.players;
+            this.filteredList = [...res.players];
             this.applyFilters()
           },
           error: () => this.openErrorDialog('Failed to fetch Players List'),
@@ -147,7 +155,10 @@ GetGymList(): void {
       }
 
  resetForm(): void {
-        this.UserForm.reset({ status: 'Active' });
+        this.UserForm.reset({ 
+          IsStatus: 'Active',
+          role: 'player' // Set default role to player
+        });
         this.selectedUserId = null;
         this.isEditing = false;
       }
@@ -156,7 +167,10 @@ GetGymList(): void {
         this.UserDetailsTabDisabled = false; // enable
         this.onStateChange(user.state)
         this.UserForm.patchValue(user);
-        this.UserForm.patchValue({gymId:user.gymId?._id});
+        this.UserForm.patchValue({
+          gymId: user.gymId?._id,
+          subscriptionId: user.subscriptionId?._id
+        });
         this.selectedUserId = user.userId;
         this.isEditing = true;
         this.selectedTabIndex = 1;
@@ -203,10 +217,11 @@ GetGymList(): void {
   }
   
     ngOnInit(): void {
-
-      this.GetGymList()
+       this.authData = this.tokenservice.getAuthData()
+       this.UserForm.controls['gymId'].setValue(this.authData.gymId)
       this.GetPlayersList()
       this.GetIndianStateDistList()
+      this.GetMembershipPlansList() // Add this line
       
 
   
@@ -221,6 +236,19 @@ GetGymList(): void {
   },
   { header: 'Email', field: 'email', sortable: true },
   { header: 'Phone', field: 'phone', sortable: true },
+  { header: 'Age', field: 'age', sortable: true },
+  { header: 'Gender', field: 'gender', sortable: true },
+  { 
+    header: 'Subscription Plan', 
+    field: 'subscriptionPlan', 
+    sortable: true,
+    formatter: (rowData) => rowData.subscriptionId?.planName || '-' 
+  },
+  { 
+    header: 'Subscription Status', 
+    field: 'subscriptionStatus', 
+    sortable: true 
+  },
   { header: 'Role', field: 'role', sortable: true },
   { header: 'Status', field: 'IsStatus', sortable: true },
     {
@@ -279,7 +307,15 @@ GetGymList(): void {
     UserDetailsTabDisabled=true
     addUser() {
       this.selectedTabIndex = 1;
-       this.UserDetailsTabDisabled = false; // enable
+      this.UserDetailsTabDisabled = false; // enable
+      
+      // Set default values for new player
+      const userSession = this.tokenservice.getAuthData();
+      this.UserForm.patchValue({
+        role: 'player',
+        IsStatus: 'Active',
+        gymId: userSession?.gymId
+      });
     }
 
       

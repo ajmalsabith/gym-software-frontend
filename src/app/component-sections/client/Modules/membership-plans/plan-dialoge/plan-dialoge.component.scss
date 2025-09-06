@@ -4,14 +4,49 @@
   gap: 16px; /* space between rows */
 }
 
+.form-row {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.form-field-full {
+  flex: 1;
+}
+
+.form-field-half {
+  flex: 1;
+}
+
+.feature-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.feature-input {
+  flex: 1;
+}
+
+.add-feature-btn {
+  margin-top: 8px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  padding-top: 8px;
+}
+
 mat-form-field {
   width: 100%;
 }
 
 .form-container {
   position: relative;
+  min-width: 500px;
 }
-
 
 .loading-overlay {
   position: absolute;
@@ -24,4 +59,35 @@ mat-form-field {
   align-items: center;
   justify-content: center;
   z-index: 10;
+}
+
+h4 {
+  margin: 0 0 12px 0;
+  color: rgba(0, 0, 0, 0.6);
+  font-weight: 500;
+}
+
+.cancel-button {
+  margin-right: 8px;
+}
+
+.save-button {
+  background-color: #1976d2;
+  color: white;
+}
+
+.save-button:hover {
+  background-color: #1565c0;
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  .form-container {
+    min-width: auto;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 8px;
+  }
 }
