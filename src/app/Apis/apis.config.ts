@@ -4,47 +4,42 @@ import { Injectable } from "@angular/core";
   providedIn: "root",
 })
 
-
-
 export class ApisConfig{
 
-
   // API URLS
-  API_LOCAL_URL:string="http://localhost:3400/"
+  API_LOCAL_URL:string="http://localhost:3400/api/admin"
   API_SERVER_URL:string=""
 
-  // login
-  ADMIN_LOGIN: string = "admin/login";
-  CLIENT_LOGIN: string = "client/login";
+  // login - Using gym owner login for all authentication
+  ADMIN_LOGIN: string = "/login";
+  GYM_OWNER_LOGIN: string = "/login";
   
-
-  // gym
-  GET_GYM_LIST:string="client/get-gymlist"
-  CREATE_GYM: string = "admin/insertgym";
-  UPDATE_GYM: string = "admin/updategym";
+  // gym owner APIs
+  GYM_OWNER_REFRESH_TOKEN: string = "/refresh-token";
+  GYM_OWNER_LOGOUT: string = "/logout";
+  GYM_OWNER_PROFILE: string = "/profile";
+  GYM_OWNER_PLAYERS: string = "/players";
 
 
   // users or players
-  GET_USER_LIST:string="client/get-userlist"
-  CREATE_USER: string = "client/insertuser";
-  UPDATE_USER: string = "client/updateuser";
-  GET_PLYERS_LISTBY_GYMID: string = "client/get-players-listbygymid";
-
+  GET_USER_LIST:string="/get-userlist"
+  CREATE_USER: string = "/insertuser";
+  UPDATE_USER: string = "/updateuser";
+  GET_PLYERS_LISTBY_GYMID: string = "/get-players-listbygymid";
+  
+  // New player APIs as per documentation
+  PLAYERS: string = "/players"; // For both GET and POST operations
 
   // membership plans
-  INSERT_MEMBERSHIP_PLAN_BY_GYMID:string="client/insert-membership-plans"
-  UPDATE_MEMBERSHIP_PLAN_BY_GYMID:string="client/update-membership-plans"
-  GET_MEMBERSHIP_PLAN_BY_GYMID:string="client/get-membership-plans"
-
+  INSERT_MEMBERSHIP_PLAN_BY_GYMID:string="/insert-membership-plans"
+  UPDATE_MEMBERSHIP_PLAN_BY_GYMID:string="/update-membership-plans"
+  GET_MEMBERSHIP_PLAN_BY_GYMID:string="/subscriptions"
 
   //  common apis 
   GET_INDIAN_CITIES_LIST:string="common/india-cities"
   GET_INDIAN_STATES_DIST_LIST:string="common/states-districts"
 
 
-
-  // token
-  GET_REFRESH_TOKENS:string="client/refresh-token"
 
 
 

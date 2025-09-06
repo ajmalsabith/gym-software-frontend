@@ -27,13 +27,13 @@ constructor(
   load() {
     return new Promise<void>((resolve, reject) => {
       this.authService
-        .change()
+        .user()
         .pipe(
-          tap(user => this.setPermissions(user)),
+          tap((user: User) => this.setPermissions(user)),
           switchMap(() =>{    
              return this.authService.Clientmenu()
           } ),
-          tap(menu => this.setMenu(menu))
+          tap((menu: Menu[]) => this.setMenu(menu))
         )
         .subscribe({
           next: () => resolve(),

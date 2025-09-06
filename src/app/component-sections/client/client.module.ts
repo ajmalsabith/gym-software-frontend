@@ -38,13 +38,17 @@ import { ClientLoginComponent } from './Modules/login/login.component';
 import { PlayerManageComponent } from './Modules/player-manage/player-manage.component';
 import { MembershipPlansComponent } from './Modules/membership-plans/membership-plans.component';
 import { PlanDialogeComponent } from './Modules/membership-plans/plan-dialoge/plan-dialoge.component';
+import { TrainerManageComponent } from './Modules/trainer-manage/trainer-manage.component';
+import { TrainerDialogComponent } from './Modules/trainer-manage/trainer-dialog/trainer-dialog.component';
 
 @NgModule({
   declarations: [
   ClientLoginComponent ,
   PlayerManageComponent,
   MembershipPlansComponent,
-  PlanDialogeComponent
+  PlanDialogeComponent,
+  TrainerManageComponent,
+  TrainerDialogComponent
   ],
   imports: [
     CommonModule,

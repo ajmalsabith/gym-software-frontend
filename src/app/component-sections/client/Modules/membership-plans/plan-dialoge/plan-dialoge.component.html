@@ -1,71 +1,120 @@
-<h2 mat-dialog-title>{{ data.heading }} Plan</h2>
+<h2 mat-dialog-title>{{ data.heading }} Subscription Plan</h2>
 <mat-dialog-content>
   <div class="form-container">
     <form [formGroup]="planForm" class="form-field-stack">
 
-        <div style="display: flex;flex-direction: row;gap: 5px;">
- <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Plan Name</mat-label>
-        <input matInput formControlName="planName" />
-      </mat-form-field>
+      <!-- Row 1: Subscription ID and Plan Name -->
+      <div class="form-row">
+        <mat-form-field appearance="fill" class="form-field-half" *ngIf="data?.row">
+          <mat-label>Subscription ID</mat-label>
+          <input matInput formControlName="subscriptionId" readonly />
+        </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Plan Type</mat-label>
-    <mat-select formControlName="planType"  (selectionChange)="onPlanTypeChange($event.value)">
-      <mat-option value="Monthly">Monthly</mat-option>
-      <mat-option value="Quarterly">Quarterly</mat-option>
-      <mat-option value="Yearly">Yearly</mat-option>
-    </mat-select>
-  </mat-form-field>
+        <mat-form-field appearance="fill" [class]="data?.row ? 'form-field-half' : 'form-field-full'">
+          <mat-label>Plan Name</mat-label>
+          <input matInput formControlName="planName" />
+          <mat-error *ngIf="planForm.get('planName')?.invalid">Plan name is required</mat-error>
+        </mat-form-field>
+      </div>
 
+      <!-- Row 2: Plan Type and Duration -->
+      <div class="form-row">
+        <mat-form-field appearance="fill" class="form-field-half">
+          <mat-label>Trainer</mat-label>
+          <mat-select formControlName="trainerId">
+            <mat-option *ngFor="let t of trainers" [value]="t._id">
+              {{ t.name || (t.firstName + ' ' + t.lastName) }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="planForm.get('trainerId')?.invalid">Trainer is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field-half">
+          <mat-label>Plan Type</mat-label>
+          <mat-select formControlName="planType" (selectionChange)="onPlanTypeChange($event.value)">
+            <mat-option value="basic">Basic</mat-option>
+            <mat-option value="premium">Premium</mat-option>
+            <mat-option value="custom">Custom</mat-option>
+          </mat-select>
+          <mat-error *ngIf="planForm.get('planType')?.invalid">Plan type is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field-half">
+          <mat-label>Duration (Months)</mat-label>
+          <input matInput type="number" formControlName="duration" min="1" />
+          <mat-error *ngIf="planForm.get('duration')?.invalid">Duration is required and must be at least 1</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Row 3: Price and Status -->
+      <div class="form-row">
+        <mat-form-field appearance="fill" class="form-field-half">
+          <mat-label>Price</mat-label>
+          <input matInput type="number" formControlName="price" min="0" />
+          <mat-error *ngIf="planForm.get('price')?.invalid">Price is required and must be at least 0</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field-half">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status">
+            <mat-option value="active">Active</mat-option>
+            <mat-option value="expired">Expired</mat-option>
+            <mat-option value="cancelled">Cancelled</mat-option>
+            <mat-option value="pending">Pending</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Row 4: Start Date and End Date -->
+      <div class="form-row">
+        <mat-form-field appearance="fill" class="form-field-half">
+          <mat-label>Start Date</mat-label>
+          <input matInput type="date" formControlName="startDate" (change)="onStartDateChange($any($event.target).value)" />
+          <mat-error *ngIf="planForm.get('startDate')?.invalid">Start date is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="form-field-half">
+          <mat-label>End Date</mat-label>
+          <input matInput type="date" formControlName="endDate" />
+          <mat-error *ngIf="planForm.get('endDate')?.invalid">End date is required</mat-error>
+        </mat-form-field>
+      </div>
+      <!-- Row 5b: Active Toggle -->
+      <div class="form-row">
+        <div class="form-field-full">
+          <mat-slide-toggle color="primary" formControlName="isActive">Active</mat-slide-toggle>
         </div>
+      </div>
 
-        <div style="display: flex;flex-direction: row;gap: 5px;margin-top: -15px;">
-        <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Duration (Months)</mat-label>
-        <input matInput type="number" formControlName="durationInMonths" readonly />
-      </mat-form-field>
+      <!-- Row 6: Description -->
+      <div class="form-row">
+        <mat-form-field appearance="fill" class="form-field-full">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
+        </mat-form-field>
+      </div>
 
-      <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Price</mat-label>
-        <input matInput type="number" formControlName="price" />
-      </mat-form-field>
-
-        <mat-form-field appearance="fill" style="width: 100%;">
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status">
-          <mat-option value="Active">Active</mat-option>
-          <mat-option value="Inactive">Inactive</mat-option>
-        </mat-select>
-      </mat-form-field>
-
+      <!-- Row 7: Features -->
+      <div class="form-row">
+        <div class="form-field-full">
+          <h4>Features</h4>
+          <div formArrayName="features">
+            <div *ngFor="let feature of features.controls; let i = index" class="feature-row">
+              <mat-form-field appearance="fill" class="feature-input">
+                <mat-label>Feature {{ i + 1 }}</mat-label>
+                <input matInput [formControlName]="i" />
+              </mat-form-field>
+              <button mat-icon-button color="warn" (click)="removeFeature(i)" type="button" *ngIf="features.length > 0">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+          <button mat-stroked-button color="primary" type="button" (click)="addFeature()" class="add-feature-btn">
+            <mat-icon>add</mat-icon> Add Feature
+          </button>
         </div>
+      </div>
 
-<div style="display: flex;flex-direction: row;gap: 5px;margin-top: -15px;">
-<div formArrayName="features" style="margin-top: -15px; width: 100%;">
-  <div *ngFor="let feature of features.controls; let i = index" style="display: flex; gap: 5px; align-items: center; margin-bottom: 5px;">
-    <mat-form-field appearance="fill" style="flex: 1;">
-      <mat-label>Feature {{ i + 1 }}</mat-label>
-      <input matInput [formControlName]="i" />
-    </mat-form-field>
-    <button mat-icon-button color="warn" (click)="removeFeature(i)" *ngIf="features.length > 1">
-      <mat-icon>delete</mat-icon>
-    </button>
-  </div>
-
-  <button mat-stroked-button color="primary" type="button" (click)="addFeature()">
-    <mat-icon>add</mat-icon> Add Feature
-  </button>
-</div>
-
-
-    
-
-        </div>
-
-     
-    
-    
     </form>
 
     <!-- Spinner Overlay -->
@@ -76,10 +125,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-raised-button mat-dialog-close style="margin-left: 10px;" class="cancel-button">
+  <button mat-raised-button mat-dialog-close class="cancel-button">
     Cancel
   </button>
-  <button mat-raised-button  class="save-button" (click)="savePlan()" >
+  <button mat-raised-button class="save-button" (click)="savePlan()">
     {{ buttonLabel }}
   </button>
 </mat-dialog-actions>
