@@ -215,6 +215,9 @@ MembershipPlansList: any[] = []; // Add this property
     }
     return this.UserForm.get('email')?.hasError('email') ? 'Not a valid email' : '';
   }
+
+  @ViewChild('photoTpl', { static: true }) photoTpl!: TemplateRef<any>;
+
   
     ngOnInit(): void {
        this.authData = this.tokenservice.getAuthData()
@@ -226,6 +229,12 @@ MembershipPlansList: any[] = []; // Add this property
 
   
    this.columns = [
+  {
+      header: 'Photo',
+      field: 'photo',
+      cellTemplate: this.photoTpl,   // ✅ works with ViewChild
+      width: '80px'
+  },
   { header: 'User ID', field: 'userId', sortable: true },
   { header: 'Name', field: 'name', sortable: true },
   { 
@@ -306,6 +315,9 @@ MembershipPlansList: any[] = []; // Add this property
   
     UserDetailsTabDisabled=true
     addUser() {
+      const UserSession= this.tokenservice.getUserSession()
+      this.UserForm.reset()
+      this.UserForm.patchValue({gymId:UserSession?.gymId})
       this.selectedTabIndex = 1;
       this.UserDetailsTabDisabled = false; // enable
       
