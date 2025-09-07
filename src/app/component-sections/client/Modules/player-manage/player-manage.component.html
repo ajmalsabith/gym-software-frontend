@@ -1,5 +1,15 @@
-<page-header class="bg-cyan-50" title="Players" />
-<mat-tab-group [(selectedIndex)]="selectedTabIndex">
+<!-- <page-header class="bg-cyan-50" title="Players" /> -->
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="mat-elevation-z8">
+        <mat-card-header>
+          <mat-card-title>Members</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+          <mat-tab-group [(selectedIndex)]="selectedTabIndex">
 
   <!-- Tab 1: Staff List -->
 <mat-tab label="Players List">
@@ -81,7 +91,8 @@
     [pageSizeOptions]="[5, 10, 50, 100]"
     [pageIndex]="0"
     [pageSize]="5"
-    [toolbarTitle]="'User List'"
+    [toolbarTitle]="'Members List'"
+    class="trainer-grid"
     (rowClick)="onRowClick($event)"
   ></mtx-grid>
 
@@ -304,3 +315,11 @@
 </mat-tab>
 
 </mat-tab-group>
+
+
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
