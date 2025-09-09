@@ -114,25 +114,25 @@
         <!-- User ID (Readonly) -->
         <div class="form-row">
 
-        <mat-form-field appearance="fill" class="full-width">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Player ID</mat-label>
-          <input matInput formControlName="userId" readonly />
+          <input matInput formControlName="plyerid" readonly />
         </mat-form-field>
           
         </div>
 
         <div class="form-row">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Name</mat-label>
             <input matInput formControlName="name" required />
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Phone</mat-label>
             <input matInput formControlName="phone" />
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Gender</mat-label>
             <mat-select formControlName="gender">
               <mat-option value="male">Male</mat-option>
@@ -146,7 +146,7 @@
 
         <div class="form-row">
 
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
   <mat-label>Email</mat-label>
   <input matInput formControlName="email" required />
   <mat-error *ngIf="UserForm.get('email')?.invalid">
@@ -154,7 +154,7 @@
   </mat-error>
 </mat-form-field>
 
-<mat-form-field appearance="fill">
+<mat-form-field appearance="outline">
   <mat-label>Password</mat-label>
   <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" required />
   <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword">
@@ -165,8 +165,8 @@
   </mat-error>
 </mat-form-field>
 
-<mat-form-field appearance="fill">
-  <mat-label>Subscription Plan</mat-label>
+<mat-form-field appearance="outline">
+  <mat-label>Membership Plan</mat-label>
   <mat-select formControlName="subscriptionId" required>
     <mat-option *ngFor="let plan of (MembershipPlansList || [])" [value]="plan._id">
       {{plan?.planName}} - {{plan?.price | currency:'INR':'symbol':'1.0-0'}}
@@ -180,19 +180,19 @@
         </div>
 
         <div class="form-row">
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Date of Birth</mat-label>
             <input matInput [matDatepicker]="picker" formControlName="dob" />
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Age</mat-label>
             <input matInput type="number" formControlName="age" />
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Role</mat-label>
             <mat-select formControlName="role" required>
               <mat-option value="player">Player</mat-option>
@@ -201,7 +201,7 @@
             </mat-select>
           </mat-form-field>
 
-             <mat-form-field appearance="fill">
+             <mat-form-field appearance="outline">
             <mat-label>Status</mat-label>
             <mat-select formControlName="IsStatus" required>
               <mat-option value="Active">Active</mat-option>
@@ -217,7 +217,7 @@
 
         <!-- Address Fields -->
           <div class="form-row">
-          <mat-form-field appearance="fill" class="full-width">
+          <mat-form-field appearance="outline" class="full-width">
             <mat-label>Address Line 1</mat-label>
             <input matInput formControlName="line1" />
           </mat-form-field>
@@ -226,12 +226,12 @@
         <!-- Address Fields -->
         <div class="form-row">
       
-          <mat-form-field appearance="fill">
+          <mat-form-field appearance="outline">
             <mat-label>Country</mat-label>
             <input matInput formControlName="country" />
           </mat-form-field>
 
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="outline">
   <mat-label>State</mat-label>
   <mat-select formControlName="state" (selectionChange)="onStateChange($event.value)">
     <mat-option *ngFor="let state of IndianStateDistList" [value]="state.state">
@@ -240,7 +240,7 @@
   </mat-select>
 </mat-form-field>
 
-<mat-form-field appearance="fill">
+<mat-form-field appearance="outline">
   <mat-label>District</mat-label>
   <mat-select formControlName="district">
     <mat-option *ngFor="let district of filteredDistricts" [value]="district">
@@ -250,12 +250,12 @@
 </mat-form-field>
 
 
-           <mat-form-field appearance="fill">
+           <mat-form-field appearance="outline">
             <mat-label>City</mat-label>
             <input matInput formControlName="city" />
           </mat-form-field>
 
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="outline">
             <mat-label>Zip</mat-label>
             <input matInput formControlName="zip" />
           </mat-form-field>
@@ -294,7 +294,7 @@
         <div class="form-buttons">
 
            <div>
-         <button mat-flat-button  class="add-button">
+         <button (click)="AssignMembership('')" mat-flat-button  class="add-button">
           <mat-icon>card_membership</mat-icon>
            Add Membership Plan
          </button>

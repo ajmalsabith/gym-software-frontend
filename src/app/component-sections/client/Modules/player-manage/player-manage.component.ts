@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { CommonService } from 'app/service/common.service';
 import { ClientService } from '../../services/client.service';
 import { TokenService } from 'app/service/token.service';
+import { AssignMembershipComponent } from './assign-membership/assign-membership.component';
 
 @Component({
   selector: 'app-player-manage',
@@ -45,12 +46,12 @@ export class PlayerManageComponent  implements OnInit{
   ) {
    
     this.UserForm = this.fb.group({
-      userId: [{ value: '', disabled: true }], // readonly
+      plyerid: [{ value: '', disabled: true }], // readonly
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
       gymId:['',[Validators.required]],
-      subscriptionId: ['', [Validators.required]], // Add subscription field
+      subscriptionId:[{ value: '', disabled: true }],// Add subscription field
       phone: [''],
       age: [''],
       gender: [''],
@@ -68,6 +69,19 @@ export class PlayerManageComponent  implements OnInit{
   }
 
 
+
+  AssignMembership(row: any): void {
+      const dialogRef = this.dialog.open(AssignMembershipComponent, {
+        width: '600px',
+        data: { row, mode: 'Add' }
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.GetPlayersList()
+        }
+      });
+    }
 
 
 loading=false
@@ -185,7 +199,7 @@ MembershipPlansList: any[] = []; // Add this property
       }
 
 
-      onLogoSelected(event: Event): void {
+onLogoSelected(event: Event): void {
   const input = event.target as HTMLInputElement;
   if (!input.files || input.files.length === 0) {
     return;
@@ -194,19 +208,55 @@ MembershipPlansList: any[] = []; // Add this property
   const file = input.files[0];
   const reader = new FileReader();
 
-  reader.onload = () => {
-    const base64String = (reader.result as string).split(',')[1] || '';
+  reader.onload = (e: any) => {
+    const img = new Image();
+    img.src = e.target.result;
 
-    this.UserForm.patchValue({
-      photo: `data:${file.type};base64,${base64String}`
-    });
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d')!;
 
-    // Optionally mark the form control as touched
-    this.UserForm.get('photo')?.markAsDirty();
+      // ✅ Resize image if too large (optional)
+      const maxWidth = 800;   // adjust as needed
+      const maxHeight = 800;  // adjust as needed
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxWidth || height > maxHeight) {
+        if (width > height) {
+          height *= maxWidth / width;
+          width = maxWidth;
+        } else {
+          width *= maxHeight / height;
+          height = maxHeight;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // ✅ Convert to compressed base64 (JPEG, quality 0.7)
+      let base64String = canvas.toDataURL('image/jpeg', 0.7);
+
+      // Ensure it's within 1 MB (retry with lower quality if needed)
+      let quality = 0.7;
+      while (base64String.length / 1024 > 1024 && quality > 0.2) {
+        quality -= 0.1;
+        base64String = canvas.toDataURL('image/jpeg', quality);
+      }
+
+      this.UserForm.patchValue({
+        photo: base64String
+      });
+
+      this.UserForm.get('photo')?.markAsDirty();
+    };
   };
 
   reader.readAsDataURL(file);
 }
+
     
 
   getErrorMessage(): string {
@@ -235,7 +285,7 @@ MembershipPlansList: any[] = []; // Add this property
       cellTemplate: this.photoTpl,   // ✅ works with ViewChild
       width: '80px'
   },
-  { header: 'User ID', field: 'userId', sortable: true },
+  { header: 'Player ID', field: 'plyerid', sortable: true },
   { header: 'Name', field: 'name', sortable: true },
   { 
     header: 'Gym Name', 

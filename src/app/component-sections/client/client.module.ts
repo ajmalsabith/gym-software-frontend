@@ -40,6 +40,7 @@ import { MembershipPlansComponent } from './Modules/membership-plans/membership-
 import { PlanDialogeComponent } from './Modules/membership-plans/plan-dialoge/plan-dialoge.component';
 import { TrainerManageComponent } from './Modules/trainer-manage/trainer-manage.component';
 import { TrainerDialogComponent } from './Modules/trainer-manage/trainer-dialog/trainer-dialog.component';
+import { AssignMembershipComponent } from './Modules/player-manage/assign-membership/assign-membership.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { TrainerDialogComponent } from './Modules/trainer-manage/trainer-dialog/
   MembershipPlansComponent,
   PlanDialogeComponent,
   TrainerManageComponent,
-  TrainerDialogComponent
+  TrainerDialogComponent,
+  AssignMembershipComponent
   ],
   imports: [
     CommonModule,

@@ -34,16 +34,12 @@ export class PlanDialogeComponent {
   planType: ['basic', Validators.required],
   price: ['', [Validators.required, Validators.min(0)]],
   duration: ['', [Validators.required, Validators.min(1)]], // in months
-  startDate: ['', Validators.required],
-  endDate: ['', Validators.required],
-  status: ['pending', Validators.required],
+  status: ['active', Validators.required],
   features: this.fb.array([]),   // << FormArray for multiple features
   description: [''],
   isActive: [true],
-  paymentStatus: ['pending', Validators.required],
   autoRenew: [false],
   gymId: [sessiondata?.gymId, Validators.required],
-  trainerId: ['', Validators.required]
 });
 
   // Initialize with at least one feature field if creating new
@@ -60,15 +56,11 @@ export class PlanDialogeComponent {
       planType: data.row.planType,
       price: data.row.price,
       duration: data.row.duration,
-      startDate: data.row.startDate ? new Date(data.row.startDate).toISOString().split('T')[0] : '',
-      endDate: data.row.endDate ? new Date(data.row.endDate).toISOString().split('T')[0] : '',
       status: data.row.status,
       description: data.row.description,
-  isActive: data.row.isActive !== undefined ? data.row.isActive : true,
-      paymentStatus: data.row.paymentStatus,
+      isActive: data.row.isActive !== undefined ? data.row.isActive : true,
       autoRenew: data.row.autoRenew,
       gymId: data.row.gymId,
-  trainerId: data.row.trainerId
     });
 
     // Patch features separately
@@ -83,17 +75,7 @@ export class PlanDialogeComponent {
   }
 
   // Load trainers for this gym for selection
-  if (sessiondata?.gymId) {
-    this.clientservice.getTrainersList(sessiondata.gymId).subscribe({
-      next: (res: any) => {
-        const data = res.trainers
-        this.trainers = data
-      },
-      error: () => {
-        this.trainers = [];
-      }
-    });
-  }
+
 }
 
 
@@ -119,28 +101,23 @@ onPlanTypeChange(planType: string) {
   let months = 0;
 
   switch (planType) {
-    case 'basic':
+    case 'Monthly':
       months = 1;
       break;
-    case 'premium':
+    case 'Quarterly':
       months = 3;
       break;
-    case 'custom':
+    case 'HalfYearly':
+      months = 6;
+      break;
+    case 'Yearly':
       months = 12;
       break;
   }
 
   this.planForm.get('duration')?.setValue(months);
-  
-  // Auto-calculate end date if start date is set
-  const startDate = this.planForm.get('startDate')?.value;
-  if (startDate) {
-    const start = new Date(startDate);
-    const end = new Date(start);
-    end.setMonth(end.getMonth() + months);
-    this.planForm.get('endDate')?.setValue(end.toISOString().split('T')[0]);
-  }
 }
+
 
 onStartDateChange(startDate: string) {
   if (startDate) {

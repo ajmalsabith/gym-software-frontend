@@ -62,6 +62,7 @@ export class GymOwnerAuthService {
             userRole: response.user.role
           };
 
+
           this.tokenService.setAuthData(authData);
           
           // Update authentication state

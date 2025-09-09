@@ -42,20 +42,6 @@ export class MembershipPlansComponent {
   },
   { header: 'Duration (Months)', field: 'duration', sortable: true, width: '120px' },
   { 
-    header: 'Start Date', 
-    field: 'startDate', 
-    sortable: true, 
-    width: '110px',
-    formatter: (rowData: any) => rowData.startDate ? new Date(rowData.startDate).toLocaleDateString() : '-'
-  },
-  { 
-    header: 'End Date', 
-    field: 'endDate', 
-    sortable: true, 
-    width: '110px',
-    formatter: (rowData: any) => rowData.endDate ? new Date(rowData.endDate).toLocaleDateString() : '-'
-  },
-  { 
     header: 'Status', 
     field: 'status', 
     sortable: true, 
@@ -67,21 +53,6 @@ export class MembershipPlansComponent {
         'expired': '🔴 Expired', 
         'cancelled': '⚪ Cancelled',
         'pending': '🟡 Pending'
-      };
-      return statusMap[status] || status;
-    }
-  },
-  { 
-    header: 'Payment', 
-    field: 'paymentStatus', 
-    sortable: true, 
-    width: '100px',
-    formatter: (rowData: any) => {
-      const status = rowData.paymentStatus || 'pending';
-      const statusMap: { [key: string]: string } = {
-        'completed': '✅ Paid',
-        'pending': '⏳ Pending',
-        'failed': '❌ Failed'
       };
       return statusMap[status] || status;
     }
