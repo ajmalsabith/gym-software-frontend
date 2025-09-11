@@ -1,5 +1,7 @@
 <div class="membership-dialog">
-  <h2 mat-dialog-title>{{ data?.mode === 'edit' ? 'Edit Membership' : 'Assign Membership' }}</h2>
+  <h2 mat-dialog-title>
+    {{ data?.mode === 'edit' ? 'Edit Membership' : 'Assign Membership' }}
+  </h2>
 
   <form [formGroup]="membershipForm" (ngSubmit)="saveMembership()">
     <mat-dialog-content>
@@ -10,7 +12,7 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Player</mat-label>
             <mat-select formControlName="playerId">
-              <mat-option *ngFor="let player of players" [value]="player.id">
+              <mat-option *ngFor="let player of playerslist" [value]="player._id">
                 {{ player.name }}
               </mat-option>
             </mat-select>
@@ -22,8 +24,8 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Membership Plan</mat-label>
             <mat-select formControlName="planId" (selectionChange)="onPlanChange($event.value)">
-              <mat-option *ngFor="let plan of membershipPlans" [value]="plan.id">
-                {{ plan.name }} - {{ plan.duration }} months
+              <mat-option *ngFor="let plan of membershipplanlist" [value]="plan._id">
+                {{ plan.planName }} - {{ plan.duration }} months
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -31,12 +33,16 @@
 
         <!-- Dates -->
         <div class="col-md-6">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Start Date</mat-label>
-            <input matInput [matDatepicker]="startPicker" formControlName="startDate">
-            <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-            <mat-datepicker #startPicker></mat-datepicker>
-          </mat-form-field>
+         <mat-form-field appearance="outline" class="w-100">
+  <mat-label>Start Date</mat-label>
+  <input matInput 
+         [matDatepicker]="startPicker" 
+         formControlName="startDate"
+         (dateChange)="onStartDateChange($event)">
+  <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+  <mat-datepicker #startPicker></mat-datepicker>
+</mat-form-field>
+
         </div>
         <div class="col-md-6">
           <mat-form-field appearance="outline" class="w-100">
@@ -47,13 +53,43 @@
           </mat-form-field>
         </div>
 
-        <!-- Payment Amount -->
+        <!-- Total Amount (from plan) -->
         <div class="col-md-6">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Payment Amount</mat-label>
-            <input matInput type="number" formControlName="amount" placeholder="Enter amount">
+            <mat-label>Total Amount</mat-label>
+            <input matInput type="number" formControlName="totalAmount" readonly>
           </mat-form-field>
         </div>
+
+        <!-- Initial Paid Amount -->
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Paid Amount</mat-label>
+            <input matInput type="number" formControlName="paidAmount" (input)="updateBalance()">
+          </mat-form-field>
+        </div>
+
+        <!-- Balance (auto-calculated) -->
+      <!-- Balance Amount (readonly) -->
+<div class="col-md-6">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Balance Amount</mat-label>
+    <input matInput type="number" formControlName="balanceAmount" readonly>
+  </mat-form-field>
+</div>
+
+<!-- Due Date - only show if partially paid -->
+<!-- Due Date - show if pending or partially paid -->
+<div class="col-md-6" 
+     *ngIf="['pending', 'partially_paid'].includes(membershipForm.get('paymentStatus')?.value)">
+  <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Due Date</mat-label>
+    <input matInput [matDatepicker]="duePicker" formControlName="dueDate">
+    <mat-datepicker-toggle matSuffix [for]="duePicker"></mat-datepicker-toggle>
+    <mat-datepicker #duePicker></mat-datepicker>
+  </mat-form-field>
+</div>
+
 
         <!-- Payment Type -->
         <div class="col-md-6">
@@ -75,6 +111,7 @@
             <mat-label>Payment Status</mat-label>
             <mat-select formControlName="paymentStatus">
               <mat-option value="paid">Paid</mat-option>
+              <mat-option value="partially_paid">Partially Paid</mat-option>
               <mat-option value="pending">Pending</mat-option>
               <mat-option value="failed">Failed</mat-option>
               <mat-option value="refunded">Refunded</mat-option>
@@ -102,13 +139,14 @@
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-      <button mat-button type="button" (click)="onCancel()" [disabled]="loading">
-        Cancel
-      </button>
-      <button mat-raised-button color="primary" type="submit" [disabled]="loading || membershipForm.invalid">
-        <mat-spinner diameter="20" *ngIf="loading" style="margin-right: 10px;"></mat-spinner>
-        {{ buttonLabel }}
-      </button>
-    </mat-dialog-actions>
+  <button mat-raised-button  (click)="onCancel()"  class="cancel-button">
+    Cancel
+  </button>
+  <button mat-raised-button diameter="20"  class="save-button" [disabled]="loading || membershipForm.invalid" type="submit" >
+    {{ buttonLabel }}
+  </button>
+</mat-dialog-actions>
+
+
   </form>
 </div>

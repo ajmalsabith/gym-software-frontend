@@ -156,7 +156,7 @@ mat-card-header {
 mat-card-title {
   font-size: 24px;
   font-weight: 500;
-  color: #333;
+  color: #333 ;
 }
 
 .text-end {
@@ -170,3 +170,71 @@ mat-card-title {
 .mb-3 {
   margin-bottom: 1rem;
 }
+
+
+
+.membership-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+button.mat-flat-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 8px 16px;
+  transition: 0.3s ease;
+}
+
+/* Status-based button colors */
+
+.membership-container{
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+
+}
+.no-membership {
+  background-color: #9e9e9e !important; /* Gray */
+  color: white !important;
+}
+
+.paid-membership {
+  background-color: #4caf50 !important; /* Green */
+  color: white !important;
+}
+
+.pending-membership {
+  background-color: #ff9800 !important; /* Orange */
+  color: white !important;
+}
+
+.expired-membership {
+  background-color: #f44336 !important; /* Red */
+  color: white !important;
+}
+
+/* Status label section */
+.membership-status {
+  margin-top: 6px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #555;
+}
+
+/* Icons colored by status */
+.status-icon-paid {
+  color: #4caf50;
+}
+.status-icon-pending {
+  color: #ff9800;
+}
+.status-icon-expired {
+  color: #f44336;
+}
+

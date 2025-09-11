@@ -29,6 +29,9 @@ export class ApisConfig{
   
   // New player APIs as per documentation
   PLAYERS: string = "/players"; // For both GET and POST operations
+  PLAYER_BYID: string = "/playerbyid"; // For both GET and POST operations
+  PLAYERS_UPDATE: string = "/playersupdate"; // For both GET and POST operations
+  PLAYERS_INSERT: string = "/playersinsert"; // For both GET and POST operations
 
   // membership plans
   INSERT_MEMBERSHIP_PLAN_BY_GYMID:string="/insert-membership-plans"
@@ -39,6 +42,12 @@ export class ApisConfig{
   GET_INDIAN_CITIES_LIST:string="common/india-cities"
   GET_INDIAN_STATES_DIST_LIST:string="common/states-districts"
 
+
+  // payment history
+
+  GET_PAYMENT_HISTORY_BY_GYMID:string="/getpayment"
+  INSERT_PAYMENT_HISTORY:string="/insertpayment"
+  UPDATE_PAYMENT_HISTORY:string="/updatepayment"
 
 
 

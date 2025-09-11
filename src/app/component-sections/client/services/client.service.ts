@@ -36,14 +36,30 @@ export class ClientService {
     );
   }
 
+   getPlayerById(gymId:any): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.PLAYER_BYID}?id=${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
   // New method to add/create a player
   createPlayer(playerData: any): Observable<any> {
     return this.http.post(
-      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.PLAYERS}`,
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.PLAYERS_INSERT}`,
       playerData,
       { headers: this.getHeaders() }
     );
   }
+
+ // client.service.ts
+UpdatePlayer(playerData: any): Observable<any> {
+  return this.http.put(
+    `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.PLAYERS_UPDATE}/${playerData._id}`,
+    playerData,
+    { headers: this.getHeaders() }
+  );
+}
 
 
 
@@ -123,4 +139,31 @@ export class ClientService {
     );
   }
 
+
+
+   // ✅ Create new payment record
+  createPayment(data: any): Observable<any> {
+    return this.http.post(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.INSERT_PAYMENT_HISTORY}`,
+      data,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // ✅ Update existing payment record
+  updatePayment(id: string, data: any): Observable<any> {
+    return this.http.put(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.UPDATE_PAYMENT_HISTORY}/${id}`,
+      data,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // ✅ Get all payments for a gym
+  getPaymentsByGym(gymId: string): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.GET_PAYMENT_HISTORY_BY_GYMID}/${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
 }

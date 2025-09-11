@@ -44,11 +44,12 @@
 
       <!-- Status Filter -->
       <mat-form-field appearance="outline" class="formsearchfeild">
-        <mat-label>Status</mat-label>
+        <mat-label>Membarship Status</mat-label>
         <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
           <mat-option value="">All</mat-option>
-          <mat-option value="Active">Active</mat-option>
-          <mat-option value="Inactive">Inactive</mat-option>
+          <mat-option value="active">Active</mat-option>
+          <mat-option value="pending">Pending</mat-option>
+          <mat-option value="partially_paid">Partially Paid</mat-option>
         </mat-select>
       </mat-form-field>
     </div>
@@ -60,17 +61,6 @@
 
 
 
- 
-
-  <ng-template    #photoTpl let-row="row">
-  <img
-    [src]="row?.photo"
-    width="50px"
-    height="50px"
-    style="border-radius: 50%; object-fit: cover"
-    alt="User photo"
-  />
-</ng-template>
 
 
   <mtx-grid
@@ -116,7 +106,7 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Player ID</mat-label>
-          <input matInput formControlName="plyerid" readonly />
+          <input matInput formControlName="playerid" readonly />
         </mat-form-field>
           
         </div>
@@ -292,13 +282,47 @@
          </div>
 
         <div class="form-buttons">
+<div class="membership-container">
+<button
+  mat-flat-button
+ [ngClass]="{
+  'no-membership': !PlayerData?.subscriptionId,
+  'paid-membership': PlayerData?.subscriptionId?.paymentStatus === 'paid',
+  'pending-membership': PlayerData?.subscriptionId?.paymentStatus === 'pending' 
+                        || PlayerData?.subscriptionId?.paymentStatus === 'partially_paid',
+  'expired-membership': isExpired()
+}"
 
-           <div>
-         <button (click)="AssignMembership('')" mat-flat-button  class="add-button">
-          <mat-icon>card_membership</mat-icon>
-           Add Membership Plan
-         </button>
-          </div>
+  (click)="AssignMembership(PlayerData?.subscriptionId || '')"
+  [matTooltip]="membershipTooltip"
+  matTooltipPosition="above"
+>
+  <mat-icon>card_membership</mat-icon>
+  {{ !PlayerData?.subscriptionId ? 'Add Membership Plan' : 'Update Membership Plan' }}
+</button>
+
+
+  <!-- Status label -->
+  <div class="membership-status" *ngIf="PlayerData?.subscriptionId">
+    <mat-icon
+      [ngClass]="{
+        'status-icon-paid': PlayerData?.paymentStatus === 'paid',
+        'status-icon-pending': PlayerData?.subscriptionId?.paymentStatus === 'pending' || PlayerData?.subscriptionId?.paymentStatus === 'partially_paid',
+        'status-icon-expired': isExpired() 
+      }"
+    >
+      {{ PlayerData?.subscriptionId?.paymentStatus === 'paid' ? 'check_circle' : 
+         (PlayerData?.subscriptionId?.paymentStatus === 'pending' || PlayerData?.subscriptionId?.paymentStatus === 'partially_paid' ? 'hourglass_empty' : 'error') }}
+    </mat-icon>
+    <span>
+      {{ PlayerData?.subscriptionId?.paymentStatus === 'paid'
+          ? ('End Date: ' + (PlayerData?.subscriptionId?.endDate | date:'dd MMM yyyy'))
+          : (PlayerData?.subscriptionId?.paymentStatus === 'pending' || PlayerData?.subscriptionId?.paymentStatus === 'partially_paid'
+              ? ('Due Date: ' + (PlayerData?.subscriptionId?.dueDate | date:'dd MMM yyyy'))
+              : 'Expired') }}
+    </span>
+  </div>
+</div>
 
         
             <div style="margin: 2px;">

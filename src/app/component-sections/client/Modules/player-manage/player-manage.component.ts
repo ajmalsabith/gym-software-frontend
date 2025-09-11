@@ -41,12 +41,17 @@ export class PlayerManageComponent  implements OnInit{
     selectedUserId: number | null = null;
      authData:any
 
+
+     hasMembership: boolean = false;
+     MembershipexpiryDate: Date = new Date()
+
   constructor(private fb: FormBuilder,private dialog:MatDialog,private tokenservice:TokenService,
     private clientservice:ClientService,private commonservice:CommonService,
   ) {
    
     this.UserForm = this.fb.group({
-      plyerid: [{ value: '', disabled: true }], // readonly
+      _id: [''], 
+      playerid: [{ value: '', readonly: true }], // readonly
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
@@ -71,13 +76,17 @@ export class PlayerManageComponent  implements OnInit{
 
 
   AssignMembership(row: any): void {
+    console.log(row,'row data');
+    
+    const mode= row==''?'Add':'Edit'
       const dialogRef = this.dialog.open(AssignMembershipComponent, {
         width: '600px',
-        data: { row, mode: 'Add' }
+        data: { membership:row, mode: mode,PlayerData:this.PlayerData}
       });
   
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
+          this.GetPlayerByid(this.PlayerData._id)
           this.GetPlayersList()
         }
       });
@@ -96,16 +105,10 @@ loading=false
   let successMessage = '';
 
   if (this.isEditing && this.selectedUserId) {
-    
-    // Update existing user - implement later
-    // request$ = this.clientservice.updateUser({
-    //   id: this.selectedUserId,
-    //   obj: formData
-    // });
-    // successMessage = 'Player updated successfully';
+    request$ = this.clientservice.UpdatePlayer(formData
+    );
+    successMessage = 'Player updated successfully';
     this.loading = false;
-    this.openErrorDialog('Update functionality not implemented yet');
-    return;
   } else {
     // Create new player using new API
     request$ = this.clientservice.createPlayer(formData);
@@ -168,6 +171,17 @@ MembershipPlansList: any[] = []; // Add this property
         });
       }
 
+       GetPlayerByid(id:string): void {
+        this.clientservice.getPlayerById(id).subscribe({
+          next: (res: any) => {
+            this.UserForm.patchValue(res.Users)    
+             this.UserForm.patchValue({ gymId: res.Users.gymId?._id,subscriptionId: res.Users.subscriptionId?.planId });
+            this.PlayerData=res.Users   
+          },
+          error: () => console.log('Failed to fetch Player by id'),
+        });
+      }
+
  resetForm(): void {
         this.UserForm.reset({ 
           IsStatus: 'Active',
@@ -176,6 +190,8 @@ MembershipPlansList: any[] = []; // Add this property
         this.selectedUserId = null;
         this.isEditing = false;
       }
+
+      PlayerData:any
     
       onEdit(user: any): void {
         this.UserDetailsTabDisabled = false; // enable
@@ -183,11 +199,14 @@ MembershipPlansList: any[] = []; // Add this property
         this.UserForm.patchValue(user);
         this.UserForm.patchValue({
           gymId: user.gymId?._id,
-          subscriptionId: user.subscriptionId?._id
+          subscriptionId: user.subscriptionId?.planId
         });
-        this.selectedUserId = user.userId;
+        this.selectedUserId = user.playerid;
         this.isEditing = true;
         this.selectedTabIndex = 1;
+        this.PlayerData=user
+        console.log(this.PlayerData,'playerdata');
+        
       }
 
    openSuccessDialog(message: string): void {
@@ -197,6 +216,47 @@ MembershipPlansList: any[] = []; // Add this property
       openErrorDialog(message: string): void {
         this.dialog.open(ErrorDailogComponent, { width: '400px', data: { message } });
       }
+
+
+
+    get membershipTooltip(): string {
+  const sub = this.PlayerData?.subscriptionId;
+
+  if (!sub) {
+    return 'No active membership. Click to add a plan.';
+  }
+
+  const today = new Date();
+  const endDate = sub?.endDate ? new Date(sub.endDate) : null;
+  const dueDate = sub?.dueDate ? new Date(sub.dueDate) : null;
+
+  // Check expiry
+  if (endDate && endDate < today) {
+    return 'Expired membership. Please renew.';
+  }
+
+  switch (sub?.paymentStatus) {
+    case 'paid':
+      return `Membership active. Ends on ${endDate?.toLocaleDateString()}`;
+    case 'pending':
+      return `Payment pending. Due on ${dueDate?.toLocaleDateString()}`;
+    case 'partially_paid':
+      return `Partially paid. Balance pending. Due on ${dueDate?.toLocaleDateString()}`;
+    default:
+      return 'Membership status unknown';
+  }
+}
+
+isExpired(): boolean {
+  const sub = this.PlayerData?.subscriptionId;
+  if (!sub?.endDate) return false;
+
+  const today = new Date();
+  const endDate = new Date(sub.endDate);
+
+  // Expired if endDate < today
+  return endDate < today;
+}
 
 
 onLogoSelected(event: Event): void {
@@ -279,37 +339,41 @@ onLogoSelected(event: Event): void {
 
   
    this.columns = [
-  {
-      header: 'Photo',
-      field: 'photo',
-      cellTemplate: this.photoTpl,   // ✅ works with ViewChild
-      width: '80px'
+   {
+    header: 'Photo',
+    field: 'photo',
+    width: '80px',
+    // type: 'html', // Important: specify HTML type
+    formatter: (rowData: any) => {
+      const photoSrc = rowData.photo || 'images/teckfuel_usericon.png';
+      return `<img src="${photoSrc}" width="50" height="50" style="border-radius: 50% !important; object-fit: cover;" alt="User photo" />`;
+    }
   },
-  { header: 'Player ID', field: 'plyerid', sortable: true },
+  // { header: 'Player ID', field: 'playerid', sortable: true },
   { header: 'Name', field: 'name', sortable: true },
-  { 
-    header: 'Gym Name', 
-    field: 'gymName', 
-    sortable: true,
-    formatter: (rowData) => rowData.gymId?.name || '-' 
-  },
-  { header: 'Email', field: 'email', sortable: true },
+  // { 
+  //   header: 'Gym Name', 
+  //   field: 'gymName', 
+  //   sortable: true,
+  //   formatter: (rowData) => rowData.gymId?.name || '-' 
+  // },
   { header: 'Phone', field: 'phone', sortable: true },
+  { header: 'Email', field: 'email', sortable: true },
   { header: 'Age', field: 'age', sortable: true },
   { header: 'Gender', field: 'gender', sortable: true },
+  // { 
+  //   header: 'Subscription Plan', 
+  //   field: 'subscriptionPlan', 
+  //   sortable: true,
+  //   formatter: (rowData) => rowData.subscriptionId?.planName || '-' 
+  // },
   { 
-    header: 'Subscription Plan', 
-    field: 'subscriptionPlan', 
-    sortable: true,
-    formatter: (rowData) => rowData.subscriptionId?.planName || '-' 
-  },
-  { 
-    header: 'Subscription Status', 
+    header: 'Membarship Status', 
     field: 'subscriptionStatus', 
     sortable: true 
   },
   { header: 'Role', field: 'role', sortable: true },
-  { header: 'Status', field: 'IsStatus', sortable: true },
+  // { header: 'Status', field: 'IsStatus', sortable: true },
     {
     header: 'Actions',
     field: 'actions',
@@ -332,6 +396,8 @@ onLogoSelected(event: Event): void {
   
    
 
+    
+
   
     
   applyFilters() {
@@ -350,7 +416,7 @@ onLogoSelected(event: Event): void {
       item.phone.toLowerCase().includes(search) 
 
     const matchesStatus =
-      !status || item.IsStatus === status;
+      !status || item.subscriptionStatus === status;
 
     const matchesRole =
       !role || item.role === role;
