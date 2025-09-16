@@ -45,9 +45,11 @@ export class ApisConfig{
 
   // payment history
 
-  GET_PAYMENT_HISTORY_BY_GYMID:string="/getpayment"
-  INSERT_PAYMENT_HISTORY:string="/insertpayment"
-  UPDATE_PAYMENT_HISTORY:string="/updatepayment"
+  GET_PAYMENT_HISTORY_BY_GYMID:string="/getpayments"
+  GET_MEMBERSHIP_BY_PLAYER:string="/getmembership"
+  INSERT_MEMBERSHIP_WITH_PAYMENT:string="/insertmembershipAndpayment"
+  UPDATE_MEMBERSHIP_WITH_PAYMENT:string="/UpdatemembershipAndpayment"
+  UPDATE_PAYMENT_:string="/Updatepayment"
 
 
 

@@ -2,6 +2,8 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ClientService } from 'app/component-sections/client/services/client.service';
+import { ErrorDailogComponent } from 'app/layout-store/dialog/error-dailog/error-dailog.component';
+import { SaveDailogComponent } from 'app/layout-store/dialog/save-dailog/save-dailog.component';
 import { TokenService } from 'app/service/token.service';
 
 @Component({
@@ -11,7 +13,7 @@ import { TokenService } from 'app/service/token.service';
 })
 export class AssignMembershipComponent {
 
-
+selectedTabIndex=0
     constructor(
       private fb: FormBuilder,
       private dialogRef: MatDialogRef<AssignMembershipComponent>,
@@ -24,24 +26,28 @@ export class AssignMembershipComponent {
             const authData = this.tokenService.getAuthData();
 
 
-      this.membershipForm = this.fb.group({
-  playerId:[{ value:this.data?.PlayerData?._id, disabled: true },Validators.required],
+this.membershipForm = this.fb.group({
+  // Membership fields
   gymId: [authData?.gymId, Validators.required],
+  playerId: [this.data.PlayerData?._id, Validators.required],
   planId: ['', Validators.required],
   startDate: [new Date(), Validators.required],
   endDate: ['', Validators.required],
+  totalAmount: [0, Validators.required],
+  balance: [0],
 
-  // Payment related
-  totalAmount: [{ value: 0, disabled: true }, Validators.required],
-  paidAmount: [0, [Validators.required, Validators.min(0)]],
-  balanceAmount: [{ value: 0, disabled: true }],
-
+  // Payment fields
+  paidAmount: [0, Validators.required],
   dueDate: [''],
+  payAmount:[0,Validators.required],
   paymentType: ['', Validators.required],
-  paymentStatus: ['pending', Validators.required],
+  status: ['', Validators.required],
   transactionId: [''],
   notes: ['']
 });
+
+this.selectedTabIndex = 0;
+
 
  if (this.data?.mode === 'Edit' && this.data?.membership) {
       this.membershipForm.patchValue(this.data.membership);
@@ -61,17 +67,27 @@ export class AssignMembershipComponent {
 
 
   ngOnInit(): void {
-    this.initForm();
     this.GetPlayersList();
     this.GetmemBershipPlanList();
-
-   
   }
 
-  private initForm(): void {
-   
 
+  nextTab() {
+  if (this.membershipForm.get('playerId')?.valid &&
+      this.membershipForm.get('planId')?.valid &&
+      this.membershipForm.get('startDate')?.valid &&
+      this.membershipForm.get('totalAmount')?.value > 0) {
+    this.selectedTabIndex = 1;
+  } else {
+    this.membershipForm.markAllAsTouched();
   }
+}
+
+prevTab() {
+  this.selectedTabIndex = 0;
+}
+
+ 
 
 membershipplanlist:any
    GetmemBershipPlanList(): void {
@@ -99,56 +115,51 @@ membershipplanlist:any
       }
 
 
-
 updateBalance(): void {
+  const paidAmount = this.membershipForm.get('paidAmount')?.value || 0;
+  const payAmount = this.membershipForm.get('payAmount')?.value || 0;
   const total = this.membershipForm.get('totalAmount')?.value || 0;
-  const paid = this.membershipForm.get('paidAmount')?.value || 0;
-  const balance = total - paid;
 
-  let status = 'pending';
-  if (balance === 0 && paid > 0) {
+  const newPaid = paidAmount + payAmount;
+  const balance = total - newPaid;
+
+  let status: string = 'pending';
+  if (balance === 0 && newPaid > 0) {
     status = 'paid';
-  } else if (balance > 0 && paid > 0) {
+  } else if (balance > 0 && newPaid > 0) {
     status = 'partially_paid';
   }
 
   this.membershipForm.patchValue({
-    balanceAmount: balance,
-    paymentStatus: status
+    balance: balance,
+    status: status
   });
 
-  // If paid/failed/refunded → clear due date
-  if (status === 'paid' || status === 'failed' || status === 'refunded') {
+  // Clear due date if final payment done or payment not expected
+  if (['paid', 'failed', 'refunded'].includes(status)) {
     this.membershipForm.patchValue({ dueDate: null });
   }
 }
 
 
-
-  // Mock data loaders (replace with service calls)
- 
-
-
- onPlanChange(planId: number): void {
-  const plan = this.membershipplanlist.find((p:any) => p._id === planId);
+onPlanChange(planId: string): void {
+  const plan = this.membershipplanlist.find((p: any) => p._id === planId);
   if (plan) {
     const startDate: Date = this.membershipForm.get('startDate')?.value || new Date();
 
-    // calculate end date based on plan duration
+    // calculate end date based on plan duration (months)
     const endDate = new Date(startDate);
     endDate.setMonth(endDate.getMonth() + plan.duration);
 
-    // patch values
     this.membershipForm.patchValue({
       endDate,
       totalAmount: plan.price,
       paidAmount: 0,
       balanceAmount: plan.price,
-      paymentStatus: 'pending',
+      status: 'pending',
       dueDate: null
     });
   }
-
 }
 
 onStartDateChange(event: any): void {
@@ -156,19 +167,18 @@ onStartDateChange(event: any): void {
   const planId = this.membershipForm.get('planId')?.value;
 
   if (planId) {
-    const plan = this.membershipPlans.find(p => p.id === planId);
+    const plan = this.membershipplanlist.find((p: any) => p._id === planId);
     if (plan) {
       const endDate = new Date(startDate);
       endDate.setMonth(endDate.getMonth() + plan.duration);
 
       this.membershipForm.patchValue({
-        endDate,
-        startDate
+        startDate,
+        endDate
       });
     }
   }
 }
-
 
 
  saveMembership(): void {
@@ -176,6 +186,10 @@ onStartDateChange(event: any): void {
     this.membershipForm.markAllAsTouched();
     return;
   }
+
+  const paidAmount = this.membershipForm.get('paidAmount')?.value || 0;
+  const payAmount = this.membershipForm.get('payAmount')?.value || 0;
+  this.membershipForm.patchValue({paidAmount:paidAmount+payAmount})
 
   this.loading = true;
   const payload = {
@@ -185,28 +199,44 @@ onStartDateChange(event: any): void {
 
   if (this.data?.mode === 'edit') {
     // ✅ Update existing payment
-    this.clientService.updatePayment(payload._id, payload).subscribe({
+    this.clientService.updateMembership(payload._id, payload).subscribe({
       next: (res) => {
         this.loading = false;
-        console.log('Payment updated:', res);
-        this.dialogRef.close(res);
+        console.log('Membership updated:', res);
+      const dialogRef = this.dialog.open(SaveDailogComponent, {
+        width: '400px',
+        data: { message: res.message }
+      });
+       this.dialogRef.close(res);
       },
       error: (err) => {
         this.loading = false;
+        const dialogRef = this.dialog.open(ErrorDailogComponent, {
+        width: '400px',
+        data: { message: err.error.message }
+      });
         console.error('Update failed:', err);
       }
     });
   } else {
     // ✅ Create new payment
-    this.clientService.createPayment(payload).subscribe({
+    this.clientService.createMembership(payload).subscribe({
       next: (res) => {
         this.loading = false;
-        console.log('Payment created:', res);
-        this.dialogRef.close(res);
+         console.log('Membership updated:', res);
+      const dialogRef = this.dialog.open(SaveDailogComponent, {
+        width: '400px',
+        data: { message: res.message }
+      });
+       this.dialogRef.close(res);
       },
       error: (err) => {
         this.loading = false;
         console.error('Create failed:', err);
+         const dialogRef = this.dialog.open(ErrorDailogComponent, {
+        width: '400px',
+        data: { message: err.error.message }
+      });
       }
     });
   }

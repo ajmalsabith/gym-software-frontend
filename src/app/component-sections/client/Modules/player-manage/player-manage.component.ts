@@ -24,7 +24,7 @@ export class PlayerManageComponent  implements OnInit{
     selectedTabIndex = 0;
     searchText = '';
     statusFilter = '';
-    RoleFilter = ''
+    RoleFilter = 'player'
     GenderFilter = ''
     list: any[] = [];
     filteredList: any[] = [];
@@ -79,10 +79,12 @@ export class PlayerManageComponent  implements OnInit{
     console.log(row,'row data');
     
     const mode= row==''?'Add':'Edit'
-      const dialogRef = this.dialog.open(AssignMembershipComponent, {
-        width: '600px',
-        data: { membership:row, mode: mode,PlayerData:this.PlayerData}
-      });
+     const dialogRef = this.dialog.open(AssignMembershipComponent, {
+  width: '750px',
+  height: 'auto',   // instead of fixed 500px
+  autoFocus: false,
+  data: { membership: row, mode: mode, PlayerData: this.PlayerData }
+});
   
       dialogRef.afterClosed().subscribe(result => {
         if (result) {

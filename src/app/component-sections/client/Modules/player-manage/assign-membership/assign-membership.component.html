@@ -1,152 +1,167 @@
 <div class="membership-dialog">
   <h2 mat-dialog-title>
-    {{ data?.mode === 'edit' ? 'Edit Membership' : 'Assign Membership' }}
+    Membarship & Payment
   </h2>
 
   <form [formGroup]="membershipForm" (ngSubmit)="saveMembership()">
     <mat-dialog-content>
-      <div class="row">
+      <mat-tab-group [(selectedIndex)]="selectedTabIndex">
 
-        <!-- Player -->
-        <div class="col-12">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Player</mat-label>
-            <mat-select formControlName="playerId">
-              <mat-option *ngFor="let player of playerslist" [value]="player._id">
-                {{ player.name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
+        <!-- 🔹 Tab 1: Membership Details -->
+        <mat-tab label="Membership">
+          <div class="row" style="margin-top: 15px;">
 
-        <!-- Membership Plan -->
-        <div class="col-12">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Membership Plan</mat-label>
-            <mat-select formControlName="planId" (selectionChange)="onPlanChange($event.value)">
-              <mat-option *ngFor="let plan of membershipplanlist" [value]="plan._id">
-                {{ plan.planName }} - {{ plan.duration }} months
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
+            <!-- Player -->
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Player</mat-label>
+                <mat-select formControlName="playerId" required>
+                  <mat-option *ngFor="let player of playerslist" [value]="player._id">
+                    {{ player.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
 
-        <!-- Dates -->
-        <div class="col-md-6">
-         <mat-form-field appearance="outline" class="w-100">
-  <mat-label>Start Date</mat-label>
-  <input matInput 
-         [matDatepicker]="startPicker" 
-         formControlName="startDate"
-         (dateChange)="onStartDateChange($event)">
-  <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
-  <mat-datepicker #startPicker></mat-datepicker>
-</mat-form-field>
+            <!-- Plan -->
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100 mt-15">
+                <mat-label>Membership Plan</mat-label>
+                <mat-select formControlName="planId" (selectionChange)="onPlanChange($event.value)" required>
+                  <mat-option *ngFor="let plan of membershipplanlist" [value]="plan._id">
+                    {{ plan.planName }} - {{ plan.duration }} months
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
 
-        </div>
-        <div class="col-md-6">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>End Date</mat-label>
-            <input matInput [matDatepicker]="endPicker" formControlName="endDate">
-            <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
-            <mat-datepicker #endPicker></mat-datepicker>
-          </mat-form-field>
-        </div>
+            <!-- Dates -->
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 mt-15">
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="startPicker" formControlName="startDate"
+                       (dateChange)="onStartDateChange($event)" required>
+                <mat-datepicker-toggle matSuffix [for]="startPicker"></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
 
-        <!-- Total Amount (from plan) -->
-        <div class="col-md-6">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Total Amount</mat-label>
-            <input matInput type="number" formControlName="totalAmount" readonly>
-          </mat-form-field>
-        </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 mt-15">
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="endPicker" formControlName="endDate" readonly>
+                <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+              </mat-form-field>
+            </div>
 
-        <!-- Initial Paid Amount -->
-        <div class="col-md-6">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Paid Amount</mat-label>
-            <input matInput type="number" formControlName="paidAmount" (input)="updateBalance()">
-          </mat-form-field>
-        </div>
+            <!-- Total Amount -->
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 mt-15">
+                <mat-label>Total Amount</mat-label>
+                <input matInput type="number" formControlName="totalAmount" readonly>
+              </mat-form-field>
+            </div>
 
-        <!-- Balance (auto-calculated) -->
-      <!-- Balance Amount (readonly) -->
-<div class="col-md-6">
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>Balance Amount</mat-label>
-    <input matInput type="number" formControlName="balanceAmount" readonly>
-  </mat-form-field>
-</div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 ">
+                <mat-label>Paid Amount</mat-label>
+                <input matInput type="number" formControlName="paidAmount" readonly >
+              </mat-form-field>
+            </div>
+            <!-- Balance -->
+            <div  *ngIf="membershipForm.get('balance')?.value>=0 " class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 mt-15">
+                <mat-label>Balance</mat-label>
+                <input matInput type="number" formControlName="balance" readonly>
+              </mat-form-field>
+            </div>
 
-<!-- Due Date - only show if partially paid -->
-<!-- Due Date - show if pending or partially paid -->
-<div class="col-md-6" 
-     *ngIf="['pending', 'partially_paid'].includes(membershipForm.get('paymentStatus')?.value)">
-  <mat-form-field appearance="outline" class="w-100">
-    <mat-label>Due Date</mat-label>
-    <input matInput [matDatepicker]="duePicker" formControlName="dueDate">
-    <mat-datepicker-toggle matSuffix [for]="duePicker"></mat-datepicker-toggle>
-    <mat-datepicker #duePicker></mat-datepicker>
-  </mat-form-field>
-</div>
+          </div>
 
+          <div class="d-flex justify-content-end mt-3" style="margin: 10px;" >
+            <button mat-raised-button mat-dialog-close class="cancel-button" type="button">Cancel</button>
+            <button mat-raised-button style="background-color:rgb(25, 25, 115);color: white;margin-left: 10px;" (click)="nextTab()" type="button">Next</button>
+          </div>
+        </mat-tab>
 
-        <!-- Payment Type -->
-        <div class="col-md-6">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Payment Type</mat-label>
-            <mat-select formControlName="paymentType">
-              <mat-option value="cash">Cash</mat-option>
-              <mat-option value="card">Card</mat-option>
-              <mat-option value="upi">UPI</mat-option>
-              <mat-option value="bank">Bank Transfer</mat-option>
-              <mat-option value="other">Other</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
+        <!-- 🔹 Tab 2: Payment Details -->
+        <mat-tab label="Payment">
+          <div class="row" style="margin-top: 15px;">
 
-        <!-- Payment Status -->
-        <div class="col-md-6">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Payment Status</mat-label>
-            <mat-select formControlName="paymentStatus">
-              <mat-option value="paid">Paid</mat-option>
-              <mat-option value="partially_paid">Partially Paid</mat-option>
-              <mat-option value="pending">Pending</mat-option>
-              <mat-option value="failed">Failed</mat-option>
-              <mat-option value="refunded">Refunded</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
+            <!-- Paid Amount -->
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 ">
+                <mat-label>Pay Amount</mat-label>
+                <input matInput type="number" formControlName="payAmount" (change)="updateBalance()" required>
+              </mat-form-field>
+            </div>
 
-        <!-- Transaction ID -->
-        <div class="col-md-6">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Transaction ID</mat-label>
-            <input matInput formControlName="transactionId" placeholder="Reference No / Txn ID">
-          </mat-form-field>
-        </div>
+            <!-- Due Date (only if partially paid/pending) -->
+            <div class="col-md-6"
+                 *ngIf="['pending', 'partially_paid'].includes(membershipForm.get('status')?.value)">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Due Date</mat-label>
+                <input matInput [matDatepicker]="duePicker" formControlName="dueDate">
+                <mat-datepicker-toggle matSuffix [for]="duePicker"></mat-datepicker-toggle>
+                <mat-datepicker #duePicker></mat-datepicker>
+              </mat-form-field>
+            </div>
 
-        <!-- Notes -->
-        <div class="col-12">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Notes</mat-label>
-            <textarea matInput formControlName="notes" rows="2" placeholder="Additional remarks"></textarea>
-          </mat-form-field>
-        </div>
+            <!-- Payment Type -->
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 mt-15">
+                <mat-label>Payment Type</mat-label>
+                <mat-select formControlName="paymentType" required>
+                  <mat-option value="cash">Cash</mat-option>
+                  <mat-option value="card">Card</mat-option>
+                  <mat-option value="upi">UPI</mat-option>
+                  <mat-option value="bank_transfer">Bank Transfer</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
 
-      </div>
+            <!-- Payment Status -->
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 mt-15">
+                <mat-label>Status</mat-label>
+                <mat-select formControlName="status" required>
+                  <mat-option value="paid">Paid</mat-option>
+                  <mat-option value="partially_paid">Partially Paid</mat-option>
+                  <mat-option value="pending">Pending</mat-option>
+                  <mat-option value="failed">Failed</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+            <!-- Transaction ID -->
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100 mt-15">
+                <mat-label>Transaction ID</mat-label>
+                <input matInput formControlName="transactionId" placeholder="Reference / Txn ID">
+              </mat-form-field>
+            </div>
+
+            <!-- Notes -->
+            <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100 mt-15">
+                <mat-label>Notes</mat-label>
+                <textarea matInput formControlName="notes" rows="2" placeholder="Additional remarks"></textarea>
+              </mat-form-field>
+            </div>
+
+          </div>
+
+          <mat-dialog-actions align="end">
+            <button mat-raised-button mat-dialog-close class="cancel-button" type="button">Cancel</button>
+            <button mat-raised-button class="save-button"
+                    [disabled]="loading || membershipForm.invalid"
+                    type="submit">
+              {{ buttonLabel }}
+            </button>
+          </mat-dialog-actions>
+        </mat-tab>
+      </mat-tab-group>
     </mat-dialog-content>
-
-    <mat-dialog-actions align="end">
-  <button mat-raised-button  (click)="onCancel()"  class="cancel-button">
-    Cancel
-  </button>
-  <button mat-raised-button diameter="20"  class="save-button" [disabled]="loading || membershipForm.invalid" type="submit" >
-    {{ buttonLabel }}
-  </button>
-</mat-dialog-actions>
-
-
   </form>
 </div>

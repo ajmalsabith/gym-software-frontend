@@ -1,34 +1,44 @@
-<page-header class="bg-cyan-50" title="Subscription Plans" />
 
-  <!-- Tab 1: Staff List -->
-  <div class="filters-container">
-    <div class="filters-left">
-      <!-- Search Filter -->
-
-       <mat-form-field appearance="outline" class="formsearchfeild">
+  <div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="mat-elevation-z8">
+        <mat-card-header>
+          <mat-card-title>Subscription Plans</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- Filters and Add Button -->
+          <div class="filter-section mb-3">
+            <div class="row align-items-center">
+              <div class="col-md-4">
+               
+       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Search</mat-label>
         <input matInput placeholder="Search" [(ngModel)]="searchText" (input)="applyFilters()" />
       </mat-form-field>
 
     
       <!-- Status Filter -->
-      <mat-form-field appearance="outline" class="formsearchfeild">
+     
+              </div>
+              <div class="col-md-3">
+                <mat-form-field appearance="outline" class="w-100">
         <mat-label>Status</mat-label>
         <mat-select [(ngModel)]="statusFilter" (selectionChange)="applyFilters()">
           <mat-option value="">All</mat-option>
-          <mat-option value="active">Active</mat-option>
-          <mat-option value="inactive">Expired</mat-option>
-          <mat-option value="cancelled">Cancelled</mat-option>
+         <mat-option value="active">Active</mat-option>
+          <mat-option value="inactive">Inactive</mat-option>
         </mat-select>
       </mat-form-field>
-    </div>
+              </div>
+              <div class="col-md-5 text-end">
+                 <button mat-flat-button class="add-button" (click)="CreatePlan('')"><mat-icon>add</mat-icon>Create New Subscription Plan</button>
+              </div>
+            </div>
+          </div>
 
-    <div class="filters-right">
-      <button mat-flat-button class="add-button" (click)="CreatePlan('')">Create New Subscription Plan</button>
-    </div>
-  </div>
-
-
+          <!-- Trainers Grid -->
+    
   <mtx-grid
     [data]="filteredList"
     [columns]="columns"
@@ -49,3 +59,12 @@
     [pageSize]="5"
     [toolbarTitle]="'Subscription Plans List'"
   ></mtx-grid>
+
+
+
+
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

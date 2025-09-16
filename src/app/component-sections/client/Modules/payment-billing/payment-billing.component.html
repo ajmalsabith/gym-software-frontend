@@ -1,1 +1,51 @@
-<p>payment-billing works!</p>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <mat-card class="mat-elevation-z8">
+        <mat-card-header>
+          <mat-card-title>Payment History & Invoices</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <!-- Filters and Add Button -->
+          <div class="filter-section mb-3">
+            <div class="row align-items-center">
+              <div class="col-md-4">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Search</mat-label>
+                  <input matInput 
+                         [(ngModel)]="searchText" 
+                         (input)="applyFilter()" 
+                         placeholder="Search by name, email, or phone">
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Status Filter</mat-label>
+                  <mat-select [(value)]="statusFilter" (selectionChange)="applyFilter()">
+                    <mat-option value="">All</mat-option>
+                    <mat-option value="active">Active</mat-option>
+                    <mat-option value="inactive">Inactive</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+
+          <!-- Trainers Grid -->
+          <mtx-grid
+            [data]="PaymentList"
+            [columns]="columns"
+            [loading]="false"
+            [multiSelectable]="false"
+            [pageSize]="10"
+            [pageSizeOptions]="[10, 25, 50, 100]"
+            [showToolbar]="false"
+            [columnResizable]="true"
+            class="payment-grid">
+          </mtx-grid>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

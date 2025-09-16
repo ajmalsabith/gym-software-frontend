@@ -287,10 +287,10 @@
   mat-flat-button
  [ngClass]="{
   'no-membership': !PlayerData?.subscriptionId,
-  'paid-membership': PlayerData?.subscriptionId?.paymentStatus === 'paid',
-  'pending-membership': PlayerData?.subscriptionId?.paymentStatus === 'pending' 
-                        || PlayerData?.subscriptionId?.paymentStatus === 'partially_paid',
-  'expired-membership': isExpired()
+  'paid-membership': PlayerData?.subscriptionId?.status === 'completed',
+  'pending-membership': PlayerData?.subscriptionId?.status === 'pending' 
+                        || PlayerData?.subscriptionId?.status === 'partially_paid',
+  'expired-membership': PlayerData?.subscriptionId?.status === 'expired'
 }"
 
   (click)="AssignMembership(PlayerData?.subscriptionId || '')"
@@ -306,18 +306,18 @@
   <div class="membership-status" *ngIf="PlayerData?.subscriptionId">
     <mat-icon
       [ngClass]="{
-        'status-icon-paid': PlayerData?.paymentStatus === 'paid',
-        'status-icon-pending': PlayerData?.subscriptionId?.paymentStatus === 'pending' || PlayerData?.subscriptionId?.paymentStatus === 'partially_paid',
-        'status-icon-expired': isExpired() 
+        'status-icon-paid': PlayerData?.status === 'completed',
+        'status-icon-pending': PlayerData?.subscriptionId?.status === 'pending' || PlayerData?.subscriptionId?.status === 'partially_paid',
+        'status-icon-expired': PlayerData?.subscriptionId?.status === 'expired'
       }"
     >
-      {{ PlayerData?.subscriptionId?.paymentStatus === 'paid' ? 'check_circle' : 
-         (PlayerData?.subscriptionId?.paymentStatus === 'pending' || PlayerData?.subscriptionId?.paymentStatus === 'partially_paid' ? 'hourglass_empty' : 'error') }}
+      {{ PlayerData?.subscriptionId?.status === 'completed' ? 'check_circle' : 
+         (PlayerData?.subscriptionId?.status === 'pending' || PlayerData?.subscriptionId?.status === 'partially_paid' ? 'hourglass_empty' : 'error') }}
     </mat-icon>
     <span>
-      {{ PlayerData?.subscriptionId?.paymentStatus === 'paid'
+      {{ PlayerData?.subscriptionId?.status === 'completed'
           ? ('End Date: ' + (PlayerData?.subscriptionId?.endDate | date:'dd MMM yyyy'))
-          : (PlayerData?.subscriptionId?.paymentStatus === 'pending' || PlayerData?.subscriptionId?.paymentStatus === 'partially_paid'
+          : (PlayerData?.subscriptionId?.status === 'pending' || PlayerData?.subscriptionId?.status === 'partially_paid'
               ? ('Due Date: ' + (PlayerData?.subscriptionId?.dueDate | date:'dd MMM yyyy'))
               : 'Expired') }}
     </span>

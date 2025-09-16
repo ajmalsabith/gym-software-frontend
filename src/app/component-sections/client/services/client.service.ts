@@ -142,18 +142,18 @@ UpdatePlayer(playerData: any): Observable<any> {
 
 
    // ✅ Create new payment record
-  createPayment(data: any): Observable<any> {
+  createMembership(data: any): Observable<any> {
     return this.http.post(
-      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.INSERT_PAYMENT_HISTORY}`,
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.INSERT_MEMBERSHIP_WITH_PAYMENT}`,
       data,
       { headers: this.getHeaders() }
     );
   }
 
   // ✅ Update existing payment record
-  updatePayment(id: string, data: any): Observable<any> {
+  updateMembership(id: string, data: any): Observable<any> {
     return this.http.put(
-      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.UPDATE_PAYMENT_HISTORY}/${id}`,
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.UPDATE_MEMBERSHIP_WITH_PAYMENT}/${id}`,
       data,
       { headers: this.getHeaders() }
     );
@@ -163,6 +163,13 @@ UpdatePlayer(playerData: any): Observable<any> {
   getPaymentsByGym(gymId: string): Observable<any> {
     return this.http.get(
       `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.GET_PAYMENT_HISTORY_BY_GYMID}/${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+   getMembershipByPlayerId(playerid: string): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.GET_MEMBERSHIP_BY_PLAYER}/${playerid}`,
       { headers: this.getHeaders() }
     );
   }
