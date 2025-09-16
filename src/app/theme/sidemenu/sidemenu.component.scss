@@ -45,8 +45,8 @@
 
     &.expanded {
       // background-color: var(--sidemenu-expanded-background-color);
-      background-color: white;
-      color: black !important;
+      background-color: rgb(0, 0, 0);
+      color: rgb(254, 254, 254) !important;
 
       >.menu-toggle>.menu-caret {
         transform: rotate(-180deg);

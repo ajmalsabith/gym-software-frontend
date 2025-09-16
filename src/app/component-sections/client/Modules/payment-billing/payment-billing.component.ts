@@ -6,6 +6,7 @@ import { ClientService } from '../../services/client.service';
 import { SaveDailogComponent } from 'app/layout-store/dialog/save-dailog/save-dailog.component';
 import { ErrorDailogComponent } from 'app/layout-store/dialog/error-dailog/error-dailog.component';
 import { TokenService } from 'app/service/token.service';
+import { InvoiceReportComponent } from './invoice-report/invoice-report.component';
 
 
 @Component({
@@ -111,7 +112,23 @@ export class PaymentBillingComponent {
       sortable: true,
       formatter: (row: any) =>
         row?.createdAt ? new Date(row.createdAt).toLocaleDateString() : '-'
+    },
+    {
+  header: 'Invoice',
+  field: 'actions',
+  width: '120px',
+  pinned: 'right',
+  type: 'button',
+  buttons: [
+    {
+      icon: 'receipt_long',   // Material Icon for invoice/receipt
+      tooltip: 'View Invoice',
+      type: 'icon',           // or 'label' if you want only text
+      click: (record: any) => this.openInvoiceDialog(record),
     }
+  ]
+}
+
   ];
 }
 
@@ -144,5 +161,28 @@ export class PaymentBillingComponent {
         return searchMatch && statusMatch;
       });
     }
+
+
+   openInvoiceDialog(row: string) {
+  this.dialog.open(InvoiceReportComponent, {
+    width: '900px',
+    height:'auto',
+    data: row
+  });
+}
+sendRenewalReminder(name: string, phone: string, dueDate: string) {
+  const message = `💪 Hi ${name},
+📅 Your membership renewal is pending on ${dueDate}.
+⚡ Please complete it soon to continue your workouts.
+
+🙏 Regards,
+Your Gym Team`;
+
+  // Encode the whole message safely (this keeps emojis intact)
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+}
+
+
 
 }

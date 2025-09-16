@@ -22,14 +22,14 @@
         <input matInput placeholder="Search by name or email" [(ngModel)]="searchText" (input)="applyFilters()" />
       </mat-form-field>
 
-      <mat-form-field appearance="outline" class="formsearchfeild">
+      <!-- <mat-form-field appearance="outline" class="formsearchfeild">
         <mat-label>Role</mat-label>
         <mat-select [(ngModel)]="RoleFilter" (selectionChange)="applyFilters()">
           <mat-option value="">All</mat-option>
           <mat-option value="admin">Admin</mat-option>
           <mat-option value="player">Player</mat-option>
         </mat-select>
-      </mat-form-field>
+      </mat-form-field> -->
 
        <mat-form-field appearance="outline" class="formsearchfeild">
         <mat-label>Gender</mat-label>
@@ -187,7 +187,7 @@
             <mat-select formControlName="role" required>
               <mat-option value="player">Player</mat-option>
               <!-- <mat-option value="trainer">Trainer</mat-option> -->
-              <mat-option value="admin">Admin</mat-option>
+              <!-- <mat-option value="admin">Admin</mat-option> -->
             </mat-select>
           </mat-form-field>
 
@@ -282,7 +282,7 @@
          </div>
 
         <div class="form-buttons">
-<div class="membership-container">
+<div  [ngClass]="{nothide: PlayerData==null}"  class="membership-container">
 <button
   mat-flat-button
  [ngClass]="{

@@ -197,7 +197,7 @@ onStartDateChange(event: any): void {
     _id: this.data?.membership?._id // keep id if edit mode
   };
 
-  if (this.data?.mode === 'edit') {
+  if (this.data?.membership?._id) {
     // ✅ Update existing payment
     this.clientService.updateMembership(payload._id, payload).subscribe({
       next: (res) => {

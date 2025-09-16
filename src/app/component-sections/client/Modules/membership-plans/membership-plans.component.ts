@@ -120,8 +120,8 @@ onEdit(record:any){
 
   const dialogRef = this.dialog.open(PlanDialogeComponent, {
     width: '700px',
-    height:'auto',
-    minHeight:'500px',    data: {
+    height:'90%',
+    minHeight:'600px',    data: {
       row:record,
       heading:"Update"    }
   });

@@ -1,0 +1,128 @@
+<mat-dialog-content>
+
+<div class="invoice-container" id="Invoice-cont" *ngIf="paymentData">
+  
+  <!-- Header -->
+  <div class="header">
+    <div>
+      <img [src]="paymentData?.gymId?.logo" alt="Gym Logo">
+    </div>
+    <div class="gym-details">
+      <h1>{{ paymentData?.gymId?.name }}</h1>
+      <p>
+        {{ paymentData?.gymId?.line1 }}, {{ paymentData?.gymId?.city }},
+        {{ paymentData?.gymId?.state }}, {{ paymentData?.gymId?.country }} - {{ paymentData?.gymId?.zip }}<br>
+        Phone: {{ paymentData?.gymId?.phone }}<br>
+        Email: {{ paymentData?.gymId?.ownerEmail }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Invoice Info -->
+  <div class="section">
+    <h2>Invoice</h2>
+    <table>
+      <tr>
+        <td><b>Invoice ID:</b> {{ paymentData?._id }}</td>
+        <td><b>Date:</b> {{ paymentData?.date | date:'dd-MMM-yyyy' }}</td>
+      </tr>
+      <tr>
+        <td><b>Payment Status:</b> {{ paymentData?.status | titlecase }}</td>
+        <td><b>Payment Type:</b> {{ paymentData?.paymentType }}</td>
+      </tr>
+      <tr>
+        <td><b>Transaction ID:</b> {{ paymentData?.transactionId || '-' }}</td>
+        <td><b>Notes:</b> {{ paymentData?.notes }}</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Member Info -->
+  <div class="section">
+    <h2>Member Details</h2>
+    <table>
+      <tr>
+        <td><b>Name:</b> {{ paymentData?.playerId?.name }}</td>
+        <td><b>Phone:</b> {{ paymentData?.playerId?.phone }}</td>
+      </tr>
+      <tr>
+        <td><b>Email:</b> {{ paymentData?.playerId?.email }}</td>
+        <td><b>Age:</b> {{ paymentData?.playerId?.age }}</td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <b>Address:</b> 
+          {{ paymentData?.playerId?.line1 }}, {{ paymentData?.playerId?.city }},
+          {{ paymentData?.playerId?.state }}, {{ paymentData?.playerId?.country }} - {{ paymentData?.playerId?.zip }}
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Membership Info -->
+  <!-- <div class="section">
+    <h2>Membership Details</h2>
+    <table>
+      <tr>
+        <td><b>Membership Plan ID:</b> {{ paymentData?.membershipId?.planId }}</td>
+        <td><b>Status:</b> {{ paymentData?.membershipId?.status | titlecase }}</td>
+      </tr>
+      <tr>
+        <td><b>Subscription Start:</b> {{ paymentData?.playerId?.subscriptionStartDate | date:'dd-MMM-yyyy' }}</td>
+        <td><b>Subscription End:</b> {{ paymentData?.playerId?.subscriptionEndDate | date:'dd-MMM-yyyy' }}</td>
+      </tr>
+    </table>
+  </div> -->
+
+  <!-- Payment Info -->
+  <div class="section">
+    <h2>Payment Summary</h2>
+    <table>
+      <tr>
+        <td>Membership Total Amount</td>
+        <td>₹{{ paymentData?.membershipId?.totalAmount }}</td>
+      </tr>
+      <tr>
+        <td>Membership Paid Amount</td>
+        <td>₹{{ paymentData?.membershipId?.paidAmount }}</td>
+      </tr>
+      <tr>
+        <td>Pay Amount</td>
+        <td>₹{{ paymentData?.amount }}</td>
+      </tr>
+      <tr>
+        <td>Balance</td>
+        <td>₹{{ paymentData?.membershipId?.balance - paymentData?.amount }}</td>
+      </tr>
+    </table>
+    <p class="total">Total Pay Amount: ₹{{ paymentData?.amount }}</p>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>Thank you for your payment!<br>Stay Fit, Stay Healthy 💪</p>
+  </div>
+
+</div>
+
+</mat-dialog-content>
+<mat-dialog-actions style="display: flex; justify-content: space-between; width: 100%;">
+  <!-- Left side buttons -->
+  <div>
+    <button mat-button style="background-color:green;color: white;" (click)="printInvoice()">
+      <mat-icon>print</mat-icon>
+      Print
+    </button>
+    <button mat-button style="background-color:green;color: white;" (click)="sendMail()">
+      <mat-icon>send</mat-icon>
+      Send Mail
+    </button>
+  </div>
+
+  <!-- Right side button -->
+  <div>
+    <button mat-button class="cancel-button" mat-dialog-close>
+      Close
+    </button>
+  </div>
+</mat-dialog-actions>

@@ -57,7 +57,15 @@
 
     "ReportsAnalytics":"Reports & Analytics",
     "paymentbilling":"Payment & Billing",
-    "UpdatesReminders":"Updates & Reminders",
+    "UpdatesReminders":"Alerts & Reminders",
+
+    "ReportsAnalytics.Revenue":"Revenue",
+    "ReportsAnalytics.Membership":"Membership",
+    "ReportsAnalytics.Attendance":"Attendance",
+
+    "UpdatesReminders.membershippayment":"Membership & Due",
+    "UpdatesReminders.birthdaycustom":"Custom & Birthdays",
+    "UpdatesReminders.attendance":"Attendance",
 
     "admin":"Admin",
     "admin.rolesandPermissions":"Roles & Permissions",

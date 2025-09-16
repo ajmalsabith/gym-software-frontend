@@ -40,20 +40,61 @@
       "type": "link",
       "icon": "attach_money"
     },
-    {
-      "route": "client/modules/reports-analytics",
+
+     {
+      "route": "",
       "name": "ReportsAnalytics",
-      "type": "link",
-      "icon": "analytics"
+      "type": "sub",
+      "icon": "analytics",
+      "children": [
+        {
+          "route": "client/modules/reports-revenue",
+          "name": "Revenue",
+          "type": "link",
+          "icon": "manage_accounts"
+        },
+        {
+          "route": "client/modules/reports-membership",
+          "name": "Membership",
+          "type": "link",
+          "icon": "card_membership"
+        },
+        {
+          "route": "client/modules/reports-attendance",
+          "name": "Attendance",
+          "type": "link",
+          "icon": "barcode_reader"
+        }
+      ]
     },
-    {
-      "route": "client/modules/updates-reminders",
+
+
+       {
+      "route": "",
       "name": "UpdatesReminders",
-      "type": "link",
-      "icon": "notifications_active"
+      "type": "sub",
+      "icon": "notifications_active",
+      "children": [
+        {
+          "route": "client/modules/reminders-membership-paymentdue",
+          "name": "membershippayment",
+          "type": "link",
+          "icon": "manage_accounts"
+        },
+        {
+          "route": "client/modules/updates-attendance",
+          "name": "attendance",
+          "type": "link",
+          "icon": "card_membership"
+        },
+        {
+          "route": "client/modules/updates-Birthdays-custome",
+          "name": "birthdaycustom",
+          "type": "link",
+          "icon": "barcode_reader"
+        }
+      ]
     }
-
-
    
     
 
@@ -61,3 +102,7 @@
   ]
 
 }
+
+
+
+ 

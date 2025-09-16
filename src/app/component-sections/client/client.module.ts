@@ -42,6 +42,7 @@ import { TrainerManageComponent } from './Modules/trainer-manage/trainer-manage.
 import { TrainerDialogComponent } from './Modules/trainer-manage/trainer-dialog/trainer-dialog.component';
 import { AssignMembershipComponent } from './Modules/player-manage/assign-membership/assign-membership.component';
 import { PaymentBillingComponent } from './Modules/payment-billing/payment-billing.component';
+import { InvoiceReportComponent } from './Modules/payment-billing/invoice-report/invoice-report.component';
 
 @NgModule({
   declarations: [
@@ -49,10 +50,12 @@ import { PaymentBillingComponent } from './Modules/payment-billing/payment-billi
   PlayerManageComponent,
   MembershipPlansComponent,
   PlanDialogeComponent,
-  TrainerManageComponent,
   TrainerDialogComponent,
   AssignMembershipComponent,
-  PaymentBillingComponent
+  PaymentBillingComponent,
+  TrainerManageComponent,
+  InvoiceReportComponent
+  
   ],
   imports: [
     CommonModule,

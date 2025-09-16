@@ -106,7 +106,7 @@ loading=false
   let request$: Observable<any>;
   let successMessage = '';
 
-  if (this.isEditing && this.selectedUserId) {
+  if (formData._id) {
     request$ = this.clientservice.UpdatePlayer(formData
     );
     successMessage = 'Player updated successfully';
@@ -446,6 +446,7 @@ onLogoSelected(event: Event): void {
         IsStatus: 'Active',
         gymId: userSession?.gymId
       });
+      this.PlayerData=null
     }
 
       
