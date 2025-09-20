@@ -1,7 +1,7 @@
 <div class="trainer-dialog">
   <h2 mat-dialog-title>{{ data?.mode === 'edit' ? 'Edit Trainer' : 'Add New Trainer' }}</h2>
   
-  <form [formGroup]="trainerForm" (ngSubmit)="saveTrainer()">
+  <form [formGroup]="trainerForm" >
     <mat-dialog-content>
       <div class="row">
         <!-- Name -->
@@ -145,10 +145,32 @@
           </mat-form-field>
         </div>
         <div class="col-md-6">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Photo URL</mat-label>
-            <input matInput formControlName="photo" placeholder="https://...">
-          </mat-form-field>
+          <div class="upload-card">
+  <!-- Image Preview -->
+  <div class="image-preview">
+    <ng-container *ngIf="trainerForm.get('photo')?.value; else placeholder">
+      <img [src]="trainerForm.get('photo')?.value" width="120px" height="120px" alt="Preview" />
+    </ng-container>
+    <ng-template #placeholder>
+      <div class="placeholder">No Photo</div>
+    </ng-template>
+  </div>
+
+  <!-- Hidden File Input -->
+  <input 
+    type="file" 
+    accept="image/*" 
+    (change)="onLogoSelected($event)" 
+    #fileInput 
+    hidden
+  />
+
+  <!-- Upload Button -->
+  <button mat-raised-button color="primary" class="upload-btn" (click)="fileInput.click()">
+    Upload Photo
+  </button>
+
+         </div>
         </div>
 
       </div>
@@ -157,12 +179,14 @@
     <mat-dialog-actions align="end">
       <button mat-button 
               type="button"
+              class="cancel-button"
               (click)="onCancel()"
               [disabled]="loading">
         Cancel
       </button>
       <button mat-raised-button 
-              color="primary"
+       (click)="saveTrainer()"
+              class="save-button"
               type="submit"
               [disabled]="loading || trainerForm.invalid">
         <mat-spinner diameter="20" *ngIf="loading" style="margin-right: 10px;"></mat-spinner>

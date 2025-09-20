@@ -1,29 +1,122 @@
 <div class="row">
 
   <!-- Statistics -->
-  @for (stat of stats; track stat) {
-    <div class="col-sm-6 col-md-3">
-      <mat-card [class]="['text-white', stat.color]">
-        <mat-card-header>
-          <mat-card-subtitle class="text-white">{{stat.title}}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <h2 class="m-t-0 m-b-8">{{stat.amount}}</h2>
-          <mtx-progress [value]="stat.progress.value"
-            height="2px"
-            foreground="rgba(255,255,255,1)"
-            background='rgba(0,0,0,.4)' />
-          <small class="text-muted">Monthly</small>
-        </mat-card-content>
-      </mat-card>
+  <!-- 1️⃣ Total Revenue -->
+  <div class="col-sm-6 col-md-2">
+    <mat-card class="stat-card card-black">
+      <div class="stat-header">
+        <mat-card-subtitle style="color: #fff;">Total Revenue</mat-card-subtitle>
+        <mat-icon class="stat-icon">currency_rupee</mat-icon>
+      </div>
+      <h2 class="stat-amount">₹{{ totalRevenue }}</h2>
+      <p class="stat-extra"></p>
+    </mat-card>
+  </div>
+
+  <!-- 2️⃣ Balance Due -->
+  <div class="col-sm-6 col-md-2">
+    <mat-card class="stat-card card-orange">
+      <div class="stat-header">
+        <mat-card-subtitle style="color: #fff;">Total Balance Due</mat-card-subtitle>
+        <mat-icon class="stat-icon">currency_rupee</mat-icon>
+      </div>
+      <h2 class="stat-amount">₹{{ balanceDue }}</h2>
+      <p class="stat-extra"></p>
+    </mat-card>
+  </div>
+
+    <!-- 4️⃣ Today Revenue -->
+  <div class="col-sm-6 col-md-2">
+    <mat-card class="stat-card  card-light-black">
+      <div class="stat-header">
+        <mat-card-subtitle>Today Revenue</mat-card-subtitle>
+        <mat-icon class="stat-icon">currency_rupee</mat-icon>
+      </div>
+      <h2 class="stat-amount">₹{{ todayRevenue }}</h2>
+      <p class="stat-extra">Today</p>
+    </mat-card>
+  </div>
+
+  <!-- 3️⃣ Expiring Soon -->
+  <div class="col-sm-6 col-md-2">
+  <mat-card class="membership-card card-white">
+    <!-- Active Membership -->
+    <div class="membership-row">
+      <div>
+        <mat-card-subtitle>Active Memberships</mat-card-subtitle>
+        <h4 class="stat-amount">{{ activeMembership }}</h4>
+      </div>
+      <mat-icon class="stat-icon">people</mat-icon>
     </div>
-  }
+
+    <div class="divider"></div>
+
+    <!-- Inactive Membership -->
+    <div class="membership-row">
+      <div>
+        <mat-card-subtitle>Expired Memberships</mat-card-subtitle>
+        <h4 class="stat-amount">{{ inactiveMembership }}</h4>
+      </div>
+      <mat-icon class="stat-icon">people</mat-icon>
+    </div>
+  </mat-card>
+</div>
+
+
+
+
+  <!-- 5️⃣ New Members -->
+  <div class="col-sm-6 col-md-2">
+    <mat-card class="stat-card card-gray">
+      <div class="stat-header">
+        <mat-card-subtitle style="color: #fff;">New Members</mat-card-subtitle>
+        <mat-icon class="stat-icon">people</mat-icon>
+      </div>
+      <h2 class="stat-amount">{{ newMembers }}</h2>
+      <p class="stat-extra">last 10 days</p>
+    </mat-card>
+  </div>
+
+
+  
+
+  <div class="col-sm-6 col-md-2">
+   <mat-card class="small-card card-small-color">
+      <div class="stat-header-small">
+        <mat-card-subtitle style="color: rgb(255, 255, 255);">Balance Due Today</mat-card-subtitle>
+        <!-- <mat-icon class="stat-icon">person_add</mat-icon> -->
+        <h4 class="stat-amount">{{balanceDueToday}}</h4>
+
+      </div>
+                     <span style="color: white;font-size: small;padding: 0;margin: 0;">Members</span>
+
+    </mat-card>
+    <mat-card style="margin-top: 10px;" class="small-card card-small-color">
+      <div class="stat-header-small">
+        <mat-card-subtitle style="color: rgb(255, 255, 255);">Expire in 5 days</mat-card-subtitle>
+        <!-- <mat-icon class="stat-icon">person_add</mat-icon> -->
+        <h4 class="stat-amount">{{expiringMemberships?.expiringIn5Days}}</h4>
+      </div>
+        <span  style="color: white;font-size: small;padding: 0;margin: 0;">Members</span>
+    </mat-card>
+  </div>
+
+
+  <!-- <div class="col-sm-6 col-md-6" >
+    
+  </div> -->
+
+  
+
+
 
   <!-- Charts -->
   <div class="col-md-7">
-    <mat-card>
+    <mat-card style="    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+  ">
       <mat-card-header>
-        <mat-card-title>Traffic</mat-card-title>
+        <mat-card-title>📊 Monthly Revenue</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div id="chart1"></div>
@@ -31,9 +124,10 @@
     </mat-card>
   </div>
   <div class="col-md-5">
-    <mat-card>
+    <mat-card style="    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  ">
       <mat-card-header>
-        <mat-card-title>Weekly Revenue</mat-card-title>
+        <mat-card-title>💰 Revenue by Payment Type</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div id="chart2"></div>
@@ -41,162 +135,74 @@
     </mat-card>
   </div>
 
-  <!-- Others -->
-  <div class="col-md-6">
-    <mat-card>
-      <mat-tab-group>
-        <mat-tab label="First">
-          <div class="m-16">
-            <img class="d-block w-full" src="images/pixabay/2.jpg" alt="">
-            <h3>Aenean viverra arcu nec pellentesque ultrices. In erat purus, adipiscing nec
-              lacinia
-              at, ornare ac eros.
-            </h3>
-            <p>
-              Nullam at risus metus. Quisque nisl purus, pulvinar ut mauris vel, elementum
-              suscipit
-              eros. Praesent
-              ornare ante massa, egestas pellentesque orci convallis ut. Curabitur consequat
-              convallis est, id luctus
-              mauris lacinia vel. Nullam tristique lobortis mauris, ultricies fermentum lacus
-              bibendum id. Proin non
-              ante tortor. Suspendisse pulvinar ornare tellus nec pulvinar. Nam pellentesque
-              accumsan mi, non
-            pellentesque sem convallis sed. Quisque rutrum erat id auctor gravida.</p>
-          </div>
-        </mat-tab>
-        <mat-tab label="Second">
-          <div class="m-16">
-            <img class="d-block w-full" src="images/pixabay/8.jpg" alt="">
-            <h3>Vestibulum vitae diam nec odio dapibus placerat. Ut ut lorem justo.</h3>
-            <p>
-              Fusce bibendum augue nec fermentum tempus. Sed laoreet dictum tempus. Aenean ac sem
-              quis nulla malesuada
-              volutpat. Nunc vitae urna pulvinar velit commodo cursus. Nullam eu felis quis diam
-              adipiscing hendrerit
-              vel ac turpis. Nam mattis fringilla euismod. Donec eu ipsum sit amet mauris iaculis
-              aliquet. Quisque sit
-              amet feugiat odio. Cras convallis lorem at libero lobortis, placerat lobortis sapien
-              lacinia. Duis sit
-            amet elit bibendum sapien dignissim bibendum.</p>
-          </div>
-        </mat-tab>
-        <mat-tab label="Third">
-          <div class="m-16">
-            <img class="d-block w-full" src="images/pixabay/16.jpg" alt="">
-            <h3>Maecenas eget turpis luctus, scelerisque arcu id, iaculis urna. Interdum et
-              malesuada fames ac ante
-            ipsum primis in faucibus.</h3>
-            <p>
-              Morbi placerat est nec pharetra placerat. Ut laoreet nunc accumsan orci aliquam
-              accumsan. Maecenas
-              volutpat dolor vitae sapien ultricies fringilla. Suspendisse vitae orci sed nibh
-              ultrices tristique.
-              Aenean in ante eget urna semper imperdiet. Pellentesque sagittis a nulla at
-              scelerisque. Nam augue nulla,
-              accumsan quis nisi a, facilisis eleifend nulla. Praesent aliquet odio non imperdiet
-            fringilla.</p>
-          </div>
-        </mat-tab>
-      </mat-tab-group>
-    </mat-card>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Album</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-grid-list cols="2">
-          <mat-grid-tile class="bg-violet-95">1</mat-grid-tile>
-          <mat-grid-tile class="bg-magenta-95">2</mat-grid-tile>
-          <mat-grid-tile class="bg-orange-95">3</mat-grid-tile>
-          <mat-grid-tile class="bg-azure-95">4</mat-grid-tile>
-        </mat-grid-list>
-      </mat-card-content>
-    </mat-card>
-  </div>
 
-  <div class="col-md-6">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Avatar List</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-list>
-          @for (message of messages; track message) {
-            <mat-list-item>
-              <img matListItemAvatar [src]="message.img" alt="Avatar">
-              <h3 matListItemTitle>{{message.subject}}</h3>
-              <p matListItemLine>{{message.content}}</p>
-            </mat-list-item>
-          }
-        </mat-list>
-      </mat-card-content>
-    </mat-card>
+<div class="col-md-6">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Most Popular Plans</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-list>
+        <mat-list-item *ngFor="let plan of popularPlans; let i = index">
+              <img matListItemAvatar [src]="images[i] || 'images/common-rank.png' " alt="Avatar">
+              <h3 matListItemTitle>{{plan?.plan.planName}}</h3>
+              <p matListItemLine>Type: {{ plan?.plan.planType }} | Price: ₹{{ plan?.plan.price }} - Subscribed: {{ plan?.count }} Members</p>
+         </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</div>
 
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Revenue Table</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <table class="w-full" mat-table [dataSource]="dataSource">
-          <ng-container matColumnDef="position">
-            <th mat-header-cell *matHeaderCellDef>No.</th>
-            <td mat-cell *matCellDef="let element;"> {{element.position}} </td>
-          </ng-container>
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>Name</th>
-            <td mat-cell *matCellDef="let element;"> {{element.name}} </td>
-          </ng-container>
-          <ng-container matColumnDef="weight">
-            <th mat-header-cell *matHeaderCellDef>Weight</th>
-            <td mat-cell *matCellDef="let element;"> {{element.weight}} </td>
-          </ng-container>
-          <ng-container matColumnDef="symbol">
-            <th mat-header-cell *matHeaderCellDef>Symbol</th>
-            <td mat-cell *matCellDef="let element;"> {{element.symbol}} </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-      </mat-card-content>
-    </mat-card>
 
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Chips & Buttons</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <mat-chip-listbox class="m-t-16">
-          <mat-chip-option selected>One fish</mat-chip-option>
-          <mat-chip-option color="primary">Primary fish</mat-chip-option>
-          <mat-chip-option color="accent">Accent fish</mat-chip-option>
-          <mat-chip-option color="warn">Two fish</mat-chip-option>
-        </mat-chip-listbox>
-        <mat-chip-listbox class="m-t-8">
-          <mat-chip-option class="bg-orange-90">Orange fish</mat-chip-option>
-          <mat-chip-option class="bg-blue-90">Blue fish</mat-chip-option>
-          <mat-chip-option class="bg-cyan-90">Cyan fish</mat-chip-option>
-          <mat-chip-option class="bg-red-90" selected>Red fish</mat-chip-option>
-          <mat-chip-option class="bg-green-90">Green fish</mat-chip-option>
-        </mat-chip-listbox>
+<div class="col-md-6">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Latest Payments</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <table mat-table [dataSource]="LatestPaymentList" class="w-full">
 
-        <div class="m-t-16">
-          <button mat-raised-button>Basic</button>
-          <button mat-raised-button color="primary">Primary</button>
-          <button mat-raised-button color="accent">Accent</button>
-          <button mat-raised-button color="warn">Warn</button>
-          <button mat-raised-button disabled>Disabled</button>
-          <a mat-raised-button routerLink=".">Link</a>
-        </div>
-        <div class="m-t-8">
-          <button mat-flat-button class="bg-orange-90 text-dark">Orange</button>
-          <button mat-flat-button class="bg-blue-90 text-dark">Teal</button>
-          <button mat-flat-button class="bg-cyan-90 text-dark">Cyan</button>
-          <button mat-flat-button class="bg-red-90 text-dark">Purple</button>
-          <button mat-flat-button class="bg-green-90 text-dark">Green</button>
-        </div>
-      </mat-card-content>
-    </mat-card>
-  </div>
+        <!-- Photo Column -->
+        <ng-container matColumnDef="photo">
+          <th mat-header-cell *matHeaderCellDef>Photo</th>
+          <td mat-cell *matCellDef="let element">
+            <img [src]="element.photo || 'images/teckfuel_usericon.png' " alt="Avatar" width="40" height="40" style="border-radius:50%;">
+          </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let element"> {{ element.name }} </td>
+        </ng-container>
+
+        <!-- Amount Column -->
+        <ng-container matColumnDef="amount">
+          <th mat-header-cell *matHeaderCellDef>Amount</th>
+          <td mat-cell *matCellDef="let element"> ₹{{ element.amount }} </td>
+        </ng-container>
+
+        <!-- Payment Type Column -->
+        <ng-container matColumnDef="paymentType">
+          <th mat-header-cell *matHeaderCellDef>Payment Type</th>
+          <td mat-cell *matCellDef="let element"> {{ element.paymentType }} </td>
+        </ng-container>
+
+        <!-- Time Column -->
+        <ng-container matColumnDef="time">
+          <th mat-header-cell *matHeaderCellDef>Time</th>
+          <td mat-cell *matCellDef="let element"> {{ element.time }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+
+  
+
 
 </div>

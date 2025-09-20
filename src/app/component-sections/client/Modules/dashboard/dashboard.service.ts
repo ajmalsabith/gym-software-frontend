@@ -58,43 +58,45 @@ const MESSAGES = [
 @Injectable()
 export class DashboardService {
   private http = inject(HttpClient);
+stats = [
+  { 
+    title: 'Total Revenue', 
+    amount: '$180,200', 
+    icon: 'currency_rupee', 
+    colorClass: 'card-black',
+    extraLabel: '' 
+  },
+  { 
+    title: 'Balance Due', 
+    amount: '$70,205', 
+    icon: 'currency_rupee', 
+    colorClass: 'card-orange',
+    extraLabel: '' 
+  },
+  { 
+    title: 'Expiring Soon', 
+    amount: '12', 
+    icon: 'people', 
+    colorClass: 'card-light-black',
+    extraLabel: 'Next 5 Days' 
+  },
+  { 
+    title: 'Today Revenue', 
+    amount: '$1,922', 
+    icon: 'currency_rupee', 
+    colorClass: 'card-white',
+    extraLabel: 'Today' 
+  },
+  { 
+    title: 'New Members', 
+    amount: '12', 
+    icon: 'people', 
+    colorClass: 'card-gray',
+    extraLabel: 'This Month' 
+  }
+];
 
-  stats = [
-    {
-      title: 'Total Sales',
-      amount: '180,200',
-      progress: {
-        value: 50,
-      },
-      color: 'bg-azure-50',
-    },
-    {
-      title: 'Revenue',
-      amount: '70,205',
-      progress: {
-        value: 70,
-      },
-      color: 'bg-blue-50',
-    },
-    {
-      title: 'Traffic',
-      amount: '1,291,922',
-      progress: {
-        value: 80,
-      },
-      color: 'bg-green-50',
-    },
-    {
-      title: 'New User',
-      amount: '1,922',
-      progress: {
-        value: 40,
-      },
-      color: 'bg-cyan-50',
-    },
-  ];
-
-  charts: ApexOptions[] = [
+  chartold: ApexOptions[] = [
     {
       chart: {
         height: 350,
@@ -189,16 +191,17 @@ export class DashboardService {
     },
   ];
 
+
+ 
+ 
+
+
   getData() {
     return ELEMENT_DATA;
   }
 
   getMessages() {
     return MESSAGES;
-  }
-
-  getCharts() {
-    return this.charts;
   }
 
   getStats() {

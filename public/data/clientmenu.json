@@ -3,7 +3,7 @@
     "menu": [
 
      {
-      "route": "client/dashboard",
+      "route": "client/modules/dashboard",
       "name": "clientdashboard",
       "type": "link",
       "icon": "dashboard"

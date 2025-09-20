@@ -7,6 +7,7 @@ import { SaveDailogComponent } from 'app/layout-store/dialog/save-dailog/save-da
 import { ErrorDailogComponent } from 'app/layout-store/dialog/error-dailog/error-dailog.component';
 import { TokenService } from 'app/service/token.service';
 import { TrainerDialogComponent } from './trainer-dialog/trainer-dialog.component';
+import { ConfirmDailogComponent } from 'app/layout-store/dialog/confirm-dailog/confirm-dailog.component';
 
 @Component({
   selector: 'app-trainer-manage',
@@ -30,6 +31,16 @@ export class TrainerManageComponent {
     this.getTrainerList();
     
     this.columns = [
+         {
+    header: 'Photo',
+    field: 'photo',
+    width: '80px',
+    // type: 'html', // Important: specify HTML type
+    formatter: (rowData: any) => {
+      const photoSrc = rowData.photo || 'images/teckfuel_usericon.png';
+      return `<img src="${photoSrc}" width="50" height="50" style="border-radius: 50% !important; object-fit: cover;" alt="User photo" />`;
+    }
+  },
       { header: 'Name', field: 'name', sortable: true },
       { header: 'Email', field: 'email', sortable: true },
       { header: 'Phone', field: 'phone', sortable: true, width: '120px' },
@@ -41,12 +52,6 @@ export class TrainerManageComponent {
         sortable: true,
         width: '120px',
         formatter: (rowData: any) => rowData.dob ? new Date(rowData.dob).toLocaleDateString() : '-'
-      },
-      {
-        header: 'Photo',
-        field: 'photo',
-        width: '90px',
-        formatter: (rowData: any) => rowData.photo ? `<img src="${rowData.photo}" alt="photo" style="width:36px;height:36px;border-radius:50%;object-fit:cover;"/>` : '-'
       },
       { 
         header: 'Created Date', 
@@ -84,7 +89,7 @@ export class TrainerManageComponent {
             icon: 'delete',
             tooltip: 'Delete',
             color: 'warn',
-            click: (record: any) => this.delete(record),
+            click: (record: any) => this.openConfirmDialog(record),
           },
         ],
       },
@@ -98,6 +103,7 @@ export class TrainerManageComponent {
         next: (res: any) => {
          if(res.success){
 this.filteredList = [...res.trainers];
+this.list=this.filteredList
          }
           
           console.log('Trainers list:', this.list);
@@ -136,6 +142,22 @@ this.filteredList = [...res.trainers];
       }
     });
   }
+
+
+  openConfirmDialog(row:any) {
+  const dialogRef = this.dialog.open(ConfirmDailogComponent, {
+    width: '350px',
+    data: { message: 'Are you sure you want to Delete?' }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+       this.delete(row)
+      console.log('Confirmed');
+    } 
+  });
+}
+
 
   delete(row: any): void {
     if (confirm('Are you sure you want to delete this trainer?')) {

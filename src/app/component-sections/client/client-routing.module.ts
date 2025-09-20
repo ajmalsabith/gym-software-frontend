@@ -4,8 +4,10 @@ import { PlayerManageComponent } from './Modules/player-manage/player-manage.com
 import { MembershipPlansComponent } from './Modules/membership-plans/membership-plans.component';
 import { TrainerManageComponent } from './Modules/trainer-manage/trainer-manage.component';
 import { PaymentBillingComponent } from './Modules/payment-billing/payment-billing.component';
+import { DashboardComponentClient } from './Modules/dashboard/dashboard.component';
 
 const routes: Routes = [
+  { path:'dashboard', component: DashboardComponentClient },
   { path:'players-manage', component: PlayerManageComponent },
   { path:'membership-plans', component: MembershipPlansComponent },
   { path:'trainer-manage', component: TrainerManageComponent },

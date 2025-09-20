@@ -61,7 +61,7 @@ export class ClientLoginComponent {
             this.isSubmitting = false;
             
             // Navigate to dashboard
-            this.router.navigateByUrl('/admin/dashboard');
+            this.router.navigateByUrl('client/modules/dashboard');
           } else {
             this.showErrorDialog({ error: { message: result.message || 'Login failed' } });
             this.isSubmitting = false;

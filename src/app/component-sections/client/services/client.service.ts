@@ -173,4 +173,74 @@ UpdatePlayer(playerData: any): Observable<any> {
       { headers: this.getHeaders() }
     );
   }
+
+
+
+   ClearMembershipByid(id:any,incPayment:any): Observable<any> {
+    return this.http.put(
+      `${this.apiConfig.API_LOCAL_URL}/clearMembership/${id}/${incPayment}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+
+  
+   DeletePaymentByid(id:any): Observable<any> {
+    return this.http.delete(
+      `${this.apiConfig.API_LOCAL_URL}/deletepayment/${id}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+
+
+  // dashboard apis
+
+  
+  // 1. Balance Due Date Today
+  getBalanceDueToday(gymId: string): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}/dueDatetoday/${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // 2. Expiring Memberships in 5 days
+  getExpiringMemberships(gymId: string): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}/expiringMemberships/${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // 3. Membership Dashboard
+  getMembershipDashboard(gymId: string): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}/membershipDashboard/${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // 4. Most Popular Plans
+  getMostPopularPlans(gymId: string): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}/mostePopularplans/${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+   GetloadLastPaymentsDashboard(gymId: string): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}/lastpaymentsDashbaord/${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // 5. Payment Dashboard
+  getPaymentDashboard(gymId: string): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}/paymentDashbaord/${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
 }

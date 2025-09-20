@@ -55,7 +55,7 @@
     </div>
 
     <div class="filters-right">
-      <button mat-flat-button class="add-button" (click)="addUser()">Create New Player</button>
+      <button mat-flat-button class="add-button" (click)="addUser()"><mat-icon>add</mat-icon>Create New Player</button>
     </div>
   </div>
 
@@ -252,7 +252,8 @@
       
         </div>
 
-         <div class="form-row">
+
+           <div class="col-md-6">
           <div class="upload-card">
   <!-- Image Preview -->
   <div class="image-preview">
@@ -277,9 +278,10 @@
   <button mat-raised-button color="primary" class="upload-btn" (click)="fileInput.click()">
     Upload Photo
   </button>
-</div>
 
          </div>
+        </div>
+      
 
         <div class="form-buttons">
 <div  [ngClass]="{nothide: PlayerData==null}"  class="membership-container">
@@ -298,7 +300,7 @@
   matTooltipPosition="above"
 >
   <mat-icon>card_membership</mat-icon>
-  {{ !PlayerData?.subscriptionId ? 'Add Membership Plan' : 'Update Membership Plan' }}
+  {{Membershiplan}}
 </button>
 
 

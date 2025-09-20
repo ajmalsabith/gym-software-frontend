@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MtxGridColumn } from '@ng-matero/extensions/grid';
 import { ErrorDailogComponent } from 'app/layout-store/dialog/error-dailog/error-dailog.component';
 import { SaveDailogComponent } from 'app/layout-store/dialog/save-dailog/save-dailog.component';
-import { Observable } from 'rxjs';
+import { Observable, retry } from 'rxjs';
 import { CommonService } from 'app/service/common.service';
 import { ClientService } from '../../services/client.service';
 import { TokenService } from 'app/service/token.service';
@@ -74,17 +74,14 @@ export class PlayerManageComponent  implements OnInit{
   }
 
 
-
   AssignMembership(row: any): void {
     console.log(row,'row data');
     
     const mode= row==''?'Add':'Edit'
      const dialogRef = this.dialog.open(AssignMembershipComponent, {
-  width: '750px',
-  height: 'auto',   // instead of fixed 500px
-  autoFocus: false,
-  data: { membership: row, mode: mode, PlayerData: this.PlayerData }
-});
+       width: '600px',
+      data: { membership: row, mode: mode, PlayerData: this.PlayerData }
+      });
   
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
@@ -92,6 +89,22 @@ export class PlayerManageComponent  implements OnInit{
           this.GetPlayersList()
         }
       });
+    }
+
+
+    get Membershiplan(){
+      if(!this.PlayerData?.subscriptionId){
+        return 'Add Membership Plan'
+      }else{
+        if(this.PlayerData?.subscriptionId?.status === 'expired'){
+          return 'Add Membership Plan'
+        }else if(this.PlayerData?.subscriptionId?.status === 'completed'){
+          return "View Membership Plan"
+        }else if(this.PlayerData?.subscriptionId?.status === 'partially_paid' || this.PlayerData?.subscriptionId?.status === 'partially_paid'){
+          return "Update Membership Plan"
+        }
+      }
+      return "Add Membership Plan"
     }
 
 
@@ -341,16 +354,22 @@ onLogoSelected(event: Event): void {
 
   
    this.columns = [
-   {
-    header: 'Photo',
-    field: 'photo',
-    width: '80px',
-    // type: 'html', // Important: specify HTML type
-    formatter: (rowData: any) => {
-      const photoSrc = rowData.photo || 'images/teckfuel_usericon.png';
-      return `<img src="${photoSrc}" width="50" height="50" style="border-radius: 50% !important; object-fit: cover;" alt="User photo" />`;
-    }
-  },
+    
+{
+  header: 'Photo',
+  field: 'photo',
+  width: '80px',
+  formatter: (rowData: any) => {
+    const photoSrc = rowData.photo || 'images/teckfuel_usericon.png';
+    return `<img 
+              src="${photoSrc}" 
+              width="50" 
+              height="50" 
+              style="border-radius: 50%; object-fit: cover; display: block;" 
+              alt="User photo" />`;
+  }
+},
+
   // { header: 'Player ID', field: 'playerid', sortable: true },
   { header: 'Name', field: 'name', sortable: true },
   // { 
@@ -372,7 +391,17 @@ onLogoSelected(event: Event): void {
   { 
     header: 'Membarship Status', 
     field: 'subscriptionStatus', 
-    sortable: true 
+    sortable: true ,
+    formatter: (rowData: any) => {
+      const status = rowData.subscriptionStatus || 'pending';
+      const statusMap: { [key: string]: string } = {
+        'Active': '🟢 Active',
+        'expired': '🔴 Expired', 
+        'pending_balance': '🟡 Balance Pending',
+        'pending': '🔴 Pending'
+      };
+      return statusMap[status] || status;
+    }
   },
   { header: 'Role', field: 'role', sortable: true },
   // { header: 'Status', field: 'IsStatus', sortable: true },

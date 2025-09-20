@@ -12,7 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MtxGridModule } from '@ng-matero/extensions/grid';
-import { PageHeaderComponent } from '@shared';
+import { BreadcrumbComponent, PageHeaderComponent } from '@shared';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
@@ -43,6 +43,11 @@ import { TrainerDialogComponent } from './Modules/trainer-manage/trainer-dialog/
 import { AssignMembershipComponent } from './Modules/player-manage/assign-membership/assign-membership.component';
 import { PaymentBillingComponent } from './Modules/payment-billing/payment-billing.component';
 import { InvoiceReportComponent } from './Modules/payment-billing/invoice-report/invoice-report.component';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatListModule } from '@angular/material/list';
+import { MatChipsModule } from '@angular/material/chips';
+import { MtxProgressModule } from '@ng-matero/extensions/progress';
+import { DashboardComponentClient } from './Modules/dashboard/dashboard.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +59,10 @@ import { InvoiceReportComponent } from './Modules/payment-billing/invoice-report
   AssignMembershipComponent,
   PaymentBillingComponent,
   TrainerManageComponent,
-  InvoiceReportComponent
+  InvoiceReportComponent,
+  DashboardComponentClient
+
+
   
   ],
   imports: [
@@ -86,6 +94,12 @@ import { InvoiceReportComponent } from './Modules/payment-billing/invoice-report
                 MtxButtonModule,
                 TranslateModule,
                 StoreModule,
+                    MatChipsModule,
+                    MatListModule,
+                    MatGridListModule,
+                    MtxProgressModule,
+                    BreadcrumbComponent,
+
   ]
 })
 export class ClientModule { }

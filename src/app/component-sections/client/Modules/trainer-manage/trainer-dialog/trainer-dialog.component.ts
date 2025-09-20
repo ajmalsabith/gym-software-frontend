@@ -86,6 +86,64 @@ export class TrainerDialogComponent {
     });
   }
 
+
+  onLogoSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  if (!input.files || input.files.length === 0) {
+    return;
+  }
+
+  const file = input.files[0];
+  const reader = new FileReader();
+
+  reader.onload = (e: any) => {
+    const img = new Image();
+    img.src = e.target.result;
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d')!;
+
+      // ✅ Resize image if too large (optional)
+      const maxWidth = 800;   // adjust as needed
+      const maxHeight = 800;  // adjust as needed
+      let width = img.width;
+      let height = img.height;
+
+      if (width > maxWidth || height > maxHeight) {
+        if (width > height) {
+          height *= maxWidth / width;
+          width = maxWidth;
+        } else {
+          width *= maxHeight / height;
+          height = maxHeight;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0, width, height);
+
+      // ✅ Convert to compressed base64 (JPEG, quality 0.7)
+      let base64String = canvas.toDataURL('image/jpeg', 0.7);
+
+      // Ensure it's within 1 MB (retry with lower quality if needed)
+      let quality = 0.7;
+      while (base64String.length / 1024 > 1024 && quality > 0.2) {
+        quality -= 0.1;
+        base64String = canvas.toDataURL('image/jpeg', quality);
+      }
+
+      this.trainerForm.patchValue({
+        photo: base64String
+      });
+
+      this.trainerForm.get('photo')?.markAsDirty();
+    };
+  };
+
+  reader.readAsDataURL(file);
+}
   saveTrainer() {
     if (this.trainerForm.valid) {
       this.loading = true;

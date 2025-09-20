@@ -1,3 +1,184 @@
 .mat-mdc-button-base {
   margin: 4px;
 }
+
+// .stat-card {
+//   background: #f4f3f6;
+//   border-right: 5px solid black;
+//   border-radius: 12px;
+//   padding: 1rem;
+//   box-shadow: 6px 6px 10px #ff66008d;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   height: 120px;   /* reduced height */
+// }
+
+// .stat-header {
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+// }
+
+// .stat-card mat-card-subtitle {
+//   font-size: 0.9rem;
+//   font-weight: 500;
+//   color: #ff6600;
+// }
+
+// .stat-icon {
+//   width: 50px;
+//   height: 50px;
+//   font-size: 32px;
+//   color: rgb(39, 39, 126);
+// }
+
+.stat-amount {
+  margin: 0.5rem 0 0;
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #111;
+}
+
+
+
+.stat-card {
+  height:170px !important;
+  border-radius: 16px;
+  padding: 10px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease-in-out;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+}
+
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stat-header-small {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+
+.small-card{
+height:80px !important;
+  border-radius: 16px;
+  padding: 10px;
+  color: #fff;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: transform 0.2s ease-in-out;
+
+}
+
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  font-size: 28px;
+}
+/* THEME COLORS */
+.card-black {
+  background: linear-gradient(135deg, #fe8181, #e31111);
+  color: #ffffff; /* white text for contrast */
+}
+
+.card-orange {
+  background: linear-gradient(135deg, #ff7043, #ff9800);
+  color: #fffbe6; /* light yellowish text for better readability */
+}
+
+.card-white {
+  background: linear-gradient(135deg, #b8ff11, #28c50f);
+  color: #1a1a1a; /* dark text for contrast */
+  border: 1px solid #ddd;
+}
+
+.card-gray {
+  background: linear-gradient(135deg, #4198c1, #060692);
+  color: #ffffff; /* white text */
+}
+
+.card-dark-orange {
+  background: linear-gradient(135deg, #000000, #fc8f02);
+  color: #fff3e0; /* soft cream text */
+}
+
+
+.card-small-color {
+  background: linear-gradient(135deg, #000000, #f68c1a);
+  color: #fff3e0; /* soft cream text */
+}
+
+.card-light-black {
+  background: linear-gradient(135deg, #97cbff, #19a1a1);
+  color: white; /* orange text pops on dark */
+}
+
+
+
+
+.membership-card {
+  height: 170px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.membership-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.membership-row mat-card-subtitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: black;
+}
+
+.membership-row .stat-amount {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+  color: #222;
+}
+
+.membership-row .stat-icon {
+  font-size: 28px;
+  color: white;
+}
+
+.divider {
+  height: 1px;
+  background-color: #e0e0e0;
+  margin: 6px 0;
+}
+
+
+.rank-icon {
+  font-size: 32px;
+  color: #fbc02d; /* Gold color for ranks */
+}
+
+
+.rank-0 {
+  color: gold;
+}
+.rank-1 {
+  color: silver;
+}
+.rank-2 {
+  color: #cd7f32; /* Bronze */
+}

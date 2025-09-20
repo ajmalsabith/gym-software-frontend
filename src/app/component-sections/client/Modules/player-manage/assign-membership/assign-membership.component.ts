@@ -2,7 +2,9 @@ import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ClientService } from 'app/component-sections/client/services/client.service';
+import { ConfirmDailogComponent } from 'app/layout-store/dialog/confirm-dailog/confirm-dailog.component';
 import { ErrorDailogComponent } from 'app/layout-store/dialog/error-dailog/error-dailog.component';
+import { MembershipClearComponent } from 'app/layout-store/dialog/membership-clear/membership-clear.component';
 import { SaveDailogComponent } from 'app/layout-store/dialog/save-dailog/save-dailog.component';
 import { TokenService } from 'app/service/token.service';
 
@@ -14,6 +16,8 @@ import { TokenService } from 'app/service/token.service';
 export class AssignMembershipComponent {
 
 selectedTabIndex=0
+fullPaymentSelected = false;
+
     constructor(
       private fb: FormBuilder,
       private dialogRef: MatDialogRef<AssignMembershipComponent>,
@@ -28,8 +32,9 @@ selectedTabIndex=0
 
 this.membershipForm = this.fb.group({
   // Membership fields
+  _id:[''],
   gymId: [authData?.gymId, Validators.required],
-  playerId: [this.data.PlayerData?._id, Validators.required],
+  playerId: [ {value:this.data.PlayerData?._id,disabled:true}, Validators.required],
   planId: ['', Validators.required],
   startDate: [new Date(), Validators.required],
   endDate: ['', Validators.required],
@@ -43,8 +48,12 @@ this.membershipForm = this.fb.group({
   paymentType: ['', Validators.required],
   status: ['', Validators.required],
   transactionId: [''],
-  notes: ['']
+  notes: [''],
 });
+
+
+
+
 
 this.selectedTabIndex = 0;
 
@@ -52,6 +61,9 @@ this.selectedTabIndex = 0;
  if (this.data?.mode === 'Edit' && this.data?.membership) {
       this.membershipForm.patchValue(this.data.membership);
       this.buttonLabel = 'Update';
+      if(this.data?.membership.status=='completed'){
+        this.membershipForm.disable()
+      }
     } else {
       this.buttonLabel = 'Create';
     }
@@ -73,7 +85,7 @@ this.selectedTabIndex = 0;
 
 
   nextTab() {
-  if (this.membershipForm.get('playerId')?.valid &&
+  if (
       this.membershipForm.get('planId')?.valid &&
       this.membershipForm.get('startDate')?.valid &&
       this.membershipForm.get('totalAmount')?.value > 0) {
@@ -87,7 +99,62 @@ prevTab() {
   this.selectedTabIndex = 0;
 }
 
+
+openConfirmDialog() {
+ const dialogRef = this.dialog.open(MembershipClearComponent, {
+  width: '350px',
+  data: { 
+    message: 'Are you sure you want to clear membership for this player?',
+    checkboxLabel: 'Also delete payments'
+  }
+});
+
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+       this.clearmembership(result.checkbox)
+      console.log('Confirmed');
+    } 
+  });
+}
+
+
+clearmembership(incPayment:any){
+ const id= this.membershipForm.get('_id')?.value
+        this.clientService.ClearMembershipByid(id,incPayment).subscribe({
+          next: (res: any) => {
+             const dialogRef = this.dialog.open(SaveDailogComponent, {
+        width: '400px',
+        data: { message: res.message }
+        
+      });
+             this.dialogRef.close(res);
+
+          },
+          error: () => console.log('Failed to Clear Membership'),
+    });
+}
+
+
  
+onFullPaymentChange(event:any) {
+    const paidAmount = this.membershipForm.get('paidAmount')?.value || 0;
+    const total = this.membershipForm.get('totalAmount')?.value || 0;
+
+    const FullTotal = total-paidAmount
+    console.log(FullTotal,'==bantototal');
+    
+    console.log(event.checked);
+    
+  if (event.checked) {
+    this.membershipForm.patchValue({payAmount:FullTotal});
+        this.updateBalance()
+
+  } else {
+    this.membershipForm.patchValue({ payAmount: 0 });
+    this.updateBalance()
+  }
+}
 
 membershipplanlist:any
    GetmemBershipPlanList(): void {

@@ -13,8 +13,7 @@ export const routes: Routes = [
   canActivate: [ClientAuthGuard],
   data: { auth: true }, // needs login
   children: [
-    { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    { path: 'dashboard', component: DashboardComponentClient },
+    { path: '', redirectTo: 'client/modules/dashboard', pathMatch: 'full' },
     {
       path: 'modules',
       loadChildren: () => import('../app/component-sections/client/client.module').then(m => m.ClientModule)
@@ -23,6 +22,6 @@ export const routes: Routes = [
  },
  { path:'client-login', component: ClientLoginComponent, canActivate:[ClientAuthGuard], data: { auth: false } },
 
- { path: '**', redirectTo: 'client' },
+ { path: '**', redirectTo: 'client/modules/dashboard' },
 
 ];

@@ -53,6 +53,11 @@ export class ApisConfig{
 
 
 
+  MEMBERSHIP_DASHBOARDS:string="/membershipDashboard"
+
+
+
+
 
 
 

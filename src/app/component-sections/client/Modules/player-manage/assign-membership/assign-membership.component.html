@@ -1,11 +1,18 @@
-<div class="membership-dialog">
-  <h2 mat-dialog-title>
-    Membarship & Payment
-  </h2>
 
-  <form [formGroup]="membershipForm" (ngSubmit)="saveMembership()">
+<div class="membership-dialog">
+<h2 mat-dialog-title>
+  Membership & Payment
+  <span *ngIf="data?.membership.status === 'completed'" class="done-icon">
+    <mat-icon>done</mat-icon>
+  </span>
+</h2>
+
+  
+  <form [formGroup]="membershipForm" >
     <mat-dialog-content>
-      <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+      <div class="row">
+
+         <mat-tab-group [(selectedIndex)]="selectedTabIndex">
 
         <!-- 🔹 Tab 1: Membership Details -->
         <mat-tab label="Membership">
@@ -64,13 +71,13 @@
             </div>
 
             <div class="col-md-6">
-              <mat-form-field appearance="outline" class="w-100 ">
+              <mat-form-field appearance="outline" class="w-100 mt-15">
                 <mat-label>Paid Amount</mat-label>
                 <input matInput type="number" formControlName="paidAmount" readonly >
               </mat-form-field>
             </div>
             <!-- Balance -->
-            <div  *ngIf="membershipForm.get('balance')?.value>=0 " class="col-md-6">
+            <div  *ngIf="membershipForm.get('balance')?.value>=0 " class="col-md-6 ">
               <mat-form-field appearance="outline" class="w-100 mt-15">
                 <mat-label>Balance</mat-label>
                 <input matInput type="number" formControlName="balance" readonly>
@@ -79,14 +86,10 @@
 
           </div>
 
-          <div class="d-flex justify-content-end mt-3" style="margin: 10px;" >
-            <button mat-raised-button mat-dialog-close class="cancel-button" type="button">Cancel</button>
-            <button mat-raised-button style="background-color:rgb(25, 25, 115);color: white;margin-left: 10px;" (click)="nextTab()" type="button">Next</button>
-          </div>
         </mat-tab>
 
         <!-- 🔹 Tab 2: Payment Details -->
-        <mat-tab label="Payment">
+        <mat-tab *ngIf="data?.membership.status!=='completed'" label="Payment">
           <div class="row" style="margin-top: 15px;">
 
             <!-- Paid Amount -->
@@ -95,6 +98,8 @@
                 <mat-label>Pay Amount</mat-label>
                 <input matInput type="number" formControlName="payAmount" (change)="updateBalance()" required>
               </mat-form-field>
+
+                <mat-checkbox class="mt-15"  (change)="onFullPaymentChange($event)">Full Amount / Complete Pay</mat-checkbox>
             </div>
 
             <!-- Due Date (only if partially paid/pending) -->
@@ -110,7 +115,7 @@
 
             <!-- Payment Type -->
             <div class="col-md-6">
-              <mat-form-field appearance="outline" class="w-100 mt-15">
+              <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Payment Type</mat-label>
                 <mat-select formControlName="paymentType" required>
                   <mat-option value="cash">Cash</mat-option>
@@ -151,17 +156,41 @@
             </div>
 
           </div>
-
-          <mat-dialog-actions align="end">
-            <button mat-raised-button mat-dialog-close class="cancel-button" type="button">Cancel</button>
-            <button mat-raised-button class="save-button"
-                    [disabled]="loading || membershipForm.invalid"
-                    type="submit">
-              {{ buttonLabel }}
-            </button>
-          </mat-dialog-actions>
         </mat-tab>
       </mat-tab-group>
+      
+      </div>
     </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button *ngIf="data?.membership._id" style="margin-right: 50px;" mat-button 
+              type="button"
+                            style="background-color:#e53935;color: white;"
+              (click)="openConfirmDialog()"
+            >
+              <mat-icon>delete</mat-icon>
+
+        Clear Membership
+      </button>
+      <button mat-button 
+              type="button"
+              class="cancel-button"
+              mat-dialog-close
+            >
+        Cancel
+      </button>
+      <ng-container *ngIf="data?.membership.status!=='completed'">
+      <button  *ngIf="selectedTabIndex==0" mat-raised-button style="background-color:rgb(25, 25, 115);color: white;margin-left: 10px;" (click)="nextTab()" type="button">Next</button>
+      <button *ngIf="selectedTabIndex==1" mat-raised-button 
+       (click)="saveMembership()"
+              class="save-button"
+              type="submit"
+              [disabled]="loading || membershipForm.invalid"
+                    type="submit">
+        <mat-spinner diameter="20" *ngIf="loading" style="margin-right: 10px;"></mat-spinner>
+        {{ buttonLabel }}
+      </button>
+      </ng-container>
+    </mat-dialog-actions>
   </form>
 </div>

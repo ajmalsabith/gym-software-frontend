@@ -90,6 +90,10 @@ margin-top: 15px;
 .upload-btn:hover {
   background-color: darkorange;
 }
+.rounded-photo {
+  border-radius: 50% !important;
+  object-fit: cover !important;
+}
 
 .upload-card {
   width: 200px;

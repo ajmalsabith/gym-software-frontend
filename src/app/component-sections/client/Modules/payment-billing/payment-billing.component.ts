@@ -7,6 +7,7 @@ import { SaveDailogComponent } from 'app/layout-store/dialog/save-dailog/save-da
 import { ErrorDailogComponent } from 'app/layout-store/dialog/error-dailog/error-dailog.component';
 import { TokenService } from 'app/service/token.service';
 import { InvoiceReportComponent } from './invoice-report/invoice-report.component';
+import { ConfirmDailogComponent } from 'app/layout-store/dialog/confirm-dailog/confirm-dailog.component';
 
 
 @Component({
@@ -93,13 +94,13 @@ export class PaymentBillingComponent {
       sortable: true,
       formatter: (row: any) => row?.transactionId || '-'
     },
-    {
-      header: 'Payment Date',
-      field: 'date',
-      sortable: true,
-      formatter: (row: any) =>
-        row?.date ? new Date(row.date).toLocaleDateString() : '-'
-    },
+   {
+  header: 'Payment Date & Time',
+  field: 'date',
+  sortable: true,
+  formatter: (row: any) =>
+    row?.date ? new Date(row.date).toLocaleString() : '-'
+},
     {
       header: 'Notes',
       field: 'notes',
@@ -114,7 +115,7 @@ export class PaymentBillingComponent {
         row?.createdAt ? new Date(row.createdAt).toLocaleDateString() : '-'
     },
     {
-  header: 'Invoice',
+  header: 'Operation',
   field: 'actions',
   width: '120px',
   pinned: 'right',
@@ -125,7 +126,15 @@ export class PaymentBillingComponent {
       tooltip: 'View Invoice',
       type: 'icon',           // or 'label' if you want only text
       click: (record: any) => this.openInvoiceDialog(record),
-    }
+    },
+              {
+            type: 'icon',
+            text: 'delete',
+            icon: 'delete',
+            tooltip: 'Delete',
+            color: 'warn',
+            click: (record: any) => this.openConfirmDialog(record),
+          }
   ]
 }
 
@@ -139,7 +148,8 @@ export class PaymentBillingComponent {
      if (sessionData?.gymId) {
       this.clientservice.getPaymentsByGym(sessionData.gymId).subscribe((res:any)=>{
         console.log(res.data,'payment list');
-        this.PaymentList=res.data
+        this.PaymentList = res.data.reverse();
+        this.list=res.data
       },(err)=>{
         console.log(err);
         
@@ -148,19 +158,21 @@ export class PaymentBillingComponent {
    }
     
     applyFilter(): void {
-      this.filteredList = this.list.filter(trainer => {
-        const searchMatch = !this.searchText || 
-    trainer.name?.toLowerCase().includes(this.searchText.toLowerCase()) ||
-          trainer.email?.toLowerCase().includes(this.searchText.toLowerCase()) ||
-          trainer.phone?.includes(this.searchText);
-  
-        const statusMatch = !this.statusFilter || 
-    (this.statusFilter === 'active' && String(trainer?.IsStatus).toLowerCase() === 'active') ||
-    (this.statusFilter === 'inactive' && String(trainer?.IsStatus).toLowerCase() === 'inactive');
-  
-        return searchMatch && statusMatch;
-      });
-    }
+  this.PaymentList = this.list.filter(payment => {
+    // Check search text match
+    const searchMatch =
+      !this.searchText ||
+      payment.playerId.name?.toLowerCase().includes(this.searchText.toLowerCase()) ||
+      payment.playerId.email?.toLowerCase().includes(this.searchText.toLowerCase());
+
+    // Check status filter match
+    const statusMatch =
+      !this.statusFilter ||
+      payment.paymentType.toLowerCase() === this.statusFilter.toLowerCase();
+
+    return searchMatch && statusMatch;
+  });
+}
 
 
    openInvoiceDialog(row: string) {
@@ -184,5 +196,43 @@ Your Gym Team`;
 }
 
 
+
+
+ openConfirmDialog(row:any) {
+  const dialogRef = this.dialog.open(ConfirmDailogComponent, {
+    width: '350px',
+    data: { message: 'Are you sure you want to Delete?' }
+  });
+
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+       this.delete(row)
+      console.log('Confirmed');
+    } 
+  });
+}
+
+
+  delete(row: any): void {
+      this.clientservice.DeletePaymentByid(row._id).subscribe({
+        next: (res: any) => {
+          const dialogRef = this.dialog.open(SaveDailogComponent, {
+            width: '400px',
+            data: { message: 'Payment deleted successfully' }
+          });
+          dialogRef.afterClosed().subscribe(() => {
+            this.GetPaymentHistory(); // Refresh the list
+          });
+        },
+        error: (err) => {
+          console.error('Error deleting trainer:', err);
+          const dialogRef = this.dialog.open(ErrorDailogComponent, {
+            width: '400px',
+            data: { message: 'Error deleting trainer. Please try again.' }
+          });
+        }
+      });
+    
+  }
 
 }

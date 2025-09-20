@@ -58,6 +58,47 @@ mat-spinner {
   vertical-align: middle;
 }
 
+
+
+.placeholder {
+  font-size: 14px;
+  color: #888;
+}
+
+
+.upload-btn:hover {
+  background-color: darkorange;
+}
+
+.upload-card {
+  width: 200px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+}
+
+.image-preview {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%; /* circular preview */
+  overflow: hidden;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 @media (max-width: 768px) {
   .col-md-6 {
     flex: 0 0 100%;
