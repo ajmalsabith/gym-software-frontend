@@ -61,7 +61,7 @@ logout(): void {
 //         <mat-icon>account_circle</mat-icon>
 //         <span>{{ 'profile' | translate }}</span>
 //       </button>
-//       <button routerLink="/profile/settings" mat-menu-item>
+//       <button routerLink="/" mat-menu-item>
 //         <mat-icon>edit</mat-icon>
 //         <span>{{ 'edit_profile' | translate }}</span>
 //       </button>
