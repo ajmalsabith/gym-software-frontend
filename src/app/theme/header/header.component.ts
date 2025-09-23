@@ -9,6 +9,7 @@ import { GithubButtonComponent } from '../widgets/github.component';
 import { NotificationComponent } from '../widgets/notification.component';
 import { TranslateComponent } from '../widgets/translate.component';
 import { UserComponent } from '../widgets/user.component';
+import { TokenService } from 'app/service/token.service';
 
 @Component({
   selector: 'app-header',
@@ -34,6 +35,11 @@ export class HeaderComponent {
   @Input() showToggle = true;
   @Input() showBranding = false;
 
+  LogoImg:any
+  constructor(private tokenservice:TokenService){
+    const sessionData= this.tokenservice.getAuthData()
+    this.LogoImg= sessionData?.gymData?.logo
+  }
   @Output() toggleSidenav = new EventEmitter<void>();
   @Output() toggleSidenavNotice = new EventEmitter<void>();
 

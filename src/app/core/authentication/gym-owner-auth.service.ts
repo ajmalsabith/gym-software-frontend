@@ -56,7 +56,8 @@ export class GymOwnerAuthService {
               gymId: response.user.gym.gymId,
               name: response.user.gym.name,
               city: response.user.gym.city,
-              state: response.user.gym.state
+              state: response.user.gym.state,
+              logo: response.user.gym.logo
             },
             userEmail: response.user.email,
             userRole: response.user.role

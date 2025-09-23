@@ -1,0 +1,40 @@
+  <form [formGroup]="attendanceForm">
+<div mat-dialog-content class="dialog-container">
+
+<h2 style="margin: 20px;color: black;">
+   Mark Attendance 
+</h2>
+  <div class="col-12">
+   <mat-form-field appearance="outline" class="w-100">
+  <mat-label>Player</mat-label>
+  <mat-select formControlName="playerId" required>
+    <mat-option *ngFor="let player of playerslist" [value]="player._id">
+      <div class="player-option" style="display: flex; align-items: center; gap: 10px;">
+        <!-- Photo -->
+        <img [src]="player.photo || 'images/teckfuel_usericon.png'" 
+             alt="player photo" 
+             style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
+
+        <!-- Player Info -->
+        <div style="display: flex; flex-direction: column;">
+          <span style="font-weight: bold;">{{ player.name }}</span>
+          <span style="font-size: 12px; color: gray;">
+            PlayerId: {{ player.playerid }} | Phone: {{ player.phone }} | Email: {{ player.email }}
+          </span>
+        </div>
+      </div>
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+  </div>
+  
+</div>
+
+<div mat-dialog-actions align="end">
+
+  <button mat-raised-button  class="cancel-button" (click)="onCancel()">Cancel</button>
+  <button mat-raised-button class="save-button" [disabled]="attendanceForm.invalid" style="margin-left: 10px;"type="submit"(click)="submitAttendance()">Mark Attendance</button>
+</div>
+
+  </form>

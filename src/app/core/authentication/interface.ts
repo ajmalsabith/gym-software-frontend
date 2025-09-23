@@ -17,6 +17,7 @@ export interface GymInfo {
   name: string;
   city: string;
   state: string;
+  logo:string;
 }
 
 export interface AuthData {

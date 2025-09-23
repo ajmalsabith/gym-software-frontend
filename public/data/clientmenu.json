@@ -23,7 +23,7 @@
       "icon": "manage_accounts"
     },
     {
-      "route": "client/modules/attendance-check-in",
+      "route": "client/modules/attendance",
       "name": "AttendanceCheckinSystem",
       "type": "link",
       "icon": "barcode_reader"

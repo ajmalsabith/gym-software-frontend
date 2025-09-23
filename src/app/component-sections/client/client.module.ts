@@ -48,6 +48,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
 import { MtxProgressModule } from '@ng-matero/extensions/progress';
 import { DashboardComponentClient } from './Modules/dashboard/dashboard.component';
+import { AttendanceComponent } from './Modules/attendance/attendance.component';
+import { MarkAttendanceDailogComponent } from './Modules/attendance/mark-attendance-dailog/mark-attendance-dailog.component';
+import { MarkAbsentsDailogComponent } from './Modules/attendance/mark-absents-dailog/mark-absents-dailog.component';
 
 @NgModule({
   declarations: [
@@ -60,9 +63,10 @@ import { DashboardComponentClient } from './Modules/dashboard/dashboard.componen
   PaymentBillingComponent,
   TrainerManageComponent,
   InvoiceReportComponent,
-  DashboardComponentClient
-
-
+  DashboardComponentClient,
+  AttendanceComponent,
+  MarkAttendanceDailogComponent,
+  MarkAbsentsDailogComponent
   
   ],
   imports: [

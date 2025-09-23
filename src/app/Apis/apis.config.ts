@@ -7,7 +7,8 @@ import { Injectable } from "@angular/core";
 export class ApisConfig{
 
   // API URLS
-  API_LOCAL_URL:string="http://localhost:3400/api/admin"
+  // API_LOCAL_URL:string="http://localhost:3400/api/admin"
+  API_LOCAL_URL:string="http://192.168.1.2:3400/api/admin"
   API_SERVER_URL:string=""
 
   // login - Using gym owner login for all authentication

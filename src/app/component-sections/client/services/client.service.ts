@@ -243,4 +243,73 @@ UpdatePlayer(playerData: any): Observable<any> {
       { headers: this.getHeaders() }
     );
   }
+
+
+
+  // attendance
+
+
+  markPresent(data: any): Observable<any> {
+    return this.http.post(
+      `${this.apiConfig.API_LOCAL_URL}/attentance/present`,
+      data,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // POST: mark absent
+  markAbsent(data: any): Observable<any> {
+    return this.http.post(
+      `${this.apiConfig.API_LOCAL_URL}/attentance/absent`,
+      data,
+      { headers: this.getHeaders() }
+    );
+  }
+
+
+  // GET: get frequent absentees by gymId
+  getFrequentAbsentees(gymId: string): Observable<any> {
+    return this.http.get(
+      `${this.apiConfig.API_LOCAL_URL}/attentance/frequent-absentees/${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+// Attendance Service
+getPresents(gymId: string, fromDate?: string, toDate?: string): Observable<any> {
+  let query = `${this.apiConfig.API_LOCAL_URL}/attentance/presents?gymId=${gymId}`;
+  if (fromDate && toDate) query += `&fromDate=${fromDate}&toDate=${toDate}`;
+  return this.http.get(query, { headers: this.getHeaders() });
+}
+
+getAbsents(gymId: string, fromDate?: string, toDate?: string): Observable<any> {
+  let query = `${this.apiConfig.API_LOCAL_URL}/attentance/absents?gymId=${gymId}`;
+  if (fromDate && toDate) query += `&fromDate=${fromDate}&toDate=${toDate}`;
+  return this.http.get(query, { headers: this.getHeaders() });
+}
+
+
+  // PUT: mark absents for today
+  markAbsentsForToday(gymId: string): Observable<any> {
+    return this.http.put(
+      `${this.apiConfig.API_LOCAL_URL}/attentance/absents/today/${gymId}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // DELETE: delete present by id
+  deletePresent(id: string): Observable<any> {
+    return this.http.delete(
+      `${this.apiConfig.API_LOCAL_URL}/attentance/present/${id}`,
+      { headers: this.getHeaders() }
+    );
+  }
+
+  // DELETE: delete absent by id
+  deleteAbsent(id: string): Observable<any> {
+    return this.http.delete(
+      `${this.apiConfig.API_LOCAL_URL}/attentance/absent/${id}`,
+      { headers: this.getHeaders() }
+    );
+  }
 }

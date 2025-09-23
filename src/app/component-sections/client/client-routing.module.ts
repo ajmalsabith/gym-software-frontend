@@ -5,6 +5,7 @@ import { MembershipPlansComponent } from './Modules/membership-plans/membership-
 import { TrainerManageComponent } from './Modules/trainer-manage/trainer-manage.component';
 import { PaymentBillingComponent } from './Modules/payment-billing/payment-billing.component';
 import { DashboardComponentClient } from './Modules/dashboard/dashboard.component';
+import { AttendanceComponent } from './Modules/attendance/attendance.component';
 
 const routes: Routes = [
   { path:'dashboard', component: DashboardComponentClient },
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path:'membership-plans', component: MembershipPlansComponent },
   { path:'trainer-manage', component: TrainerManageComponent },
   { path:'payment-billing', component: PaymentBillingComponent },
+  { path:'attendance', component: AttendanceComponent },
 ];
 
 @NgModule({
