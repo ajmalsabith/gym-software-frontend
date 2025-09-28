@@ -51,6 +51,7 @@ import { DashboardComponentClient } from './Modules/dashboard/dashboard.componen
 import { AttendanceComponent } from './Modules/attendance/attendance.component';
 import { MarkAttendanceDailogComponent } from './Modules/attendance/mark-attendance-dailog/mark-attendance-dailog.component';
 import { MarkAbsentsDailogComponent } from './Modules/attendance/mark-absents-dailog/mark-absents-dailog.component';
+import { CreatepaymentComponent } from './Modules/payment-billing/createpayment/createpayment.component';
 
 @NgModule({
   declarations: [
@@ -66,7 +67,8 @@ import { MarkAbsentsDailogComponent } from './Modules/attendance/mark-absents-da
   DashboardComponentClient,
   AttendanceComponent,
   MarkAttendanceDailogComponent,
-  MarkAbsentsDailogComponent
+  MarkAbsentsDailogComponent,
+  CreatepaymentComponent
   
   ],
   imports: [

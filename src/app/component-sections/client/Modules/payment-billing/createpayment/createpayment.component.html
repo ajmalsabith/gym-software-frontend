@@ -1,0 +1,81 @@
+<h2 mat-dialog-title>Add Payment</h2>
+
+<form [formGroup]="paymentForm" (ngSubmit)="savePayment()">
+  <div mat-dialog-content>
+    <div class="row" style="margin-top: 15px;">
+
+
+          <div class="col-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Player</mat-label>
+                <mat-select formControlName="playerId" required>
+                  <mat-option *ngFor="let player of playerslist" [value]="player._id">
+                    {{ player.name }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+
+      <!-- Pay Amount -->
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Pay Amount</mat-label>
+          <input matInput type="number" formControlName="payAmount"  required>
+        </mat-form-field>
+      </div>
+
+     
+      <!-- Payment Type -->
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Payment Type</mat-label>
+          <mat-select formControlName="paymentType" required>
+            <mat-option value="cash">Cash</mat-option>
+            <mat-option value="card">Card</mat-option>
+            <mat-option value="upi">UPI</mat-option>
+            <mat-option value="bank_transfer">Bank Transfer</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Payment For -->
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100 mt-15">
+          <mat-label>Payment For</mat-label>
+          <mat-select formControlName="paymentFor" required>
+            <mat-option value="membership">Membership</mat-option>
+            <mat-option value="personal_training">Personal Training</mat-option>
+            <mat-option value="merchandise">Merchandise</mat-option>
+            <mat-option value="other">Other</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Payment Status -->
+      <!-- Transaction ID -->
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100 mt-15">
+          <mat-label>Transaction ID</mat-label>
+          <input matInput formControlName="transactionId" placeholder="Reference / Txn ID">
+        </mat-form-field>
+      </div>
+
+      <!-- Notes -->
+      <div class="col-12">
+        <mat-form-field appearance="outline" class="w-100 mt-15">
+          <mat-label>Notes</mat-label>
+          <textarea matInput formControlName="notes" rows="2" placeholder="Additional remarks"></textarea>
+        </mat-form-field>
+      </div>
+
+    </div>
+  </div>
+
+  <div mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close class="cancel-button" type="button">Cancel</button>
+    <button mat-raised-button class="save-button" type="submit" [disabled]="loading || paymentForm.invalid">
+      <mat-spinner diameter="20" *ngIf="loading" style="margin-right: 10px;"></mat-spinner>
+      {{ buttonLabel }}
+    </button>
+  </div>
+</form>

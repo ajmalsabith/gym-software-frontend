@@ -79,7 +79,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
     const refreshToken = tokenService.getAuthData()?.refreshToken;
     if (!refreshToken) {
-      tokenService.logout();
+      tokenService.Clientlogout();
       return throwError(() => originalError ?? new Error('No refresh token'));
     }
 
@@ -95,12 +95,12 @@ export class AuthInterceptor implements HttpInterceptor {
             const cloned = this.addToken(req, result.accessToken);
             return next.handle(cloned);
           }
-          tokenService.logout();
+          tokenService.Clientlogout();
           return throwError(() => originalError ?? new Error('Token refresh failed'));
         }),
         catchError(err => {
           this.isRefreshing = false;
-          tokenService.logout();
+          tokenService.Clientlogout();
           return throwError(() => err);
         })
       );

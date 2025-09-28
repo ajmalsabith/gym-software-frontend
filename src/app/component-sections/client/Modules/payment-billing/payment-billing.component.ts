@@ -8,6 +8,7 @@ import { ErrorDailogComponent } from 'app/layout-store/dialog/error-dailog/error
 import { TokenService } from 'app/service/token.service';
 import { InvoiceReportComponent } from './invoice-report/invoice-report.component';
 import { ConfirmDailogComponent } from 'app/layout-store/dialog/confirm-dailog/confirm-dailog.component';
+import { CreatepaymentComponent } from './createpayment/createpayment.component';
 
 
 @Component({
@@ -46,6 +47,13 @@ export class PaymentBillingComponent {
       sortable: true,
       formatter: (row: any) => row?.playerId?.email || '-'
     },
+      {
+  header: 'Payment Date',
+  field: 'date',
+  sortable: true,
+  formatter: (row: any) =>
+    row?.date ? new Date(row.date).toLocaleString() : '-'
+},
     // {
     //   header: 'Plan Amount',
     //   field: 'membershipId.totalAmount',
@@ -83,6 +91,12 @@ export class PaymentBillingComponent {
       formatter: (row: any) => row?.paymentType || '-'
     },
     {
+      header: 'Payment For',
+      field: 'paymentFor',
+      sortable: true,
+      formatter: (row: any) => row?.paymentFor || '-'
+    },
+    {
       header: 'Payment Status',
       field: 'status',
       sortable: true,
@@ -94,13 +108,7 @@ export class PaymentBillingComponent {
       sortable: true,
       formatter: (row: any) => row?.transactionId || '-'
     },
-   {
-  header: 'Payment Date & Time',
-  field: 'date',
-  sortable: true,
-  formatter: (row: any) =>
-    row?.date ? new Date(row.date).toLocaleString() : '-'
-},
+ 
     {
       header: 'Notes',
       field: 'notes',
@@ -234,5 +242,20 @@ Your Gym Team`;
       });
     
   }
+
+
+   createNewpayment(): void {
+      
+       const dialogRef = this.dialog.open(CreatepaymentComponent, {
+         width: '600px',
+        data: {  mode: 'Add', }
+        });
+    
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.GetPaymentHistory()
+          }
+        });
+      }
 
 }

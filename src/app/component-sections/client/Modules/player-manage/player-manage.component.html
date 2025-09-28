@@ -12,13 +12,13 @@
           <mat-tab-group [(selectedIndex)]="selectedTabIndex">
 
   <!-- Tab 1: Staff List -->
-<mat-tab label="Players List">
+<mat-tab label="Members List">
 
        <div class="filter-section mb-6">
             <div class="row align-items-center">
               <div class="col-md-3 col-sm-4">
                 <mat-form-field appearance="outline" class="w-100">
-                  <mat-label>Search Trainers</mat-label>
+                  <mat-label>Search Members</mat-label>
                   <input matInput 
                          [(ngModel)]="searchText" 
                          (input)="applyFilters()" 
@@ -80,11 +80,11 @@
     [expandable]="false"
     [pageOnFront]="true"
     [showPaginator]="true"
-    [pageSizeOptions]="[5, 10, 50, 100]"
+    [pageSizeOptions]="[10, 15, 50, 100]"
     [pageIndex]="0"
-    [pageSize]="5"
+    [pageSize]="10"
     [toolbarTitle]="'Members List'"
-    class="trainer-grid"
+    class="Members-list"
     (rowClick)="onRowClick($event)"
   ></mtx-grid>
 
@@ -94,10 +94,10 @@
 
 
   <!-- Tab 2: Staff Details Form -->
-<mat-tab label="Player Details" [disabled]="UserDetailsTabDisabled">
+<mat-tab label="Member Details" [disabled]="UserDetailsTabDisabled">
   <mat-card>
     <mat-card-header>
-      <mat-card-title>Player Details</mat-card-title>
+      <mat-card-title>Member Details</mat-card-title>
     </mat-card-header>
 
     <mat-card-content>
@@ -107,7 +107,7 @@
         <div class="form-row">
 
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Player ID</mat-label>
+          <mat-label>Member ID</mat-label>
           <input matInput formControlName="playerid" readonly />
         </mat-form-field>
           

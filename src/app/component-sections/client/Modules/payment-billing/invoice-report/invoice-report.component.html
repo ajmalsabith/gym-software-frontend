@@ -1,6 +1,6 @@
 <mat-dialog-content>
 
-<div class="invoice-container" id="Invoice-cont" *ngIf="paymentData">
+<div #invoiceCont class="invoice-container" id="Invoice-cont" *ngIf="paymentData">
   
   <!-- Header -->
   <div class="header">
@@ -78,11 +78,15 @@
   <div class="section">
     <h2>Payment Summary</h2>
     <table>
-      <tr>
+        <tr>
+        <td>Payment For</td>
+        <td>{{ paymentData?.paymentFor }}</td>
+      </tr>
+      <tr *ngIf="paymentData?.paymentFor=='Membership'">
         <td>Membership Total Amount</td>
         <td>₹{{ paymentData?.membershipId?.totalAmount }}</td>
       </tr>
-      <tr>
+      <tr *ngIf="paymentData?.paymentFor=='Membership'">
         <td>Membership Paid Amount</td>
         <td>₹{{ paymentData?.membershipId?.paidAmount }}</td>
       </tr>
@@ -90,7 +94,7 @@
         <td>Pay Amount</td>
         <td>₹{{ paymentData?.amount }}</td>
       </tr>
-      <tr>
+      <tr *ngIf="paymentData?.paymentFor=='Membership'">
         <td>Balance</td>
         <td>₹{{ (paymentData?.membershipId?.balance) }}</td>
       </tr>
@@ -113,7 +117,7 @@
       <mat-icon>print</mat-icon>
       Print
     </button>
-    <button mat-button style="background-color:green;color: white;" (click)="sendMail()">
+    <button mat-button mat-dialog-close style="background-color:green;color: white;" >
       <mat-icon>send</mat-icon>
       Send Mail
     </button>

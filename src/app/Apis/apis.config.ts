@@ -7,9 +7,9 @@ import { Injectable } from "@angular/core";
 export class ApisConfig{
 
   // API URLS
-  // API_LOCAL_URL:string="http://localhost:3400/api/admin"
+  API_LOCAL_URL:string="http://localhost:3400/api/admin"
   // API_LOCAL_URL:string="http://192.168.1.2:3400/api/admin"
-  API_LOCAL_URL:string="https://gym-software-backend-code.onrender.com/api/admin"
+  // API_LOCAL_URL:string="https://gym-software-backend-code.onrender.com/api/admin"
 
   // login - Using gym owner login for all authentication
   ADMIN_LOGIN: string = "/login";
@@ -42,6 +42,7 @@ export class ApisConfig{
   //  common apis 
   GET_INDIAN_CITIES_LIST:string="common/india-cities"
   GET_INDIAN_STATES_DIST_LIST:string="common/states-districts"
+  SEND_MAIL_COMMON:string="common/sendmail"
 
 
   // payment history

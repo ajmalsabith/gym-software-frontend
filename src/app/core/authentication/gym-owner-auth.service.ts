@@ -159,7 +159,7 @@ export class GymOwnerAuthService {
     this.tokenService.clearAuthData();
     this.isAuthenticatedSubject.next(false);
     this.currentUserSubject.next(null);
-    this.router.navigate(['/auth/login']);
+    this.tokenService.Clientlogout()
   }
 
   /**

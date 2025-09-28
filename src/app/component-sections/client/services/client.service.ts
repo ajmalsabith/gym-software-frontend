@@ -192,6 +192,14 @@ UpdatePlayer(playerData: any): Observable<any> {
     );
   }
 
+    CreateCusotmPayment(data:any): Observable<any> {
+    return this.http.post(
+      `${this.apiConfig.API_LOCAL_URL}/createcustompayment`,data,
+      { headers: this.getHeaders() }
+    );
+  }
+
+
 
 
   // dashboard apis

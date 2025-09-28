@@ -32,4 +32,12 @@ getIndianCitiesList(): Observable<any> {
       { headers: this.getHeaders() }
     );
   }
+
+    Sendmail(data:any): Observable<any> {
+       return this.http.post(
+         `${this.apiConfig.API_LOCAL_URL}${this.apiConfig.SEND_MAIL_COMMON}`,data,
+         { headers: this.getHeaders() }
+       );
+     }
+
 }
