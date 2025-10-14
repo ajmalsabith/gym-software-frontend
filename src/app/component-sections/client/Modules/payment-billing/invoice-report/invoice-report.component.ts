@@ -29,6 +29,11 @@ export class InvoiceReportComponent {
   ngOnInit(): void {
   }
 
+
+  sendMailInvoice(){
+    this.commonservice.sendInvoiceMail(this.paymentData)
+  }
+
   
 
   printInvoice() {
@@ -136,9 +141,47 @@ table td {
 
  @ViewChild('invoiceCont', { static: false }) invoiceElement!: ElementRef;
 
+
+ async generateInvoiceBase64(element: HTMLElement): Promise<string> {
+  // Step 1️⃣ Capture the full scrollable content
+  const canvas = await html2canvas(element, {
+    scale: 2,
+    useCORS: true,
+    scrollY: -window.scrollY, // important if inside a scrolled container
+  });
+
+  const imgData = canvas.toDataURL('image/png');
+  const pdf = new jsPDF('p', 'mm', 'a4');
+
+  const pdfWidth = pdf.internal.pageSize.getWidth();
+  const pdfHeight = pdf.internal.pageSize.getHeight();
+
+  const imgWidth = pdfWidth;
+  const imgHeight = (canvas.height * pdfWidth) / canvas.width;
+
+  let heightLeft = imgHeight;
+  let position = 0;
+
+  // Step 2️⃣ Add image and handle multi-page content
+  pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+  heightLeft -= pdfHeight;
+
+  while (heightLeft > 0) {
+    position = heightLeft - imgHeight;
+    pdf.addPage();
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pdfHeight;
+  }
+
+  // Step 3️⃣ Return Base64 string (without prefix)
+  const pdfBase64 = pdf.output('datauristring').split(',')[1];
+  return pdfBase64;
+}
+
     
 async sendMail() {
     const element = this.invoiceElement.nativeElement;
+     const pdfBase64 = await this.generateInvoiceBase64(element);
     const today = new Date();
   const formattedDate = today.toLocaleDateString('en-GB').replace(/\//g, '-');
 
@@ -181,21 +224,6 @@ async sendMail() {
   </html>
   `;
 
-// Capture invoice as canvas
-  const canvas = await html2canvas(element, { scale: 2 });
-  const imgData = canvas.toDataURL('image/png');
-
-  // Convert to PDF
-  const pdf = new jsPDF('p', 'mm', 'a4');
-  const imgProps = pdf.getImageProperties(imgData);
-  const pdfWidth = pdf.internal.pageSize.getWidth();
-  const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-  pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-
-  // ✅ Get Base64 string of PDF
-  const pdfBase64 = pdf.output('datauristring');
-  const base64String = pdfBase64.split(',')[1];
 
 
     
@@ -212,7 +240,7 @@ const fname = this.paymentData?.paymentFor?.toUpperCase();
       attach: [
         {
           filename: filename,
-          filestring: `data:application/pdf;base64,${base64String}`
+          filestring: `data:application/pdf;base64,${pdfBase64}`
         }
       ],
       html:htmltemp
@@ -237,6 +265,7 @@ const fname = this.paymentData?.paymentFor?.toUpperCase();
       }
     });
   }
+
 
 
  

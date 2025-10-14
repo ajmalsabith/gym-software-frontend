@@ -1,9 +1,9 @@
 <div class="d-flex w-full h-full">
   <mat-card class="m-auto" style="max-width: 420px;">
-    <mat-card-header class="m-b-10" style="display: flex; justify-content: start;margin-top: 10px;">
-      <mat-card-title style="display: flex; justify-content:start;gap: 80px;">
-        <img src="images/gym-logo2.jpg" style="border-radius: 15%;" width="60px" height="60px" alt="Logo">
-        <h4 style="color:black">Gym Login</h4>
+    <mat-card-header class="m-b-10" style="display: flex; justify-content: center;margin-top: 10px;">
+      <mat-card-title >
+        <img src="images/logo-full.png" style="border-radius: 15%;" width="140px" height="70px" alt="Logo">
+        <!-- <h4 style="color:black">Gym Login</h4> -->
       </mat-card-title>
     </mat-card-header>
 
@@ -53,7 +53,7 @@
           class="w-full m-y-16" 
           mat-flat-button 
           (click)="submitLogin()" 
-          style="background-color: #343dff;"
+          style="background-color: #eb550b;"
           [disabled]="isSubmitting">
           @if (isSubmitting) {
             <mat-spinner diameter="20" style="margin-right: 8px;"></mat-spinner>

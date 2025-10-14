@@ -4,9 +4,12 @@ import { Component, Input } from '@angular/core';
   selector: 'app-branding',
   template: `
     <a class="branding" href="/">
-      <img src="images/gym-logo2.jpg" class="branding-logo" alt="logo" />
+      <img src="images/logo-dark2.png" class="branding-logo" alt="logo" />
       @if (showName) {
-        <span class="branding-name">InTrainor</span>
+        <span class="branding-name">
+           <span class="in-part">In</span><span class="trainor-part">Trainor</span>
+        </span>
+
       }
     </a>
   `,
@@ -14,7 +17,7 @@ import { Component, Input } from '@angular/core';
     .branding {
       display: flex;
       align-items: center;
-      margin: 0 0.5rem;
+      margin: 0 0.1rem;
       text-decoration: none;
       white-space: nowrap;
       color: inherit;
@@ -26,12 +29,20 @@ import { Component, Input } from '@angular/core';
       height:3rem;
       border-radius: 0.5rem;
     }
+.branding-name {
+  margin: 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
 
-    .branding-name {
-      margin: 0 0.5rem;
-      font-size: 1rem;
-      font-weight: 500;
-    }
+.in-part {
+  color: black;
+}
+
+.trainor-part {
+  color: #eb550b;
+}
+
   `,
   standalone: true,
 })
